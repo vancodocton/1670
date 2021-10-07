@@ -9,6 +9,7 @@ using WebApp.ViewModels;
 using WebApp.Utils;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace WebApp.Controllers
 {
@@ -118,31 +119,72 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult> DeleteAccount(string id)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
-
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(user);
-        }
-
         [HttpGet]
         public async Task<ActionResult> DetailsAccount(string id)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+            //var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            var roles = await UserManager.GetRolesAsync(user.Id);
+            var model = new UserViewModel()
+            {
+                User = user,
+                Roles = new List<string>(roles)
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DeleteAccount(string id, bool? saveChangesError = false)
+        {
+            var user = await UserManager.FindByIdAsync(id);
 
             if (user == null)
             {
                 return HttpNotFound();
             }
 
-            return View(user);
+            var model = new UserViewModel()
+            {
+                User = user,
+                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id))
+            };
+
+            if (saveChangesError == true)
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("DeleteAccount")]
+        public async Task<ActionResult> ConfirmedDeleteAccount(string id)
+        {
+            var user = await UserManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            try
+            {
+                await UserManager.DeleteAsync(user);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(DeleteAccount), new { id = id, saveChangesError = true });
+            }
         }
 
         private void AddErrors(IdentityResult result)
