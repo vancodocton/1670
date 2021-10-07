@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using WebApp.Utils;
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />
@@ -22,6 +23,13 @@
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
 					<li>@Html.ActionLink("Home", "Index", "Home")</li>
+					@if (User.Identity.IsAuthenticated)
+					{
+						if (User.IsInRole(Role.Admin))
+						{
+						 <li>@Html.ActionLink("Account Management", "Index", "Admin")</li>
+						}
+					}
 				</ul>
 				@Html.Partial("_LoginPartial")
 			</div>
