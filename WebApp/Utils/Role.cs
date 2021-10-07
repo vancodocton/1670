@@ -2,9 +2,9 @@
 {
     public class Role
     {
-        public string Admin = "Admin";
-        public string Staff = "Staff";
-        public string Trainer = "Trainer";
-        public string Trainee = "Trainee";
+        public const string Admin = "Admin";
+        public const string Staff = "Staff";
+        public const string Trainer = "Trainer";
+        public const string Trainee = "Trainee";
     }
 }
