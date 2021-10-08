@@ -9,12 +9,13 @@ Install-Package Microsoft.Net.Compilers
 * Cannot attach the file '.\WebApp\App_Data\aspnet-WebApp-*.mdf
 Root cause: the local database is not existed.
 Solution: Recreate local database. OPEN PMS and run:
-
-  * sqllocaldb stop mssqllocaldb
-  * sqllocaldb delete mssqllocaldb
-  * sqllocaldb create mssqllocaldb
   * sqllocaldb start mssqllocaldb
   * mkdir WebApp/App_Data
   * update-database
+If the problem is not resolved run:
+  * sqllocaldb stop mssqllocaldb
+  * sqllocaldb delete mssqllocaldb
+  * sqllocaldb create mssqllocaldb
+then run the first solution again
 
 
