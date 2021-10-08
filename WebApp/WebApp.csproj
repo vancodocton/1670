@@ -258,6 +258,9 @@
     <Content Include="Views\Admin\CreateTrainerAccount.cshtml" />
     <Content Include="Views\Admin\DeleteAccount.cshtml" />
     <Content Include="Views\Admin\DetailsAccount.cshtml" />
+    <Content Include="Views\Admin\EditAccount.cshtml" />
+    <Content Include="Views\Admin\ResetPassword.cshtml" />
+    <Content Include="Views\Admin\ResetPasswordConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

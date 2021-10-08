@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
-using WebApp.ViewModels;
 using WebApp.Utils;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -68,7 +67,6 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult CreateStaffAccount()
         {
-            ViewBag.Title = "Create Staff Account";
             return View();
         }
 
@@ -95,7 +93,6 @@ namespace WebApp.Controllers
         [HttpGet]
         public ActionResult CreateTrainerAccount()
         {
-            ViewBag.Title = "Create Trainer Account";
             return View();
         }
 
@@ -175,16 +172,118 @@ namespace WebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            try
+            IdentityResult result = await UserManager.DeleteAsync(user);
+
+            if (result.Succeeded)
             {
-                await UserManager.DeleteAsync(user);
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateException /* ex */)
+
+            return RedirectToAction(nameof(DeleteAccount), new { id, saveChangesError = true });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EditAccount(string id)
+        {
+            var user = await UserManager.FindByIdAsync(id);
+
+            if (user == null)
             {
-                //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction(nameof(DeleteAccount), new { id = id, saveChangesError = true });
+                return HttpNotFound();
             }
+
+            var roles = await UserManager.GetRolesAsync(user.Id);
+            var model = new UserViewModel()
+            {
+                User = user,
+                Roles = new List<string>(roles)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditAccount(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = model.User;
+                var userinDb = await UserManager.FindByIdAsync(user.Id);
+
+                if (userinDb == null)
+                    return HttpNotFound();
+                userinDb.FullName = user.FullName;
+                userinDb.Age = user.Age;
+                userinDb.Address = user.Address;
+                userinDb.Email = user.Email;
+
+                IdentityResult result = await UserManager.UpdateAsync(userinDb);
+
+                if (result.Succeeded)
+                    return RedirectToAction(nameof(Index));
+                else
+                    AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult ResetPassword(string email = null)
+        {
+            if (email == null)
+                return View();
+
+            var model = new ResetPasswordViewModel()
+            {
+                Email = email
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await UserManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "The user does not exist";
+                return View(model);
+            }
+
+            var roles = await UserManager.GetRolesAsync(user.Id);
+            if (!roles.Any(r => r == Role.Staff || r == Role.Trainer))
+            {
+                ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
+                return View(model);
+            }
+
+            model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(ResetPasswordConfirmation), user.Email);
+            }
+
+            AddErrors(result);
+            return View();
+        }
+
+        //
+        // GET: /Account/ResetPasswordConfirmation
+        [AllowAnonymous]
+        public ActionResult ResetPasswordConfirmation(string email)
+        {
+            return View(email);
         }
 
         private void AddErrors(IdentityResult result)
@@ -196,3 +295,4 @@ namespace WebApp.Controllers
         }
     }
 }
+

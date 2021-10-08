@@ -1,5 +1,7 @@
 ﻿@model WebApp.Models.RegisterViewModel
-
+@{ 
+	ViewBag.Title = "Create Staff Account";
+}
 <h2>@ViewBag.Title.</h2>
 
 @using (Html.BeginForm("CreateStaffAccount", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
