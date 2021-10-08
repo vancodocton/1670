@@ -271,19 +271,18 @@ namespace WebApp.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), user.Email);
+                return RedirectToAction(nameof(ResetPasswordConfirmation), "Admin", new { email = user.Email });
             }
 
             AddErrors(result);
             return View();
         }
 
-        //
-        // GET: /Account/ResetPasswordConfirmation
-        [AllowAnonymous]
+        [HttpGet]
         public ActionResult ResetPasswordConfirmation(string email)
         {
-            return View(email);
+            ViewBag.Email = email;
+            return View();
         }
 
         private void AddErrors(IdentityResult result)
