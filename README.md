@@ -14,6 +14,7 @@ Solution: Recreate local database. OPEN PMS and run:
   * sqllocaldb delete mssqllocaldb
   * sqllocaldb create mssqllocaldb
   * sqllocaldb start mssqllocaldb
+  * mkdir WebApp/App_Data
   * update-database
 
 
