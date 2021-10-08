@@ -12,7 +12,7 @@ Solution: Recreate local database. OPEN PMS and run:
   * sqllocaldb start mssqllocaldb
   * mkdir WebApp/App_Data
   * update-database
-If the problem is not resolved run:
+* If the problem is not resolved run:
   * sqllocaldb stop mssqllocaldb
   * sqllocaldb delete mssqllocaldb
   * sqllocaldb create mssqllocaldb
