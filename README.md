@@ -10,10 +10,10 @@ Install-Package Microsoft.Net.Compilers
 Root cause: the local database is not existed.
 Solution: Recreate local database. OPEN PMS and run:
 
-*sqllocaldb stop mssqllocaldb
-*sqllocaldb delete mssqllocaldb
-*sqllocaldb create mssqllocaldb
-*sqllocaldb start mssqllocaldb
-*update-database
+  * sqllocaldb stop mssqllocaldb
+  * sqllocaldb delete mssqllocaldb
+  * sqllocaldb create mssqllocaldb
+  * sqllocaldb start mssqllocaldb
+  * update-database
 
 
