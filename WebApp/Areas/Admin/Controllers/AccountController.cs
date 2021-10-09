@@ -13,6 +13,7 @@ using WebApp.ViewModels;
 
 namespace WebApp.Areas.Admin.Controllers
 {
+    [Authorize(Roles = Role.Admin)]
     public class AccountController : Controller
     {
         private ApplicationDbContext _context;
