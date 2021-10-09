@@ -10,7 +10,7 @@ namespace WebApp.Models
         {
         }
 
-        DbSet<CourseCategory> CourseCategories { get; set; }
+        public DbSet<CourseCategory> CourseCategories { get; set; }
 
         public static ApplicationDbContext Create()
         {
