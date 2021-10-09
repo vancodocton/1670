@@ -27,7 +27,11 @@
 					{
 						if (User.IsInRole(Role.Admin))
 						{
-						 <li>@Html.ActionLink("Account Management", "Index", "Admin")</li>
+							<li>@Html.ActionLink("Account Management", "Index", "Admin")</li>
+						}
+						if (User.IsInRole(Role.Staff))
+						{
+							<li>@Html.ActionLink("Course Management", "Index", "Staff")</li>
 						}
 					}
 				</ul>
