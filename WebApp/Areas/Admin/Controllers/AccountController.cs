@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+using WebApp.Areas.Admin.ViewModels;
 using WebApp.Models;
 using WebApp.Utils;
 using WebApp.ViewModels;
 
-namespace WebApp.Controllers
+namespace WebApp.Areas.Admin.Controllers
 {
-    [Authorize(Roles = Role.Admin)]
-    public class AdminController : Controller
+    public class AccountController : Controller
     {
         private ApplicationDbContext _context;
         private ApplicationSignInManager _signInManager;
@@ -42,8 +42,7 @@ namespace WebApp.Controllers
                 _userManager = value;
             }
         }
-
-        public AdminController()
+        public AccountController()
         {
             _context = new ApplicationDbContext();
         }
@@ -63,16 +62,19 @@ namespace WebApp.Controllers
 
             return View(model);
         }
-
         [HttpGet]
-        public ActionResult CreateStaffAccount()
+        public ActionResult Create()
         {
-            return View();
+            AccountRegisterViewModel model = new AccountRegisterViewModel()
+            {
+                Roles = new List<string> { Role.Staff, Role.Trainer }
+            };
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateStaffAccount(RegisterViewModel model)
+        public async Task<ActionResult> Create(AccountRegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -80,8 +82,8 @@ namespace WebApp.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await UserManager.AddToRoleAsync(user.Id, Role.Staff);
-                    return RedirectToAction("Index", "Admin");
+                    await UserManager.AddToRoleAsync(user.Id, model.Role);
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
@@ -90,36 +92,16 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public ActionResult CreateTrainerAccount()
+        private void AddErrors(IdentityResult result)
         {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateTrainerAccount(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
+            foreach (var error in result.Errors)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await UserManager.AddToRoleAsync(user.Id, Role.Trainer);
-                    return RedirectToAction("Index", "Admin");
-                }
-                AddErrors(result);
+                ModelState.AddModelError("", error);
             }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> DetailsAccount(string id)
+        public async Task<ActionResult> Details(string id)
         {
-            //var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
             var user = await UserManager.FindByIdAsync(id);
             if (user == null)
             {
@@ -137,7 +119,7 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> DeleteAccount(string id, bool? saveChangesError = false)
+        public async Task<ActionResult> Delete(string id, bool? saveChangesError = false)
         {
             var user = await UserManager.FindByIdAsync(id);
 
@@ -162,8 +144,8 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        [HttpPost, ActionName("DeleteAccount")]
-        public async Task<ActionResult> ConfirmedDeleteAccount(string id)
+        [HttpPost, ActionName("Delete")]
+        public async Task<ActionResult> ConfirmedDelete(string id)
         {
             var user = await UserManager.FindByIdAsync(id);
 
@@ -176,14 +158,14 @@ namespace WebApp.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Account");
             }
 
-            return RedirectToAction(nameof(DeleteAccount), new { id, saveChangesError = true });
+            return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
         }
 
         [HttpGet]
-        public async Task<ActionResult> EditAccount(string id)
+        public async Task<ActionResult> Edit(string id)
         {
             var user = await UserManager.FindByIdAsync(id);
 
@@ -203,7 +185,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditAccount(UserViewModel model)
+        public async Task<ActionResult> Edit(UserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -271,13 +253,14 @@ namespace WebApp.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), "Admin", new { email = user.Email });
+                return RedirectToAction(nameof(ResetPasswordConfirmation), "Account", new { email = user.Email });
             }
 
             AddErrors(result);
             return View();
         }
 
+        [Route("{email}")]
         [HttpGet]
         public ActionResult ResetPasswordConfirmation(string email)
         {
@@ -285,13 +268,5 @@ namespace WebApp.Controllers
             return View();
         }
 
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
     }
 }
-
