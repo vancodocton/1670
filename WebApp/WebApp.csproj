@@ -187,10 +187,15 @@
     <Compile Include="Migrations\202110071952509_alter-application-user-table.Designer.cs">
       <DependentUpon>202110071952509_alter-application-user-table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202110091455405_add-course-categories-table.cs" />
+    <Compile Include="Migrations\202110091455405_add-course-categories-table.Designer.cs">
+      <DependentUpon>202110091455405_add-course-categories-table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\CourseCategory.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -286,6 +291,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110071952509_alter-application-user-table.resx">
       <DependentUpon>202110071952509_alter-application-user-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110091455405_add-course-categories-table.resx">
+      <DependentUpon>202110091455405_add-course-categories-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 
 namespace WebApp.Models
 {
@@ -8,6 +9,8 @@ namespace WebApp.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+
+        DbSet<CourseCategory> CourseCategories { get; set; }
 
         public static ApplicationDbContext Create()
         {
