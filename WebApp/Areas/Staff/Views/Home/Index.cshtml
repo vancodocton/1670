@@ -1,0 +1,15 @@
+﻿@model WebApp.ViewModels.GroupedUsersViewModel
+@{
+	ViewBag.Title = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<ul class="list-group">
+	<li class="list-group-item">
+		@Html.ActionLink("Trainee Account Management", "Index", "Trainee")
+	</li>
+	<li class="list-group-item">
+		@Html.ActionLink("Course Category Management", "Index", "CourseCategory")
+	</li>
+</ul>

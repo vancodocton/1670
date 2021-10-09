@@ -31,7 +31,7 @@
 						}
 						if (User.IsInRole(Role.Staff))
 						{
-							<li>@Html.ActionLink("Dashboard", null, null, new { Area = "Staff" }, null)</li>
+							<li>@Html.ActionLink("Dashboard", "Index", "Home", new { Area = "Staff" }, null)</li>
 						}
 					}
 				</ul>
