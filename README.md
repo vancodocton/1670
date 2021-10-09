@@ -4,7 +4,7 @@ Project Employee Training Manamement System. The system is based on ASP.NET MVC 
 # Debug issue 
 * Could not find a part of the path '.\WebApp\bin\roslyn\csc.exe'.
 Open PMS and run:
-Install-Package Microsoft.Net.Compilers
+ * Install-Package Microsoft.Net.Compilers -r
 
 * Cannot attach the file '.\WebApp\App_Data\aspnet-WebApp-*.mdf
 Root cause: the local database is not existed.
