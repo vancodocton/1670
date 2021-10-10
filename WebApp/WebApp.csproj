@@ -178,6 +178,8 @@
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
+    <Compile Include="Areas\Train\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Train\TrainAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -238,6 +240,9 @@
     <Content Include="Areas\Staff\Views\Course\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Course\Edit.cshtml" />
     <Content Include="Areas\Staff\Views\Course\Index.cshtml" />
+    <Content Include="Areas\Train\Views\web.config" />
+    <Content Include="Areas\Train\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Train\Views\Home\Index.cshtml" />
     <None Include="Properties\PublishProfiles\estm - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -295,6 +300,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
+    <Folder Include="Areas\Train\Data\" />
+    <Folder Include="Areas\Train\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
