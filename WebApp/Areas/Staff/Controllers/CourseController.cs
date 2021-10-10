@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Utils;
+using PagedList;
 
 namespace WebApp.Areas.Staff.Controllers
 {
@@ -17,11 +18,30 @@ namespace WebApp.Areas.Staff.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        [HttpGet]
-        public async Task<ActionResult> Index()
+        //[HttpGet]
+        //public async Task<ActionResult> Index()
+        //{
+        //    var courses = db.Courses.Include(c => c.CourseCategory);
+        //    return View(await courses.ToListAsync());
+        //}
+
+        public ActionResult Index(string CourseName, int? page)
         {
-            var courses = db.Courses.Include(c => c.CourseCategory);
-            return View(await courses.ToListAsync());
+            var courses = db.Courses
+                .Include(c => c.CourseCategory);
+
+            if (CourseName != null)
+            {
+                CourseName = CourseName.Trim();
+                if (CourseName != "")
+                    courses = courses.Where(c => c.Name.Contains(CourseName.Trim()));
+            }
+
+            courses = courses.OrderBy(c => c.Id);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            return View(courses.ToPagedList(pageNumber, pageSize));
         }
 
         [HttpGet]
