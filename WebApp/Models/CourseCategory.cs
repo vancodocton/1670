@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace WebApp.Models
 {
@@ -17,5 +14,7 @@ namespace WebApp.Models
 
         [StringLength(255)]
         public string Description { get; set; }
+
+        public ICollection<Course> Courses { get; set; }
     }
 }

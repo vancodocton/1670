@@ -196,10 +196,15 @@
     <Compile Include="Migrations\202110091455405_add-course-categories-table.Designer.cs">
       <DependentUpon>202110091455405_add-course-categories-table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202110101354407_create-course-table.cs" />
+    <Compile Include="Migrations\202110101354407_create-course-table.designer.cs">
+      <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\Course.cs" />
     <Compile Include="Models\CourseCategory.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -308,6 +313,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110091455405_add-course-categories-table.resx">
       <DependentUpon>202110091455405_add-course-categories-table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110101354407_create-course-table.resx">
+      <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
