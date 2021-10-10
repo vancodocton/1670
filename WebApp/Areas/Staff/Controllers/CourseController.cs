@@ -17,21 +17,23 @@ namespace WebApp.Areas.Staff.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Staff/Course
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
             var courses = db.Courses.Include(c => c.CourseCategory);
             return View(await courses.ToListAsync());
         }
 
-        // GET: Staff/Course/Details/5
+        [HttpGet]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses.FindAsync(id);
+            Course course = await db.Courses
+                .Include(c => c.CourseCategory)
+                .SingleOrDefaultAsync(c => c.Id == id);
             if (course == null)
             {
                 return HttpNotFound();
@@ -39,16 +41,13 @@ namespace WebApp.Areas.Staff.Controllers
             return View(course);
         }
 
-        // GET: Staff/Course/Create
+        [HttpGet]
         public ActionResult Create()
         {
             ViewBag.CourseCategoryId = new SelectList(db.CourseCategories, "Id", "Name");
             return View();
         }
 
-        // POST: Staff/Course/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name,CourseCategoryId,Description")] Course course)
@@ -64,7 +63,7 @@ namespace WebApp.Areas.Staff.Controllers
             return View(course);
         }
 
-        // GET: Staff/Course/Edit/5
+        [HttpGet]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,9 +79,6 @@ namespace WebApp.Areas.Staff.Controllers
             return View(course);
         }
 
-        // POST: Staff/Course/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name,CourseCategoryId,Description")] Course course)
@@ -97,7 +93,7 @@ namespace WebApp.Areas.Staff.Controllers
             return View(course);
         }
 
-        // GET: Staff/Course/Delete/5
+        [HttpGet]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -112,7 +108,6 @@ namespace WebApp.Areas.Staff.Controllers
             return View(course);
         }
 
-        // POST: Staff/Course/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)

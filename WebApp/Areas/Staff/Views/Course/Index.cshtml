@@ -4,51 +4,49 @@
 	ViewBag.Title = "Course management";
 }
 
-<!DOCTYPE html>
+<h2>@ViewBag.Title</h2>
 
-<html>
-<head>
-	<meta name="viewport" content="width=device-width" />
-	<title>Index</title>
-</head>
-<body>
-	<p>
-		@Html.ActionLink("Create New", "Create")
-	</p>
-	<table class="table">
+@Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
+<table class="table">
+	<thead>
 		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.CourseCategory.Name)
-			</th>
+			<th scope="col">#</th>
 			<th>
 				@Html.DisplayNameFor(model => model.Name)
 			</th>
-			<th>
+			<th scope="col">
+				@Html.DisplayNameFor(model => model.CourseCategory)
+			</th>
+			<th scope="col">
 				@Html.DisplayNameFor(model => model.Description)
 			</th>
 			<th></th>
 		</tr>
+	</thead>
 
+	<tbody>
+		@{ int i = 0;}
 		@foreach (var item in Model)
 		{
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.CourseCategory.Name)
-				</td>
+				<th scope="row">@{i++;}@i</th>
 				<td>
 					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.CourseCategory.Name)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.Description)
 				</td>
 				<td>
-					@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-					@Html.ActionLink("Details", "Details", new { id = item.Id }) |
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+					@Html.ActionLink("Edit", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-success" }) |
+					@Html.ActionLink("Details", "Details", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-info" }) |
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger" })
 				</td>
 			</tr>
 		}
+	</tbody>
 
-	</table>
-</body>
-</html>
+</table>
+
