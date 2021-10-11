@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -49,15 +50,15 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            string staffRoleId = _context.Roles.SingleOrDefault(r => r.Name == Role.Staff).Id;
-            string trainerRoleId = _context.Roles.SingleOrDefault(r => r.Name == Role.Trainer).Id;
+            var staffRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == Role.Staff);
+            var trainerRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == Role.Trainer);
 
             var model = new GroupedUsersViewModel()
             {
-                Staffs = _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(staffRoleId)).ToList(),
-                Trainers = _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(trainerRoleId)).ToList(),
+                Staffs = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(staffRole.Id)).ToListAsync(),
+                Trainers = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(trainerRole.Id)).ToListAsync(),
                 Trainees = null
             };
 
