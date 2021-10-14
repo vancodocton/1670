@@ -61,9 +61,9 @@
 				<th scope="row">@i</th>
 				<td>@item.UserName</td>
 				<td>
-					@Html.ActionLink("Delete", "DeleteAccount", new { id = item.Id }, new { @class = "btn btn-danger" })
-					@Html.ActionLink("Edit", "EditAccount", new { id = item.Id }, new { @class = "btn btn-success" })
-					@Html.ActionLink("Details", "DetailsAccount", new { id = item.Id }, new { @class = "btn btn-info" })
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+					@Html.ActionLink("Edit profiles", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
+					@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
 					@Html.ActionLink("Reset Password", "ResetPassword", new { email = item.Email }, new { @class = "btn btn-danger" })
 				</td>
 			</tr>

@@ -47,6 +47,7 @@ namespace WebApp.Areas.Admin.Controllers
         public AccountController()
         {
             _context = new ApplicationDbContext();
+
         }
 
         [HttpGet]
@@ -200,6 +201,7 @@ namespace WebApp.Areas.Admin.Controllers
                 userinDb.Age = user.Age;
                 userinDb.Address = user.Address;
                 userinDb.Email = user.Email;
+                userinDb.UserName = user.Email;
 
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
 

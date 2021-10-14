@@ -180,6 +180,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
     <Compile Include="Areas\Admin\ViewModels\AccountRegisterViewModel.cs" />
+    <Compile Include="Areas\Staff\Controllers\TraineeController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
@@ -250,6 +251,13 @@
     <Content Include="Areas\Train\Views\web.config" />
     <Content Include="Areas\Train\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Train\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\Create.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\Delete.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\Index.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\ResetPassword.cshtml" />
+    <Content Include="Areas\Staff\Views\Trainee\ResetPasswordConfirmation.cshtml" />
     <None Include="Properties\PublishProfiles\estm - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -302,6 +310,8 @@
     <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Shared\UpdateProfile.cshtml" />
+    <Content Include="Views\Shared\DetailsProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

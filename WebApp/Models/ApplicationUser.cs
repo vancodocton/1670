@@ -13,6 +13,7 @@ namespace WebApp.Models
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
+        [Range(0, int.MaxValue)]
         public int Age { get; set; }
 
         public string Address { get; set; }
@@ -24,6 +25,5 @@ namespace WebApp.Models
             // Add custom user claims here
             return userIdentity;
         }
-
     }
 }
