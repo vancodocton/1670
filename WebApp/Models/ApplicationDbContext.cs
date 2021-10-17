@@ -10,6 +10,9 @@ namespace WebApp.Models
         {
         }
 
+        public DbSet<TrainerProfile> TrainerProfiles { get; set; }
+
+        public DbSet<TraineeProfile> TraineeProfiles { get; set; }
         public DbSet<CourseCategory> CourseCategories { get; set; }
 
         public DbSet<Course> Courses { get; set; }
