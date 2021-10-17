@@ -120,11 +120,14 @@ namespace WebApp.Areas.Staff.Controllers
                 return HttpNotFound();
             }
 
-            var roles = await UserManager.GetRolesAsync(user.Id);
+            var profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+
             var model = new UserViewModel()
             {
                 User = user,
-                Roles = new List<string>(roles)
+                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id)),
+                Education = profile.Education,
+                BirthDate = profile.BirthDate
             };
 
             return View(model);
@@ -140,10 +143,14 @@ namespace WebApp.Areas.Staff.Controllers
                 return HttpNotFound();
             }
 
+            var profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+
             var model = new UserViewModel()
             {
                 User = user,
-                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id))
+                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id)),
+                Education = profile.Education,
+                BirthDate = profile.BirthDate
             };
 
             if (saveChangesError == true)
@@ -193,6 +200,25 @@ namespace WebApp.Areas.Staff.Controllers
                 Roles = new List<string>(roles)
             };
 
+            TraineeProfile profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+
+            if (profile == null)
+            {
+                profile = new TraineeProfile()
+                {
+                    UserId = user.Id ,
+                    BirthDate = null,
+                    Education = null
+                };
+                _context.TraineeProfiles.Add(profile);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                model.Education = profile.Education;
+                model.BirthDate = profile.BirthDate;
+            }
+
             return View(model);
         }
 
@@ -212,6 +238,12 @@ namespace WebApp.Areas.Staff.Controllers
                 userinDb.Email = user.Email;
 
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
+
+                var profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+
+                profile.Education = model.Education;
+                profile.BirthDate = model.BirthDate;
+                await _context.SaveChangesAsync();
 
                 if (result.Succeeded)
                     return RedirectToAction(nameof(Index));
