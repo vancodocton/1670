@@ -29,15 +29,17 @@
 		<tr>
 			<th scope="col">#</th>
 			<th>
-				@Html.DisplayName("Name")
+				@Html.DisplayNameFor(m => m.First().Name)
 			</th>
 			<th scope="col">
-				@Html.DisplayName("CourseCategory")
+				@Html.DisplayNameFor(m => m.First().CourseCategory)
 			</th>
 			<th scope="col">
-				@Html.DisplayName("Description")
+				@Html.DisplayNameFor(m => m.First().Description)
 			</th>
-			<th></th>
+			<th>
+				Actions
+			</th>
 		</tr>
 	</thead>
 
