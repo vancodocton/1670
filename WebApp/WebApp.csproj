@@ -214,8 +214,10 @@
       <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202110170125208_add-course-trainee-table.cs" />
-    <Compile Include="Migrations\202110170125208_add-course-trainee-table.Designer.cs">
-      <DependentUpon>202110170125208_add-course-trainee-table.cs</DependentUpon>
+    <Compile Include="Migrations\202110170125208_add-course-trainee-table.Designer.cs" />
+    <Compile Include="Migrations\202110170259046_alter-trainee-profile-table.cs" />
+    <Compile Include="Migrations\202110170259046_alter-trainee-profile-table.Designer.cs">
+      <DependentUpon>202110170259046_alter-trainee-profile-table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\Role.cs" />
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
+    <Compile Include="ViewModels\AssignViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +272,7 @@
     <Content Include="Areas\Staff\Views\Trainee\Index.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\ResetPassword.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Areas\Staff\Views\Course\Assign.cshtml" />
     <None Include="Properties\PublishProfiles\estm - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -360,8 +364,9 @@
     <EmbeddedResource Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.resx">
       <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110170125208_add-course-trainee-table.resx">
-      <DependentUpon>202110170125208_add-course-trainee-table.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202110170125208_add-course-trainee-table.resx" />
+    <EmbeddedResource Include="Migrations\202110170259046_alter-trainee-profile-table.resx">
+      <DependentUpon>202110170259046_alter-trainee-profile-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
