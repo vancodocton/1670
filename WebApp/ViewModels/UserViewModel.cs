@@ -15,7 +15,8 @@ namespace WebApp.ViewModels
 
         [DataType(DataType.Date)]
         [Display(Name = "Date of birth")]
-        public DateTime BirthDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime? BirthDate { get; set; }
 
         public string Education { get; set; }
     }

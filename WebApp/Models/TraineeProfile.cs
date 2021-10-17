@@ -15,8 +15,9 @@ namespace WebApp.Models
         public ApplicationUser User { get; set; }
 
         [DataType(DataType.Date)]
-        public string BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
+        [StringLength(255)]
         public string Education { get; set; }
 
         public ICollection<CourseTrainee> CourseTrainees { get; set; }

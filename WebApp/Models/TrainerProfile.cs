@@ -14,6 +14,7 @@ namespace WebApp.Models
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
 
+        [StringLength(255)]
         public string Specialty { get; set; }
     }
 }
