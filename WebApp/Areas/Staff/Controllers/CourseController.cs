@@ -18,13 +18,7 @@ namespace WebApp.Areas.Staff.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        //[HttpGet]
-        //public async Task<ActionResult> Index()
-        //{
-        //    var courses = db.Courses.Include(c => c.CourseCategory);
-        //    return View(await courses.ToListAsync());
-        //}
-
+        [HttpGet]
         public ActionResult Index(string CourseName, int? page)
         {
             var courses = db.Courses

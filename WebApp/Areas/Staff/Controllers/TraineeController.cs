@@ -254,7 +254,7 @@ namespace WebApp.Areas.Staff.Controllers
             }
 
             var roles = await UserManager.GetRolesAsync(user.Id);
-            if (!roles.Any(r => r == Role.Trainee))
+            if (!roles.All(r => r == Role.Trainee))
             {
                 ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
                 return View(model);
