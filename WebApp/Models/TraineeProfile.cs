@@ -18,5 +18,7 @@ namespace WebApp.Models
         public string BirthDate { get; set; }
 
         public string Education { get; set; }
+
+        public ICollection<CourseTrainee> CourseTrainees { get; set; }
     }
 }
