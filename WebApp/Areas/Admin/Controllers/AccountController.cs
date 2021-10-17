@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -17,10 +18,9 @@ namespace WebApp.Areas.Admin.Controllers
     [Authorize(Roles = Role.Admin)]
     public class AccountController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
         public ApplicationSignInManager SignInManager
         {
             get
@@ -83,9 +83,25 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+
+
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRoleAsync(user.Id, model.Role);
+                    switch (model.Role)
+                    {
+                        case Role.Trainer:
+                            var profile = new TrainerProfile()
+                            {
+                                UserId = user.Id,
+                                Specialty = null,
+                            };
+                            _context.TrainerProfiles.Add(profile);
+                            await _context.SaveChangesAsync();
+                            break;
+                        default:
+                            break;
+                    }
                     return RedirectToAction("Index", "Account");
                 }
                 AddErrors(result);
@@ -103,21 +119,39 @@ namespace WebApp.Areas.Admin.Controllers
             }
         }
 
-        public async Task<ActionResult> Details(string id)
+        private async Task<UserViewModel> LoadUserViewModel(string userId)
         {
-            var user = await UserManager.FindByIdAsync(id);
+            var user = await UserManager.FindByIdAsync(userId);
+
             if (user == null)
-            {
-                return HttpNotFound();
-            }
+                return null;
 
             var roles = await UserManager.GetRolesAsync(user.Id);
+
             var model = new UserViewModel()
             {
                 User = user,
                 Roles = new List<string>(roles)
             };
 
+            if (roles.Any(r => r == Role.Trainer))
+            {
+                var trainer = await _context.TrainerProfiles.SingleOrDefaultAsync(u => u.UserId == userId);
+                model.Specialty = trainer.Specialty;
+            }
+
+            return model;
+        }
+
+        public async Task<ActionResult> Details(string id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            UserViewModel model = await LoadUserViewModel(id);
+
+            if (model == null)
+                return HttpNotFound();
             return View(model);
         }
 
@@ -170,20 +204,13 @@ namespace WebApp.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Edit(string id)
         {
-            var user = await UserManager.FindByIdAsync(id);
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            if (user == null)
-            {
+            UserViewModel model = await LoadUserViewModel(id);
+
+            if (model == null)
                 return HttpNotFound();
-            }
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(roles)
-            };
-
             return View(model);
         }
 
@@ -204,6 +231,13 @@ namespace WebApp.Areas.Admin.Controllers
                 userinDb.UserName = user.Email;
 
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
+
+                if (model.Specialty != null)
+                {
+                    var profile = await _context.TrainerProfiles.SingleOrDefaultAsync(p => p.UserId == userinDb.Id);
+                    profile.Specialty = model.Specialty;
+                }
+                await _context.SaveChangesAsync();
 
                 if (result.Succeeded)
                     return RedirectToAction(nameof(Index));
