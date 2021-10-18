@@ -10,12 +10,12 @@ namespace WebApp.ViewModels
     {
         public Course Course { get; set; }
 
-        public ICollection<TraineeProfile> AssignedTrainees { get; set; }
+        public ICollection<Trainee> AssignedTrainees { get; set; }
 
-        public ICollection<TraineeProfile> AssignedTrainers { get; set; }
+        public ICollection<ApplicationUser> AssignedTrainers { get; set; }
 
-        public ICollection<TraineeProfile> UnassignedTrainees { get; set; }
+        public ICollection<ApplicationUser> UnassignedTrainees { get; set; }
 
-        public ICollection<TraineeProfile> UnassignedTrainers { get; set; }
+        public ICollection<ApplicationUser> UnassignedTrainers { get; set; }
     }
 }

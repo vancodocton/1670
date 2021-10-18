@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Utils;
 using PagedList;
+using WebApp.ViewModels;
 
 namespace WebApp.Areas.Staff.Controllers
 {
@@ -139,6 +140,33 @@ namespace WebApp.Areas.Staff.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Assign(int id)
+        {
+            var course = await db.Courses.Include(c => c.CourseTrainees).SingleOrDefaultAsync(c => c.Id == id);
+            var model = new AssignViewModel();
+
+            model.Course = course;
+
+            var arr = course.CourseTrainees.Select(ct => ct.TraineeUserId);
+
+            //var a = db.Courses
+            //    .GroupJoin(db.CourseTrainees, c => c.Id, ct => ct.CourseId, (c, ct) =>
+            //    ct.Select(i => i.TraineeProfile));
+
+            var trainees = db.CourseTrainees
+                .Include(ct => ct.TraineeProfile.User)
+                .Where(ct => ct.CourseId == id);
+
+            model.AssignedTrainees = trainees
+                .Select(ct => ct.TraineeProfile)
+                .Include(p => p.User)
+                .ToList();
+            
+
+            return View(model);
         }
     }
 }

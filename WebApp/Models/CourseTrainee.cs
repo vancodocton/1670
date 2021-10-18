@@ -17,6 +17,6 @@ namespace WebApp.Models
         [Key, Column(Order = 1)]
         [ForeignKey("TraineeProfile")]
         public string TraineeUserId { get; set; }
-        public TraineeProfile TraineeProfile { get; set; }
+        public Trainee TraineeProfile { get; set; }
     }
 }

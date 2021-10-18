@@ -59,6 +59,7 @@
 					@Html.DisplayFor(modelItem => item.Description)
 				</td>
 				<td>
+					@Html.ActionLink("Assign to", "Assign", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary" }) |
 					@Html.ActionLink("Edit", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-success" }) |
 					@Html.ActionLink("Details", "Details", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-info" }) |
 					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger" })

@@ -18,7 +18,7 @@ namespace WebApp.Areas.Staff.Controllers
     [Authorize(Roles = Role.Staff)]
     public class TraineeController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -120,7 +120,7 @@ namespace WebApp.Areas.Staff.Controllers
                 return HttpNotFound();
             }
 
-            var profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+            var profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
 
             var model = new UserViewModel()
             {
@@ -143,7 +143,7 @@ namespace WebApp.Areas.Staff.Controllers
                 return HttpNotFound();
             }
 
-            var profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+            var profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
 
             var model = new UserViewModel()
             {
@@ -200,17 +200,17 @@ namespace WebApp.Areas.Staff.Controllers
                 Roles = new List<string>(roles)
             };
 
-            TraineeProfile profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+            Trainee profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
 
             if (profile == null)
             {
-                profile = new TraineeProfile()
+                profile = new Trainee()
                 {
                     UserId = user.Id ,
                     BirthDate = null,
                     Education = null
                 };
-                _context.TraineeProfiles.Add(profile);
+                _context.Trainees.Add(profile);
                 await _context.SaveChangesAsync();
             }
             else
@@ -239,7 +239,7 @@ namespace WebApp.Areas.Staff.Controllers
 
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
 
-                var profile = await _context.TraineeProfiles.SingleOrDefaultAsync(p => p.UserId == user.Id);
+                var profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
 
                 profile.Education = model.Education;
                 profile.BirthDate = model.BirthDate;

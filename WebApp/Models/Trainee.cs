@@ -7,14 +7,19 @@ using System.Web;
 
 namespace WebApp.Models
 {
-    public class TrainerProfile
+    public class Trainee
     {
         [Key]
         [ForeignKey("User")]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
 
+        [DataType(DataType.Date)]
+        public DateTime? BirthDate { get; set; }
+
         [StringLength(255)]
-        public string Specialty { get; set; }
+        public string Education { get; set; }
+
+        public ICollection<CourseTrainee> CourseTrainees { get; set; }
     }
 }

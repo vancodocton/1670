@@ -91,12 +91,12 @@ namespace WebApp.Areas.Admin.Controllers
                     switch (model.Role)
                     {
                         case Role.Trainer:
-                            var profile = new TrainerProfile()
+                            var profile = new Trainer()
                             {
                                 UserId = user.Id,
                                 Specialty = null,
                             };
-                            _context.TrainerProfiles.Add(profile);
+                            _context.Trainers.Add(profile);
                             await _context.SaveChangesAsync();
                             break;
                         default:
@@ -136,7 +136,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (roles.Any(r => r == Role.Trainer))
             {
-                var trainer = await _context.TrainerProfiles.SingleOrDefaultAsync(u => u.UserId == userId);
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == userId);
                 model.Specialty = trainer.Specialty;
             }
 
@@ -234,7 +234,7 @@ namespace WebApp.Areas.Admin.Controllers
 
                 if (model.Specialty != null)
                 {
-                    var profile = await _context.TrainerProfiles.SingleOrDefaultAsync(p => p.UserId == userinDb.Id);
+                    var profile = await _context.Trainers.SingleOrDefaultAsync(p => p.UserId == userinDb.Id);
                     profile.Specialty = model.Specialty;
                 }
                 await _context.SaveChangesAsync();

@@ -10,9 +10,9 @@ namespace WebApp.Models
         {
         }
 
-        public DbSet<TrainerProfile> TrainerProfiles { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
 
-        public DbSet<TraineeProfile> TraineeProfiles { get; set; }
+        public DbSet<Trainee> Trainees { get; set; }
 
         public DbSet<CourseTrainee> CourseTrainees { get; set; }
 
