@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "estm",
+      "defaultValue": "dev-etms",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

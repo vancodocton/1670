@@ -17,7 +17,7 @@ namespace WebApp.Areas.Staff.Controllers
     [Authorize(Roles = Role.Staff)]
     public class CourseController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext db = new ApplicationDbContext();
 
         [HttpGet]
         public ActionResult Index(string CourseName, int? page)
