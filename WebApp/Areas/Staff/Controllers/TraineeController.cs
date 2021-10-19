@@ -206,7 +206,7 @@ namespace WebApp.Areas.Staff.Controllers
             {
                 profile = new Trainee()
                 {
-                    UserId = user.Id ,
+                    UserId = user.Id,
                     BirthDate = null,
                     Education = null
                 };
@@ -281,14 +281,14 @@ namespace WebApp.Areas.Staff.Controllers
 
             if (user == null)
             {
-                ViewBag.ErrorMessage = "The user does not exist";
+                ModelState.AddModelError("", "The user does not exist");
                 return View(model);
             }
 
             var roles = await UserManager.GetRolesAsync(user.Id);
             if (!roles.All(r => r == Role.Trainee))
             {
-                ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
+                ModelState.AddModelError("", "The user cannot be reset. Permission is denied.");
                 return View(model);
             }
 
@@ -297,7 +297,7 @@ namespace WebApp.Areas.Staff.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), "Trainee", new { email = user.Email });
+                return RedirectToAction(nameof(ResetPasswordConfirmation), new { email = user.Email});
             }
 
             AddErrors(result);
@@ -308,6 +308,8 @@ namespace WebApp.Areas.Staff.Controllers
         [HttpGet]
         public ActionResult ResetPasswordConfirmation(string email)
         {
+            if (email == null)
+                return HttpNotFound();
             ViewBag.Email = email;
             return View();
         }
