@@ -366,8 +366,8 @@
     <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Admin\Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Shared\UpdateProfile.cshtml" />
-    <Content Include="Views\Shared\DetailsProfile.cshtml" />
+    <Content Include="Views\Shared\UpdateProfilePartial.cshtml" />
+    <Content Include="Views\Shared\DetailsProfilePartial.cshtml" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
   </ItemGroup>
