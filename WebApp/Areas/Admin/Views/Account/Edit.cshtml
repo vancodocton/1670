@@ -1,7 +1,9 @@
 ﻿@model WebApp.ViewModels.UserViewModel
-@using WebApp.Utils;
+@{
+	ViewBag.Title = "Edit profile";
+}
 
-@Html.Partial("UpdateProfile")
+@Html.Partial("UpdateProfilePartial", Model)
 
 <div>
 	@Html.ActionLink("Back to List", "Index")
