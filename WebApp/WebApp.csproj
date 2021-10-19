@@ -185,8 +185,6 @@
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
-    <Compile Include="Areas\Train\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Train\TrainAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -275,9 +273,6 @@
     <Content Include="Areas\Staff\Views\Course\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Course\Edit.cshtml" />
     <Content Include="Areas\Staff\Views\Course\Index.cshtml" />
-    <Content Include="Areas\Train\Views\web.config" />
-    <Content Include="Areas\Train\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Train\Views\Home\Index.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Create.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Delete.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
@@ -375,8 +370,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
-    <Folder Include="Areas\Train\Data\" />
-    <Folder Include="Areas\Train\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
