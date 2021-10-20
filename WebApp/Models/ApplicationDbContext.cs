@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace WebApp.Models
 {
@@ -23,6 +24,21 @@ namespace WebApp.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ApplicationUser>()
+            .HasRequired(t => t.Trainer)
+            .WithRequiredPrincipal(t => t.User)
+            .WillCascadeOnDelete(true);
+
+            modelBuilder.Entity<ApplicationUser>()
+            .HasRequired(t => t.Trainee)
+            .WithRequiredPrincipal(t => t.User)
+            .WillCascadeOnDelete(true);
         }
     }
 }

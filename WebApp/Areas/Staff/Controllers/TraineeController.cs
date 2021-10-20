@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -7,47 +7,26 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using WebApp.Areas.Admin.ViewModels;
 using WebApp.Models;
 using WebApp.Utils;
 using WebApp.ViewModels;
 using PagedList;
+using System.Net;
 
 namespace WebApp.Areas.Staff.Controllers
 {
     [Authorize(Roles = Role.Staff)]
-    public class TraineeController : Controller
+    public class TraineeController : BaseAccountController
     {
-        private readonly ApplicationDbContext _context;
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        public TraineeController() : base() { }
 
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
-        }
+        public TraineeController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+            : base(userManager, signInManager) { }
 
-        public ApplicationUserManager UserManager
+
+        protected override void SetManagedRoles()
         {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-        public TraineeController()
-        {
-            _context = new ApplicationDbContext();
+            roles.Add(Role.Trainee);
         }
 
         [HttpGet]
@@ -73,246 +52,79 @@ namespace WebApp.Areas.Staff.Controllers
             int pageSize = 3;
             return View(trainees.ToPagedList(page ?? 1, pageSize));
         }
-        [HttpGet]
-        public ActionResult Create()
+
+        protected override async Task<UserViewModel> LoadUserViewModel(string userId)
         {
-            AccountRegisterViewModel model = new AccountRegisterViewModel()
-            {
-                Roles = new List<string> { Role.Trainee }
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(AccountRegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await UserManager.AddToRoleAsync(user.Id, Role.Trainee);
-                    return RedirectToAction(nameof(Index));
-                }
-                AddErrors(result);
-            }
-
-            // If we got this far, something failed, redisplay form
-            model.Roles = new List<string> { Role.Trainee };
-            return View(model);
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
-
-        public async Task<ActionResult> Details(string id)
-        {
-            var user = await UserManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-
-            var profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
-
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id)),
-                Education = profile.Education,
-                BirthDate = profile.BirthDate
-            };
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Delete(string id, bool? saveChangesError = false)
-        {
-            var user = await UserManager.FindByIdAsync(id);
+            var user = await UserManager.FindByIdAsync(userId);
 
             if (user == null)
-            {
-                return HttpNotFound();
-            }
-
-            var profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
-
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id)),
-                Education = profile.Education,
-                BirthDate = profile.BirthDate
-            };
-
-            if (saveChangesError == true)
-            {
-                ViewData["ErrorMessage"] =
-                    "Delete failed. Try again, and if the problem persists " +
-                    "see your system administrator.";
-            }
-
-            return View(model);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public async Task<ActionResult> ConfirmedDelete(string id)
-        {
-            var user = await UserManager.FindByIdAsync(id);
-
-            if (user == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            IdentityResult result = await UserManager.DeleteAsync(user);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Edit(string id)
-        {
-            var user = await UserManager.FindByIdAsync(id);
-
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
+                return null;
 
             var roles = await UserManager.GetRolesAsync(user.Id);
+            if (!roles.All(r => r == Role.Trainee))
+                return null;
+
             var model = new UserViewModel()
             {
                 User = user,
                 Roles = new List<string>(roles)
             };
 
-            Trainee profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
+            model = await LoadUserProfile(model);
 
-            if (profile == null)
+            return model;
+        }
+
+        protected override async Task<UserViewModel> LoadUserProfile(UserViewModel model)
+        {
+            var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+
+            if (trainee == null)
             {
-                profile = new Trainee()
+                trainee = new Models.Trainee()
                 {
-                    UserId = user.Id,
+                    UserId = model.User.Id,
+                    Education = null,
                     BirthDate = null,
-                    Education = null
                 };
-                _context.Trainees.Add(profile);
+
+                _context.Trainees.Add(trainee);
                 await _context.SaveChangesAsync();
             }
-            else
-            {
-                model.Education = profile.Education;
-                model.BirthDate = profile.BirthDate;
-            }
 
-            return View(model);
+            model.Education = trainee.Education;
+            model.BirthDate = trainee.BirthDate;
+
+            return model;
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Edit(UserViewModel model)
+        protected override async Task<UserViewModel> UpdateUserProfile(UserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (roles.All(r => r == Role.Trainee))
             {
-                var user = model.User;
-                var userinDb = await UserManager.FindByIdAsync(user.Id);
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
 
-                if (userinDb == null)
-                    return HttpNotFound();
-                userinDb.FullName = user.FullName;
-                userinDb.Age = user.Age;
-                userinDb.Address = user.Address;
-                userinDb.Email = user.Email;
-
-                IdentityResult result = await UserManager.UpdateAsync(userinDb);
-
-                var profile = await _context.Trainees.SingleOrDefaultAsync(p => p.UserId == user.Id);
-
-                profile.Education = model.Education;
-                profile.BirthDate = model.BirthDate;
-                await _context.SaveChangesAsync();
-
-                if (result.Succeeded)
-                    return RedirectToAction(nameof(Index));
+                if (trainee == null)
+                {
+                    trainee = new Models.Trainee()
+                    {
+                        UserId = model.User.Id,
+                        Education = null,
+                        BirthDate = null,
+                    };
+                    _context.Trainees.Add(trainee);
+                }
                 else
-                    AddErrors(result);
+                {
+                    trainee.Education = model.Education;
+                    trainee.BirthDate = model.BirthDate;
+                }
+
+                await _context.SaveChangesAsync();
+                return model;
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            return null;
         }
-
-        [HttpGet]
-        public ActionResult ResetPassword(string email = null)
-        {
-            if (email == null)
-                return View();
-
-            var model = new ResetPasswordViewModel()
-            {
-                Email = email
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var user = await UserManager.FindByEmailAsync(model.Email);
-
-            if (user == null)
-            {
-                ModelState.AddModelError("", "The user does not exist");
-                return View(model);
-            }
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-            if (!roles.All(r => r == Role.Trainee))
-            {
-                ModelState.AddModelError("", "The user cannot be reset. Permission is denied.");
-                return View(model);
-            }
-
-            model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), new { email = user.Email});
-            }
-
-            AddErrors(result);
-            return View();
-        }
-
-        [Route("{email}")]
-        [HttpGet]
-        public ActionResult ResetPasswordConfirmation(string email)
-        {
-            if (email == null)
-                return HttpNotFound();
-            ViewBag.Email = email;
-            return View();
-        }
-
     }
 }
