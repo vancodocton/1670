@@ -215,7 +215,6 @@
       <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202110170125208_add-course-trainee-table.cs" />
-    <Compile Include="Migrations\202110170125208_add-course-trainee-table.Designer.cs" />
     <Compile Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.cs" />
     <Compile Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.Designer.cs">
       <DependentUpon>202110170314411_alter-trainee-trainer-profiles-table.cs</DependentUpon>
