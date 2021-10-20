@@ -165,11 +165,7 @@ namespace WebApp.Areas.Admin.Controllers
                 return HttpNotFound();
             }
 
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(await UserManager.GetRolesAsync(user.Id))
-            };
+            UserViewModel model = await LoadUserViewModel(id);
 
             if (saveChangesError == true)
             {

@@ -3,7 +3,7 @@
 @{
 	ViewBag.Title = "Account Details";
 }
-@Html.Partial("DetailsProfile")
+@Html.Partial("DetailsProfilePartial")
 <p>
 	@Html.ActionLink("Edit", "EditAccount", new { id = Model.User.Id }) |
 	@Html.ActionLink("Back to List", "Index")

@@ -74,7 +74,6 @@ namespace WebApp.Controllers
             };
             return View(model);
         }
-
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]

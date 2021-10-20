@@ -4,69 +4,7 @@
 	ViewBag.Title = "Delete Account";
 }
 
-<div>
-	<h4>Todo</h4>
-	<hr />
-	<dl class="dl-horizontal">
-		<dt>
-			@Html.DisplayNameFor(m => m.User.Id)
-		</dt>
-
-		<dd>
-			@Html.DisplayFor(m => m.User.Id)
-		</dd>
-
-		<dt>
-			@Html.DisplayNameFor(m => m.User.FullName)
-		</dt>
-
-		<dd>
-			@Html.DisplayFor(m => m.User.FullName)
-		</dd>
-
-		<dt>
-			@Html.DisplayNameFor(u => u.User.Email)
-		</dt>
-
-		<dd>
-			@Html.DisplayFor(u => u.User.Email)
-		</dd>
-
-		<dt>
-			@Html.DisplayNameFor(u => u.User.Age)
-		</dt>
-
-		<dd>
-			@Html.DisplayFor(i => i.User.Age)
-		</dd>
-
-		<dt>
-			@Html.DisplayNameFor(u => u.User.Address)
-		</dt>
-
-		<dd>
-			@Html.DisplayFor(i => i.User.Address)
-		</dd>
-		<dt>
-			@Html.DisplayNameFor(u => u.Roles)
-		</dt>
-
-		<dd>
-			@string.Join(", ", Model.Roles)
-		</dd>
-
-		@if (Model.Roles.Contains(Role.Trainer))
-		{
-			<dt>
-				@Html.DisplayNameFor(u => u.Specialty)
-			</dt>
-
-			<dd>
-				@Html.DisplayFor(u => u.Specialty)
-			</dd>
-		}
-	</dl>
-</div>
+@Html.Partial("DetailsProfilePartial")
 
 @using (Html.BeginForm("Delete", "Trainee", FormMethod.Post))
 {
