@@ -8,11 +8,7 @@ namespace WebApp.ViewModels
 {
     public class GroupedUsersViewModel
     {
-        public List<ApplicationUser> Staffs { get; set; }
-
-        public List<ApplicationUser> Trainers { get; set; }
-
-        public List<ApplicationUser> Trainees { get; set; }
-
+        public string Type { get; set; }
+        public List<ApplicationUser> Users { get; set; }
     }
 }
