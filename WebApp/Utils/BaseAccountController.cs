@@ -69,11 +69,7 @@ namespace WebApp.Utils
             }
         }
 
-        protected virtual void SetManagedRoles()
-        {
-            roles.Add(Role.Staff);
-            roles.Add(Role.Trainer);
-        }
+        protected abstract void SetManagedRoles();
 
         [HttpGet]
         public async Task<ActionResult> Index()
@@ -123,75 +119,13 @@ namespace WebApp.Utils
                 AddErrors(result);
             }
 
+            model.Roles = roles;
             return View(model);
         }
 
-        private async Task<UserViewModel> LoadUserViewModel(string userId)
-        {
-            var user = await UserManager.FindByIdAsync(userId);
-
-            if (user == null)
-                return null;
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(roles)
-            };
-
-            model = await LoadUserProfile(model);
-
-            return model;
-        }
-
-        protected virtual async Task<UserViewModel> LoadUserProfile(UserViewModel model)
-        {
-            if (roles.Contains(Role.Trainer))
-            {
-                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
-
-                if (trainer == null)
-                {
-                    trainer = new Trainer()
-                    {
-                        UserId = model.User.Id,
-                        Specialty = null
-                    };
-
-                    _context.Trainers.Add(trainer);
-                    await _context.SaveChangesAsync();
-                }
-                model.Specialty = trainer.Specialty;
-            }
-
-            return model;
-        }
-
-        protected virtual async Task<UserViewModel> UpdateUserProfile(UserViewModel model)
-        {
-            if (roles.Contains(Role.Trainer))
-            {
-                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
-
-                if (trainer == null)
-                {
-                    trainer = new Trainer()
-                    {
-                        UserId = model.User.Id,
-                        Specialty = model.Specialty
-                    };
-                    _context.Trainers.Add(trainer);
-                }
-                else
-                    trainer.Specialty = model.Specialty;
-
-                await _context.SaveChangesAsync();
-            }
-
-            return model;
-        }
+        protected abstract Task<UserViewModel> LoadUserViewModel(string userId);
+        protected abstract Task<UserViewModel> LoadUserProfile(UserViewModel model);
+        protected abstract Task<UserViewModel> UpdateUserProfile(UserViewModel model);
 
         [HttpGet]
         public async Task<ActionResult> Details(string id)
@@ -228,6 +162,7 @@ namespace WebApp.Utils
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfirmedDelete(string id)
         {
             var user = await UserManager.FindByIdAsync(id);
@@ -262,6 +197,7 @@ namespace WebApp.Utils
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(UserViewModel model)
         {
             if (ModelState.IsValid)
