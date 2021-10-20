@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -7,12 +10,15 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebApp.Models;
+using WebApp.Utils;
+using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
     [Authorize]
     public class ManageController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -74,6 +80,92 @@ namespace WebApp.Controllers
             };
             return View(model);
         }
+
+        private async Task<UserViewModel> LoadUserViewModel(string userId)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return null;
+
+            var roles = await UserManager.GetRolesAsync(user.Id);
+
+            var model = new UserViewModel()
+            {
+                User = user,
+                Roles = new List<string>(roles)
+            };
+
+            if (roles.Any(r => r == Role.Trainer))
+            {
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == userId);
+                model.Specialty = trainer.Specialty;
+            }
+
+            return model;
+        }
+
+
+        public async Task<ActionResult> Details(string id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            UserViewModel model = await LoadUserViewModel(id);
+
+            if (model == null)
+                return HttpNotFound();
+            return View(model);
+        }
+
+        public async Task<ActionResult> Edit(string id)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            UserViewModel model = await LoadUserViewModel(id);
+
+            if (model == null)
+                return HttpNotFound();
+            return View(model);
+        }
+
+        public async Task<ActionResult> Edit(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = model.User;
+                var userinDb = await UserManager.FindByIdAsync(user.Id);
+
+                if (userinDb == null)
+                    return HttpNotFound();
+                userinDb.FullName = user.FullName;
+                userinDb.Age = user.Age;
+                userinDb.Address = user.Address;
+                userinDb.Email = user.Email;
+                userinDb.UserName = user.Email;
+
+                IdentityResult result = await UserManager.UpdateAsync(userinDb);
+
+                if (model.Specialty != null)
+                {
+                    var profile = await _context.Trainers.SingleOrDefaultAsync(p => p.UserId == userinDb.Id);
+                    profile.Specialty = model.Specialty;
+                }
+                await _context.SaveChangesAsync();
+
+                if (result.Succeeded)
+                    return RedirectToAction(nameof(Index));
+                else
+                    AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]

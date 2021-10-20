@@ -331,6 +331,8 @@
     <Content Include="Areas\Admin\Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\UpdateProfilePartial.cshtml" />
     <Content Include="Views\Shared\DetailsProfilePartial.cshtml" />
+    <Content Include="Views\Manage\UpdateProfile.cshtml" />
+    <Content Include="Views\Manage\ViewProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
