@@ -24,6 +24,7 @@ namespace WebApp.Controllers
 
         public ManageController()
         {
+            _context = new ApplicationDbContext();
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
