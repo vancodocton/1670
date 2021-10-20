@@ -106,10 +106,10 @@ namespace WebApp.Controllers
         }
 
 
-        public async Task<ActionResult> Details(string id)
+        public async Task<ActionResult> ViewProfile()
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            string id = User.Identity.GetUserId();
+
 
             UserViewModel model = await LoadUserViewModel(id);
 
@@ -118,10 +118,10 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> Edit(string id)
+        [HttpGet]
+        public async Task<ActionResult> UpdateProfile()
         {
-            if (id == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            string id = User.Identity.GetUserId();
 
             UserViewModel model = await LoadUserViewModel(id);
 
@@ -130,7 +130,9 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> Edit(UserViewModel model)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateProfile(UserViewModel model)
         {
             if (ModelState.IsValid)
             {
