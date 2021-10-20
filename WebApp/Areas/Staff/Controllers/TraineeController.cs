@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using WebApp.Areas.Admin.ViewModels;
 using WebApp.Models;
 using WebApp.Utils;
 using WebApp.ViewModels;

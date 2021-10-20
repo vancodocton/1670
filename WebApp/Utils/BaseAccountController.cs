@@ -7,19 +7,18 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using WebApp.Areas.Admin.ViewModels;
-using WebApp.Models;
 using WebApp.ViewModels;
+using WebApp.Models;
 
 namespace WebApp.Utils
 {
     public abstract class BaseAccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext _context;
         protected readonly List<string> roles;
-        private ApplicationRoleManager _roleManager;
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        protected ApplicationRoleManager _roleManager;
+        protected ApplicationSignInManager _signInManager;
+        protected ApplicationUserManager _userManager;
 
         public BaseAccountController()
         {
