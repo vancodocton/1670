@@ -27,6 +27,26 @@ namespace WebApp.Areas.Admin.Controllers
             roles.Add(Role.Trainer);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Index()
+        {
+            var model = new List<GroupedUsersViewModel>();
+
+            foreach (var roleName in roles)
+            {
+                var role = await RoleManager.FindByNameAsync(roleName);
+
+                var groupedUsers = new GroupedUsersViewModel()
+                {
+                    Type = roleName,
+                    Users = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(role.Id)).ToListAsync(),
+                };
+                model.Add(groupedUsers);
+            }
+
+            return View(model);
+        }
+
         protected override async Task<UserViewModel> LoadUserViewModel(string userId)
         {
             var user = await UserManager.FindByIdAsync(userId);
