@@ -1,4 +1,4 @@
-﻿@model WebApp.ViewModels.GroupedUsersViewModel
+﻿@model ICollection<WebApp.ViewModels.GroupedUsersViewModel>
 @{
 	ViewBag.Title = "Dashboard";
 	int i = 0;
@@ -15,63 +15,34 @@
 	</li>
 </ul>
 
-<h3>Staff Accounts</h3>
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th scope="col">#</th>
-			<th scope="col">UserName</th>
-			<th scope="col">Full Name</th>
-			<th scope="col">Action</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in @Model.Staffs)
-		{
-			{ i++; }
+@foreach (var groupedUsers in Model)
+{
+	<h3>@groupedUsers.Type Accounts</h3>
+	<table class="table table-striped">
+		<thead>
 			<tr>
-				<th scope="row">@i</th>
-				<td>@item.UserName</td>
-				<td>@item.FullName</td>
-				<td>
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-					@Html.ActionLink("Edit profiles", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
-					@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-					@Html.ActionLink("Reset Password", "ResetPassword", new { email = item.Email }, new { @class = "btn btn-danger" })
-				</td>
+				<th scope="col">#</th>
+				<th scope="col">UserName</th>
+				<th scope="col">Full Name</th>
+				<th scope="col">Action</th>
 			</tr>
-		}
-
-	</tbody>
-</table>
-
-<h3>Trainer Accounts</h3>
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th scope="col">#</th>
-			<th scope="col">UserName</th>
-			<th scope="col">Full Name</th>
-			<th scope="col">Action</th>
-		</tr>
-	</thead>
-	<tbody>
-		@{ i = 0; }
-		@foreach (var item in @Model.Trainers)
-		{
-			{ i++; }
-			<tr>
-				<th scope="row">@i</th>
-				<td>@item.UserName</td>
-				<td>@item.FullName</td>
-				<td>
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-					@Html.ActionLink("Edit profiles", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
-					@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-					@Html.ActionLink("Reset Password", "ResetPassword", new { email = item.Email }, new { @class = "btn btn-danger" })
-				</td>
-			</tr>
-		}
-
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			@foreach (var user in groupedUsers.Users)
+			{
+				{ i++; }
+				<tr>
+					<th scope="row">@i</th>
+					<td>@user.UserName</td>
+					<td>@user.FullName</td>
+					<td>
+						@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "btn btn-danger" })
+						@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "btn btn-success" })
+						@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "btn btn-info" })
+						@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "btn btn-danger" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
