@@ -211,18 +211,9 @@
     <Compile Include="Migrations\202110101354407_create-course-table.designer.cs">
       <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.cs" />
-    <Compile Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.Designer.cs">
-      <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110170125208_add-course-trainee-table.cs" />
-    <Compile Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.cs" />
-    <Compile Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.Designer.cs">
-      <DependentUpon>202110170314411_alter-trainee-trainer-profiles-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110181404133_rename-table.cs" />
-    <Compile Include="Migrations\202110181404133_rename-table.Designer.cs">
-      <DependentUpon>202110181404133_rename-table.cs</DependentUpon>
+    <Compile Include="Migrations\202110201913549_add-trainer-trainee-table.cs" />
+    <Compile Include="Migrations\202110201913549_add-trainer-trainee-table.designer.cs">
+      <DependentUpon>202110201913549_add-trainer-trainee-table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -367,15 +358,8 @@
     <EmbeddedResource Include="Migrations\202110101354407_create-course-table.resx">
       <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.resx">
-      <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110170125208_add-course-trainee-table.resx" />
-    <EmbeddedResource Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.resx">
-      <DependentUpon>202110170314411_alter-trainee-trainer-profiles-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110181404133_rename-table.resx">
-      <DependentUpon>202110181404133_rename-table.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202110201913549_add-trainer-trainee-table.resx">
+      <DependentUpon>202110201913549_add-trainer-trainee-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
