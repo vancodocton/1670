@@ -7,7 +7,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using WebApp.Areas.Admin.ViewModels;
 using WebApp.Models;
 using WebApp.Utils;
@@ -19,8 +18,25 @@ namespace WebApp.Areas.Admin.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly List<string> roles;
+        private ApplicationRoleManager _roleManager;
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        public AccountController()
+        {
+            _context = new ApplicationDbContext();
+            //RoleManager = new ApplicationRoleManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
+            roles = new List<string>();
+            SetManagedRoles();
+        }
+
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager) : this()
+        {
+            UserManager = userManager;
+            SignInManager = signInManager;
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
@@ -44,33 +60,51 @@ namespace WebApp.Areas.Admin.Controllers
                 _userManager = value;
             }
         }
-        public AccountController()
-        {
-            _context = new ApplicationDbContext();
 
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+        }
+
+        private void SetManagedRoles()
+        {
+            roles.Add(Role.Staff);
+            roles.Add(Role.Trainer);
         }
 
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var staffRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == Role.Staff);
-            var trainerRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == Role.Trainer);
+            var model = new List<GroupedUsersViewModel>();
 
-            var model = new GroupedUsersViewModel()
+            foreach (var roleName in roles)
             {
-                Staffs = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(staffRole.Id)).ToListAsync(),
-                Trainers = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(trainerRole.Id)).ToListAsync(),
-                Trainees = null
-            };
+                var role = await RoleManager.FindByNameAsync(roleName);
+
+                var groupedUsers = new GroupedUsersViewModel()
+                {
+                    Type = roleName,
+                    Users = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(role.Id)).ToListAsync(),
+                };
+                model.Add(groupedUsers);
+            }
 
             return View(model);
         }
+
         [HttpGet]
         public ActionResult Create()
         {
             AccountRegisterViewModel model = new AccountRegisterViewModel()
             {
-                Roles = new List<string> { Role.Staff, Role.Trainer }
+                Roles = roles
             };
             return View(model);
         }
@@ -84,30 +118,15 @@ namespace WebApp.Areas.Admin.Controllers
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
 
-
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRoleAsync(user.Id, model.Role);
-                    switch (model.Role)
-                    {
-                        case Role.Trainer:
-                            var profile = new Trainer()
-                            {
-                                UserId = user.Id,
-                                Specialty = null,
-                            };
-                            _context.Trainers.Add(profile);
-                            await _context.SaveChangesAsync();
-                            break;
-                        default:
-                            break;
-                    }
-                    return RedirectToAction("Index", "Account");
+
+                    return RedirectToAction(nameof(Index));
                 }
                 AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -134,15 +153,33 @@ namespace WebApp.Areas.Admin.Controllers
                 Roles = new List<string>(roles)
             };
 
+            model = await LoadUserProfile(model);
+
+            return model;
+        }
+
+        private async Task<UserViewModel> LoadUserProfile(UserViewModel model)
+        {
             if (roles.Any(r => r == Role.Trainer))
             {
-                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == userId);
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+
+                if (trainer == null)
+                {
+                    trainer = new Trainer()
+                    {
+                        UserId = model.User.Id,
+                        Specialty = null
+                    };
+                    await _context.SaveChangesAsync();
+                }
                 model.Specialty = trainer.Specialty;
             }
 
             return model;
         }
 
+        [HttpGet]
         public async Task<ActionResult> Details(string id)
         {
             if (id == null)
@@ -152,26 +189,25 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (model == null)
                 return HttpNotFound();
+
             return View(model);
         }
 
         [HttpGet]
-        public async Task<ActionResult> Delete(string id, bool? saveChangesError = false)
+        public async Task<ActionResult> Delete(string id, bool saveChangesError = false)
         {
-            var user = await UserManager.FindByIdAsync(id);
-
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             UserViewModel model = await LoadUserViewModel(id);
+            if (model == null)
+                return HttpNotFound();
 
-            if (saveChangesError == true)
+            if (saveChangesError)
             {
-                ViewData["ErrorMessage"] =
-                    "Delete failed. Try again, and if the problem persists " +
-                    "see your system administrator.";
+                ModelState.AddModelError("",
+                    "Delete failed.Try again, and if the problem persists " +
+                    "see your system administrator.");
             }
 
             return View(model);
@@ -191,7 +227,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(Index), "Account");
+                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
@@ -207,6 +243,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (model == null)
                 return HttpNotFound();
+
             return View(model);
         }
 
@@ -233,6 +270,7 @@ namespace WebApp.Areas.Admin.Controllers
                     var profile = await _context.Trainers.SingleOrDefaultAsync(p => p.UserId == userinDb.Id);
                     profile.Specialty = model.Specialty;
                 }
+
                 await _context.SaveChangesAsync();
 
                 if (result.Succeeded)
@@ -241,7 +279,6 @@ namespace WebApp.Areas.Admin.Controllers
                     AddErrors(result);
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -276,7 +313,8 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var roles = await UserManager.GetRolesAsync(user.Id);
-            if (!roles.All(r => r == Role.Staff || r == Role.Trainer))
+
+            if (!roles.All(r => roles.Contains(r)))
             {
                 ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
                 return View(model);
@@ -287,7 +325,7 @@ namespace WebApp.Areas.Admin.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), "Account", new { email = user.Email });
+                return RedirectToAction(nameof(ResetPasswordConfirmation), null, new { email = user.Email });
             }
 
             AddErrors(result);
