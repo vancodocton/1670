@@ -186,6 +186,8 @@
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
+    <Compile Include="Areas\Trainer\Controllers\TrainerController.cs" />
+    <Compile Include="Areas\Trainer\TrainerAreaRegistration.cs" />
     <Compile Include="Areas\Train\Controllers\HomeController.cs" />
     <Compile Include="Areas\Train\TrainAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -277,6 +279,12 @@
     <Content Include="Areas\Staff\Views\Trainee\ResetPassword.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\ResetPasswordConfirmation.cshtml" />
     <Content Include="Areas\Staff\Views\Course\Assign.cshtml" />
+    <Content Include="Areas\Trainer\Views\web.config" />
+    <Content Include="Areas\Trainer\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Trainer\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Trainer\Views\Trainer\Index.cshtml" />
+    <Content Include="Areas\Trainer\Views\Trainer\Details.cshtml" />
+    <Content Include="Areas\Trainer\Views\Trainer\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\dev-etms - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -338,6 +346,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
+    <Folder Include="Areas\Trainer\Data\" />
     <Folder Include="Areas\Train\Data\" />
     <Folder Include="Areas\Train\Views\Shared\" />
   </ItemGroup>
