@@ -5,15 +5,10 @@
 }
 <h2>Dashboard</h2>
 
-<ul class="list-group">
-	<li class="list-group-item">
-		@Html.ActionLink("Create new account", "Create", "Account")
-	</li>
-	<li class="list-group-item">
-		@Html.ActionLink("Reset Password", "ResetPassword")
-
-	</li>
-</ul>
+<div class="list-group">
+	@Html.ActionLink("Create new account", "Create", null, htmlAttributes: new { @class = "list-group-item list-group-item-action" })
+	@Html.ActionLink("Reset Password", "ResetPassword", null, htmlAttributes: new { @class = "list-group-item list-group-item-action" })
+</div>
 
 <h3>Staff Accounts</h3>
 <table class="table table-striped">
@@ -34,7 +29,7 @@
 				<td>@item.UserName</td>
 				<td>@item.FullName</td>
 				<td>
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { type = "button", @class = "btn btn-danger" })
 					@Html.ActionLink("Edit profiles", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
 					@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
 					@Html.ActionLink("Reset Password", "ResetPassword", new { email = item.Email }, new { @class = "btn btn-danger" })
