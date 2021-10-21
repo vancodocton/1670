@@ -171,6 +171,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\ApplicationRoleManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -178,7 +179,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AccountRegisterViewModel.cs" />
     <Compile Include="Areas\Staff\Controllers\TraineeController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
@@ -206,19 +206,9 @@
     <Compile Include="Migrations\202110101354407_create-course-table.designer.cs">
       <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.cs" />
-    <Compile Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.Designer.cs">
-      <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110170125208_add-course-trainee-table.cs" />
-    <Compile Include="Migrations\202110170125208_add-course-trainee-table.Designer.cs" />
-    <Compile Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.cs" />
-    <Compile Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.Designer.cs">
-      <DependentUpon>202110170314411_alter-trainee-trainer-profiles-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110181404133_rename-table.cs" />
-    <Compile Include="Migrations\202110181404133_rename-table.Designer.cs">
-      <DependentUpon>202110181404133_rename-table.cs</DependentUpon>
+    <Compile Include="Migrations\202110201913549_add-trainer-trainee-table.cs" />
+    <Compile Include="Migrations\202110201913549_add-trainer-trainee-table.Designer.cs">
+      <DependentUpon>202110201913549_add-trainer-trainee-table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -232,7 +222,9 @@
     <Compile Include="Models\Trainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\BaseAccountController.cs" />
     <Compile Include="Utils\Role.cs" />
+    <Compile Include="ViewModels\AccountRegisterViewModel.cs" />
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\AssignViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
@@ -250,10 +242,27 @@
     <Content Include="Content\bootstrap-utilities.min.css" />
     <Content Include="Content\bootstrap-utilities.rtl.css" />
     <Content Include="Content\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\bootstrap.bundle.js" />
+    <Content Include="Content\bootstrap.bundle.min.js" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.esm.js" />
+    <Content Include="Content\bootstrap.esm.min.js" />
+    <Content Include="Content\bootstrap.js" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.min.js" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <None Include="Content\jquery-3.6.0.intellisense.js" />
+    <Content Include="Content\jquery-3.6.0.js" />
+    <Content Include="Content\jquery-3.6.0.min.js" />
+    <Content Include="Content\jquery-3.6.0.slim.js" />
+    <Content Include="Content\jquery-3.6.0.slim.min.js" />
+    <None Include="Content\jquery.validate-vsdoc.js" />
+    <Content Include="Content\jquery.validate.js" />
+    <Content Include="Content\jquery.validate.min.js" />
+    <Content Include="Content\jquery.validate.unobtrusive.js" />
+    <Content Include="Content\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Content\modernizr-2.8.3.js" />
     <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -308,6 +317,14 @@
     <Content Include="Scripts\bootstrap.esm.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
     <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Content\bootstrap.bundle.js.map" />
+    <Content Include="Content\bootstrap.bundle.min.js.map" />
+    <Content Include="Content\bootstrap.esm.js.map" />
+    <Content Include="Content\bootstrap.esm.min.js.map" />
+    <Content Include="Content\bootstrap.js.map" />
+    <Content Include="Content\bootstrap.min.js.map" />
+    <Content Include="Content\jquery-3.6.0.min.map" />
+    <Content Include="Content\jquery-3.6.0.slim.min.map" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -367,6 +384,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
     <Folder Include="Properties\PublishProfiles\" />
@@ -387,15 +405,8 @@
     <EmbeddedResource Include="Migrations\202110101354407_create-course-table.resx">
       <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110140619213_add-trainer-trainee-profile-tables.resx">
-      <DependentUpon>202110140619213_add-trainer-trainee-profile-tables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110170125208_add-course-trainee-table.resx" />
-    <EmbeddedResource Include="Migrations\202110170314411_alter-trainee-trainer-profiles-table.resx">
-      <DependentUpon>202110170314411_alter-trainee-trainer-profiles-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110181404133_rename-table.resx">
-      <DependentUpon>202110181404133_rename-table.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202110201913549_add-trainer-trainee-table.resx">
+      <DependentUpon>202110201913549_add-trainer-trainee-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

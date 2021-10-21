@@ -9,7 +9,7 @@ namespace WebApp.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             ContextKey = "WebApp.Models.ApplicationDbContext";
         }
 
