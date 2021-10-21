@@ -18,10 +18,6 @@ namespace WebApp.Models
 
         public string Address { get; set; }
 
-        public Trainer Trainer { get; set; }
-
-        public Trainee Trainee { get; set; }
-
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

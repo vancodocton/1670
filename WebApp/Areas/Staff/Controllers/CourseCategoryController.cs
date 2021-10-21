@@ -48,7 +48,7 @@ namespace WebApp.Areas.Staff.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
