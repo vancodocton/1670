@@ -1,5 +1,8 @@
-﻿@model PagedList.IPagedList<WebApp.Models.ApplicationUser>
-@using PagedList.Mvc
+﻿@model IPagedList<WebApp.Models.ApplicationUser>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Fluent
+@using X.PagedList.Web.Common
 @{
 	ViewBag.Title = "Trainee Management";
 }
@@ -51,7 +54,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var item in @Model)
+				@foreach (var item in Model)
 				{
 					<tr>
 						<td>@item.UserName</td>
@@ -68,10 +71,9 @@
 
 			</tbody>
 		</table>
-		Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-
-		@Html.PagedListPager(Model, page => Url.Action("Index",
-			new { page, keyword = @Request.Params["keyword"] }))
+		@(Html.Pager(Model)
+		.Url(page => Url.Action("Index", new { name = Request.Params["name"], age = Request.Params["age"], page = page }))
+		.Build())
 	</div>
 </div>
