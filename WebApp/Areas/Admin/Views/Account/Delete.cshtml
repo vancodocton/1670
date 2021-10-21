@@ -1,5 +1,5 @@
 ﻿@model WebApp.ViewModels.UserViewModel
-@{ 
+@{
 	ViewBag.Title = "Delete Account";
 }
 
@@ -10,7 +10,7 @@
 	@Html.AntiForgeryToken()
 
 	<div class="form-actions no-color">
-		<input type="submit" value="Confirm Delete" class="btn btn-default" /> |
-		@Html.ActionLink("Back to List", "Index")
+		<input type="submit" value="Confirm Delete" class="btn btn-danger" />
+		<p class="mt-3">@Html.ActionLink("Back to List", "Index")</p>
 	</div>
 }

@@ -286,8 +286,6 @@
     <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\ResetPassword.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\ResetPasswordConfirmation.cshtml" />
     <Content Include="Areas\Staff\Views\Course\Assign.cshtml" />
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
@@ -358,8 +356,6 @@
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
@@ -374,13 +370,13 @@
     <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\ResetPassword.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Shared\ResetPassword.cshtml" />
+    <Content Include="Views\Shared\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\UpdateProfilePartial.cshtml" />
     <Content Include="Views\Shared\DetailsProfilePartial.cshtml" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
-    <Content Include="Views\Shared\ResetPasswordFormPartial.cshtml" />
+    <Content Include="Views\Shared\CreateAccountFormPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

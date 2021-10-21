@@ -2,88 +2,87 @@
 @using WebApp.Utils;
 
 <div>
-	<h4>Profile</h4>
+	<h4>@ViewBag.Title</h4>
 	<hr />
 	@Html.HiddenFor(model => model.User.Id)
 	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-	<dl class="dl-horizontal">
-		<dt>
+	<dl class="row dl-horizontal">
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(m => m.User.UserName)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(m => m.User.UserName)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(m => m.User.FullName)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(m => m.User.FullName)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(u => u.User.Age)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(i => i.User.Age)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(u => u.User.Address)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(i => i.User.Address)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(u => u.User.Email)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(u => u.User.Email)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(u => u.Roles)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@string.Join(", ", Model.Roles)
 		</dd>
 
 		@if (Model.Roles.Contains(Role.Trainer))
 		{
-			<dt>
+			<dt class="col-sm-3 text-end">
 				@Html.DisplayNameFor(u => u.Specialty)
 			</dt>
 
-			<dd>
+			<dd class="col-sm-9">
 				@Html.DisplayFor(u => u.Specialty)
 			</dd>
 		}
 
 		@if (Model.Roles.Contains(Role.Trainee))
 		{
-			<dt>
+			<dt class="col-sm-3 text-end">
 				@Html.DisplayNameFor(u => u.BirthDate)
 			</dt>
 
-			<dd>
+			<dd class="col-sm-9">
 				@Html.DisplayFor(u => u.BirthDate)
 			</dd>
 
-			<dt>
+			<dt class="col-sm-3 text-end">
 				@Html.DisplayNameFor(u => u.Education)
 			</dt>
 
-			<dd>
+			<dd class="col-sm-9">
 				@Html.DisplayFor(u => u.Education)
 			</dd>
 		}
-
 	</dl>
 </div>

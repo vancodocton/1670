@@ -5,44 +5,45 @@
 }
 <h2>Dashboard</h2>
 
-<ul class="list-group">
-	<li class="list-group-item">
-		@Html.ActionLink("Create new account", "Create", "Account")
-	</li>
-	<li class="list-group-item">
-		@Html.ActionLink("Reset Password", "ResetPassword")
+<div class="row">
+	<div class="col-xl-3 list-group list-group-flush">
+		@Html.ActionLink("Create new account", "Create", null, new { @class = "list-group-item list-group-item-action" })
 
-	</li>
-</ul>
+		@Html.ActionLink("Reset Password", "ResetPassword", null, new { @class = "list-group-item list-group-item-action" })
+	</div>
 
-@foreach (var groupedUsers in Model)
-{
-	<h3>@groupedUsers.Type Accounts</h3>
-	<table class="table table-striped">
-		<thead>
-			<tr>
-				<th scope="col">#</th>
-				<th scope="col">UserName</th>
-				<th scope="col">Full Name</th>
-				<th scope="col">Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var user in groupedUsers.Users)
-			{
-				{ i++; }
-				<tr>
-					<th scope="row">@i</th>
-					<td>@user.UserName</td>
-					<td>@user.FullName</td>
-					<td>
-						@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "btn btn-danger" })
-						@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "btn btn-success" })
-						@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "btn btn-info" })
-						@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "btn btn-danger" })
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-}
+	<div class="col-xl-9">
+		@foreach (var groupedUsers in Model)
+		{
+			{ i = 0; }
+			<h3>@groupedUsers.Type Accounts</h3>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">UserName</th>
+						<th scope="col">Full Name</th>
+						<th scope="col">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var user in groupedUsers.Users)
+					{
+						{ i++; }
+						<tr>
+							<th scope="row">@i</th>
+							<td>@user.UserName</td>
+							<td>@user.FullName</td>
+							<td>
+								@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "btn btn-danger" })
+								@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "btn btn-success" })
+								@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "btn btn-info" })
+								@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "btn btn-danger" })
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		}
+	</div>
+</div>
