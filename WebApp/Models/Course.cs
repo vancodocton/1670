@@ -21,6 +21,8 @@ namespace WebApp.Models
         [StringLength(255)]
         public string Description { get; set; }
 
-        public ICollection<CourseTrainee> CourseTrainees { get; set; }
+        public virtual ICollection<Trainee> Trainees { get; set; }
+
+        public virtual ICollection<Trainer> Trainers { get; set; }
     }
 }
