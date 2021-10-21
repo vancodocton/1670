@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.ViewModels
+namespace WebApp.Areas.Admin.ViewModels
 {
     public class AccountRegisterViewModel
     {
