@@ -1,5 +1,8 @@
-﻿@model PagedList.IPagedList<WebApp.Models.Course>
-@using PagedList.Mvc;
+﻿@model IPagedList<WebApp.Models.Course>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Fluent
+@using X.PagedList.Web.Common
 
 @{
 	ViewBag.Title = "Course management";
@@ -8,18 +11,17 @@
 <h2>@Html.ActionLink((string)ViewBag.Title, "Index", "Course")</h2>
 @using (Html.BeginForm("Index", "Course", FormMethod.Get))
 {
-	@*@Html.AntiForgeryToken()*@
 	<div class="form-group">
 		<div class="col-md-10">
 			@Html.Editor("CourseName", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search for course" } })
 		</div>
 	</div>
+
 	<div class="form-group">
 		<div class="col-md-offset-2 col-md-10">
 			<input type="submit" value="Search" class="btn btn-default" />
 		</div>
 	</div>
-
 }
 
 @Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
@@ -69,8 +71,7 @@
 	</tbody>
 </table>
 <br />
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index",
-	new { page }))
-
+@(Html.Pager(Model)
+		.Url(page => Url.Action("Index", new { name = Request.Params["name"], age = Request.Params["age"], page = page }))
+		.Build())

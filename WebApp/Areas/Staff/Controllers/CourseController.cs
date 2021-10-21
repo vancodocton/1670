@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Utils;
-using PagedList;
+using X.PagedList;
 using WebApp.ViewModels;
 
 namespace WebApp.Areas.Staff.Controllers
