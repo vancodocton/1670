@@ -215,6 +215,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Diagrams\WebApp.Models.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebApp.Models.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -350,6 +355,10 @@
     <Content Include="Content\bootstrap.min.js.map" />
     <Content Include="Content\jquery-3.6.0.min.map" />
     <Content Include="Content\jquery-3.6.0.slim.min.map" />
+    <EntityDeploy Include="Diagrams\WebApp.Models.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WebApp.Models.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
