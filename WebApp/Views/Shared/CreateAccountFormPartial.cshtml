@@ -1,6 +1,6 @@
 ﻿@model WebApp.ViewModels.AccountRegisterViewModel
 
-@using (Html.BeginForm("Create", "Account", new { area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm(null, null, null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
 	@Html.AntiForgeryToken()
 	<hr />
