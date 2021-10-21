@@ -207,6 +207,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Staff\Controllers\AssignController.cs" />
     <Compile Include="Areas\Staff\Controllers\TraineeController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
@@ -419,6 +420,7 @@
     <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
+    <Folder Include="Areas\Staff\Views\Assign\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>

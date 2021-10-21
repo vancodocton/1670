@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using WebApp.Models;
 
 namespace WebApp.ViewModels
@@ -14,8 +11,12 @@ namespace WebApp.ViewModels
 
         public ICollection<Trainer> Trainers { get; set; }
 
-        public Trainee AssignedTrainee { get; set; }
+        public string TraineeId { get; set; }
 
-        public Trainer AssignedTrainer { get; set; }
+        public string TrainerId { get; set; }
+
+        public ICollection<Trainee> AssignedTrainees { get; set; }
+
+        public ICollection<Trainer> AssignedTrainers { get; set; }
     }
 }
