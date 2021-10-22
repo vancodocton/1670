@@ -1,89 +1,126 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using WebApp.Models;
+using WebApp.Utils;
+using WebApp.ViewModels;
+using X.PagedList;
 
 namespace WebApp.Areas.Staff.Controllers
 {
+    [Authorize(Roles = Role.Staff)]
     public class AssignController : Controller
     {
-        // GET: Staff/Assign
-        public ActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public AssignController()
         {
-            return View();
+            _context = new ApplicationDbContext();
         }
 
-        // GET: Staff/Assign/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public async Task<ActionResult> Index(int? courseId, int? id)
         {
-            return View();
+            if (id != null)
+                courseId = id;
+            if (courseId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var course = await _context.Courses.SingleOrDefaultAsync(c => c.Id == courseId);
+            if (course == null)
+                return HttpNotFound();
+
+
+            var model = new CourseViewModel();
+
+            model.Course = course;
+
+            model.AssignedTrainees = await _context.Trainees
+                .Include(t => t.User)
+                .Where(t => t.Courses.Any(c => c.Id == courseId))
+                .ToListAsync();
+            model.AssignedTrainers = await _context.Trainers
+                .Include(t => t.User)
+                .Where(t => t.Courses.Any(c => c.Id == courseId))
+                .ToListAsync();
+
+            return View(model);
         }
 
-        // GET: Staff/Assign/Create
-        public ActionResult Create()
+        private async Task<AssignViewModel> LoadAssignViewModel(string role)
         {
-            return View();
+            var model = new AssignViewModel();
+
+            switch (role)
+            {
+                case Role.Trainee:
+                    model.Trainees = await _context.Trainees
+                        .Include(t => t.User)
+                        .ToListAsync();
+                    break;
+                case Role.Trainer:
+                    model.Trainers = await _context.Trainers
+                        .Include(t => t.User)
+                        .ToListAsync();
+                    break;
+                default:
+                    return null;
+            }
+            model.Role = role;
+
+            return model;
         }
 
-        // POST: Staff/Assign/Create
+        [HttpGet]
+        public async Task<ActionResult> Add(int? courseId, string user)
+        {
+            if (courseId == null || user == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var model = await LoadAssignViewModel(user);
+
+            if (model == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return View(model);
+        }
+
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Add(AssignViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                var course = await _context.Courses.SingleOrDefaultAsync(c => c.Id == model.CourseId);
+                if (course == null)
+                    return HttpNotFound();
 
-                return RedirectToAction("Index");
+                if (model.Role == Role.Trainer)
+                {
+                    course.Trainers.Add(await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == model.UserId));
+                }
+                else if (model.Role == Role.Trainee)
+                {
+                    var trainee = await _context.Trainees.SingleOrDefaultAsync(t => t.UserId == model.UserId);
+                    course.Trainees.Add(trainee);                    
+                }
+                _context.Courses.Attach(course);
+                _ = await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index), new { courseId = model.CourseId });
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: Staff/Assign/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            model = await LoadAssignViewModel(model.Role);
 
-        // POST: Staff/Assign/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
+            if (model == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Staff/Assign/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Staff/Assign/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            return View(model);
         }
     }
 }

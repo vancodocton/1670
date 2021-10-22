@@ -1,22 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
     public class AssignViewModel
     {
-        public Course Course { get; set; }
+        [Required]
+        public int CourseId { get; set; }
+
+        [Required]
+        public string Role { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
 
         public ICollection<Trainee> Trainees { get; set; }
 
         public ICollection<Trainer> Trainers { get; set; }
-
-        public string TraineeId { get; set; }
-
-        public string TrainerId { get; set; }
-
-        public ICollection<Trainee> AssignedTrainees { get; set; }
-
-        public ICollection<Trainer> AssignedTrainers { get; set; }
     }
 }

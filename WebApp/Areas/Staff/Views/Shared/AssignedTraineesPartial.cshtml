@@ -1,0 +1,31 @@
+﻿@model ICollection<WebApp.Models.Trainee>
+
+<h3>Enrolled Trainers</h3>
+@if (Model.Count == 0)
+{
+	<p class="text-danger">There is no enrolled trainee in the course.</p>
+}
+else
+{
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th scope="col">UserName</th>
+				<th scope="col">Full Name</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var trainer in @Model)
+			{
+				<tr>
+					<td>@trainer.User.UserName</td>
+					<td>@trainer.User.FullName</td>
+					<td>
+						@Html.ActionLink("Unassign", "Remove", "Assign", new { id = trainer.UserId }, new { @class = "btn btn-danger" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

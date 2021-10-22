@@ -141,53 +141,5 @@ namespace WebApp.Areas.Staff.Controllers
             }
             base.Dispose(disposing);
         }
-
-        [HttpGet]
-        public async Task<ActionResult> Assign(int id)
-        {
-            var course = await _context.Courses
-                .Include(c => c.Trainees)
-                .Include(c => c.Trainers)
-                .SingleOrDefaultAsync(c => c.Id == id);
-
-            var model = new AssignViewModel
-            {
-                Course = course,
-                Trainees = await _context.Trainees
-                    .Include(t => t.User)
-                    .ToListAsync(),
-                Trainers = await _context.Trainers
-                    .Include(t => t.User)
-                    .ToListAsync(),
-                AssignedTrainers = await course.Trainers.ToListAsync(),
-                AssignedTrainees = await course.Trainees.ToListAsync()
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Assign(AssignViewModel model)
-        {
-            var course = await _context.Courses
-                .SingleOrDefaultAsync(c => c.Id == model.Course.Id);
-
-            if (model.TrainerId != null)
-            {
-                course.Trainers.Add(await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == model.TrainerId));
-                _context.Courses.Attach(course);
-                _ = await _context.SaveChangesAsync();
-            }
-            if (model.TraineeId != null)
-            {
-                var trainee = await _context.Trainees.SingleOrDefaultAsync(t => t.UserId == model.TraineeId);
-                course.Trainees.Add(trainee);
-                _context.Courses.Attach(course);
-                _ = await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Assign), new { id = model.Course.Id });
-        }
     }
 }

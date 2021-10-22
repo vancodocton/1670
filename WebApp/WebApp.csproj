@@ -258,8 +258,9 @@
     <Compile Include="Utils\BaseAccountController.cs" />
     <Compile Include="Utils\Role.cs" />
     <Compile Include="ViewModels\AccountRegisterViewModel.cs" />
-    <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\AssignViewModel.cs" />
+    <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
+    <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +286,9 @@
     <Content Include="Content\bootstrap.min.js" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Areas\Staff\Views\Shared\AssignedTrainersPartial.cshtml" />
+    <Content Include="Areas\Staff\Views\Shared\AssignedTraineesPartial.cshtml" />
+    <Content Include="Areas\Staff\Views\Assign\Index.cshtml" />
     <None Include="Content\jquery-3.6.0.intellisense.js" />
     <Content Include="Content\jquery-3.6.0.js" />
     <Content Include="Content\jquery-3.6.0.min.js" />
@@ -305,7 +309,6 @@
     <Content Include="Areas\Admin\Views\Account\Index.cshtml" />
     <Content Include="Areas\Staff\Views\web.config" />
     <Content Include="Areas\Staff\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Staff\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Staff\Views\Home\Index.cshtml" />
     <Content Include="Areas\Staff\Views\CourseCategory\Index.cshtml" />
     <Content Include="Areas\Staff\Views\CourseCategory\Create.cshtml" />
@@ -319,7 +322,7 @@
     <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\Assign\Assign.cshtml" />
+    <Content Include="Areas\Staff\Views\Assign\Add.cshtml" />
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
