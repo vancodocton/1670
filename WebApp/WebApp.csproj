@@ -319,7 +319,7 @@
     <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\Course\Assign.cshtml" />
+    <Content Include="Areas\Staff\Views\Assign\Assign.cshtml" />
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -420,7 +420,6 @@
     <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
-    <Folder Include="Areas\Staff\Views\Assign\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
