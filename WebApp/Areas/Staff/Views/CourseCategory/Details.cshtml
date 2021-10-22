@@ -1,0 +1,38 @@
+﻿@model WebApp.Models.CourseCategory
+
+@{
+    ViewBag.Title = "Details CourseCategory";
+}
+
+
+<div>
+    <h4>@ViewBag.Title</h4>
+    <hr />
+    @Html.HiddenFor(model => model.Id)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <dl class="row dl-horizontal">
+        <dt class="col-sm-3 text-end">
+            @Html.DisplayNameFor(m => m.Name)
+        </dt>
+
+        <dd class="col-sm-9">
+            @Html.DisplayFor(m => m.Name)
+        </dd>
+
+        <dt class="col-sm-3 text-end">
+            @Html.DisplayNameFor(m => m.Description)
+        </dt>
+
+        <dd class="col-sm-9">
+            @Html.DisplayFor(m => m.Description)
+        </dd>
+    </dl>
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
