@@ -207,6 +207,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
+    <Compile Include="Areas\Staff\Controllers\AssignController.cs" />
     <Compile Include="Areas\Staff\Controllers\TraineeController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
@@ -216,6 +217,11 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Diagrams\WebApp.Models.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebApp.Models.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -235,9 +241,9 @@
     <Compile Include="Migrations\202110101354407_create-course-table.designer.cs">
       <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202110201913549_add-trainer-trainee-table.cs" />
-    <Compile Include="Migrations\202110201913549_add-trainer-trainee-table.Designer.cs">
-      <DependentUpon>202110201913549_add-trainer-trainee-table.cs</DependentUpon>
+    <Compile Include="Migrations\202110211446077_add-trainer-trainee-table.cs" />
+    <Compile Include="Migrations\202110211446077_add-trainer-trainee-table.Designer.cs">
+      <DependentUpon>202110211446077_add-trainer-trainee-table.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -245,7 +251,6 @@
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\CourseCategory.cs" />
-    <Compile Include="Models\CourseTrainee.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Trainee.cs" />
     <Compile Include="Models\Trainer.cs" />
@@ -358,6 +363,10 @@
     <Content Include="Content\bootstrap.min.js.map" />
     <Content Include="Content\jquery-3.6.0.min.map" />
     <Content Include="Content\jquery-3.6.0.slim.min.map" />
+    <EntityDeploy Include="Diagrams\WebApp.Models.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>WebApp.Models.Designer.cs</LastGenOutput>
+    </EntityDeploy>
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -421,6 +430,7 @@
     <Folder Include="Areas\Staff\Data\" />
     <Folder Include="Areas\Trainer\Controllers\" />
     <Folder Include="Areas\Trainer\Data\" />
+    <Folder Include="Areas\Staff\Views\Assign\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
@@ -439,8 +449,8 @@
     <EmbeddedResource Include="Migrations\202110101354407_create-course-table.resx">
       <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110201913549_add-trainer-trainee-table.resx">
-      <DependentUpon>202110201913549_add-trainer-trainee-table.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202110211446077_add-trainer-trainee-table.resx">
+      <DependentUpon>202110211446077_add-trainer-trainee-table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

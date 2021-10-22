@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace WebApp.Models
 {
@@ -16,5 +13,7 @@ namespace WebApp.Models
 
         [StringLength(255)]
         public string Specialty { get; set; }
+
+        public virtual ICollection<Course> Courses { get; set; }
     }
 }

@@ -17,12 +17,12 @@ namespace WebApp.Areas.Staff.Controllers
     [Authorize(Roles = Role.Staff)]
     public class CourseController : Controller
     {
-        private readonly ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
         [HttpGet]
         public ActionResult Index(string CourseName, int? page)
         {
-            var courses = db.Courses
+            var courses = _context.Courses
                 .Include(c => c.CourseCategory);
 
             if (CourseName != null)
@@ -46,7 +46,7 @@ namespace WebApp.Areas.Staff.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses
+            Course course = await _context.Courses
                 .Include(c => c.CourseCategory)
                 .SingleOrDefaultAsync(c => c.Id == id);
             if (course == null)
@@ -59,7 +59,7 @@ namespace WebApp.Areas.Staff.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.CourseCategoryId = new SelectList(db.CourseCategories, "Id", "Name");
+            ViewBag.CourseCategoryId = new SelectList(_context.CourseCategories, "Id", "Name");
             return View();
         }
 
@@ -69,12 +69,12 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Courses.Add(course);
-                await db.SaveChangesAsync();
+                _context.Courses.Add(course);
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CourseCategoryId = new SelectList(db.CourseCategories, "Id", "Name", course.CourseCategoryId);
+            ViewBag.CourseCategoryId = new SelectList(_context.CourseCategories, "Id", "Name", course.CourseCategoryId);
             return View(course);
         }
 
@@ -85,12 +85,12 @@ namespace WebApp.Areas.Staff.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses.FindAsync(id);
+            Course course = await _context.Courses.FindAsync(id);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CourseCategoryId = new SelectList(db.CourseCategories, "Id", "Name", course.CourseCategoryId);
+            ViewBag.CourseCategoryId = new SelectList(_context.CourseCategories, "Id", "Name", course.CourseCategoryId);
             return View(course);
         }
 
@@ -100,11 +100,11 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(course).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                _context.Entry(course).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.CourseCategoryId = new SelectList(db.CourseCategories, "Id", "Name", course.CourseCategoryId);
+            ViewBag.CourseCategoryId = new SelectList(_context.CourseCategories, "Id", "Name", course.CourseCategoryId);
             return View(course);
         }
 
@@ -115,7 +115,7 @@ namespace WebApp.Areas.Staff.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses.FindAsync(id);
+            Course course = await _context.Courses.FindAsync(id);
             if (course == null)
             {
                 return HttpNotFound();
@@ -127,9 +127,9 @@ namespace WebApp.Areas.Staff.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Course course = await db.Courses.FindAsync(id);
-            db.Courses.Remove(course);
-            await db.SaveChangesAsync();
+            Course course = await _context.Courses.FindAsync(id);
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -137,7 +137,7 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _context.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -145,28 +145,49 @@ namespace WebApp.Areas.Staff.Controllers
         [HttpGet]
         public async Task<ActionResult> Assign(int id)
         {
-            var course = await db.Courses.Include(c => c.CourseTrainees).SingleOrDefaultAsync(c => c.Id == id);
-            var model = new AssignViewModel();
+            var course = await _context.Courses
+                .Include(c => c.Trainees)
+                .Include(c => c.Trainers)
+                .SingleOrDefaultAsync(c => c.Id == id);
 
-            model.Course = course;
-
-            var arr = course.CourseTrainees.Select(ct => ct.TraineeUserId);
-
-            //var a = db.Courses
-            //    .GroupJoin(db.CourseTrainees, c => c.Id, ct => ct.CourseId, (c, ct) =>
-            //    ct.Select(i => i.TraineeProfile));
-
-            var trainees = db.CourseTrainees
-                .Include(ct => ct.TraineeProfile.User)
-                .Where(ct => ct.CourseId == id);
-
-            model.AssignedTrainees = trainees
-                .Select(ct => ct.TraineeProfile)
-                .Include(p => p.User)
-                .ToList();
-            
+            var model = new AssignViewModel
+            {
+                Course = course,
+                Trainees = await _context.Trainees
+                    .Include(t => t.User)
+                    .ToListAsync(),
+                Trainers = await _context.Trainers
+                    .Include(t => t.User)
+                    .ToListAsync(),
+                AssignedTrainers = await course.Trainers.ToListAsync(),
+                AssignedTrainees = await course.Trainees.ToListAsync()
+            };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Assign(AssignViewModel model)
+        {
+            var course = await _context.Courses
+                .SingleOrDefaultAsync(c => c.Id == model.Course.Id);
+
+            if (model.TrainerId != null)
+            {
+                course.Trainers.Add(await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == model.TrainerId));
+                _context.Courses.Attach(course);
+                _ = await _context.SaveChangesAsync();
+            }
+            if (model.TraineeId != null)
+            {
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(t => t.UserId == model.TraineeId);
+                course.Trainees.Add(trainee);
+                _context.Courses.Attach(course);
+                _ = await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Assign), new { id = model.Course.Id });
         }
     }
 }

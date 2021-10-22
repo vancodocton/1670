@@ -15,8 +15,6 @@ namespace WebApp.Models
 
         public DbSet<Trainee> Trainees { get; set; }
 
-        public DbSet<CourseTrainee> CourseTrainees { get; set; }
-
         public DbSet<CourseCategory> CourseCategories { get; set; }
 
         public DbSet<Course> Courses { get; set; }
