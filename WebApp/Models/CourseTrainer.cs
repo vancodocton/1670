@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp.Models
 {
-    public class CourseTrainee
+    public class CourseTrainer
     {
         [Key, Column(Order = 0)]
         [ForeignKey("Course")]
@@ -12,10 +12,10 @@ namespace WebApp.Models
         public Course Course { get; set; }
 
         [Key, Column(Order = 1)]
-        [ForeignKey("Trainee")]
-        public string TraineeUserId { get; set; }
-        public Trainee Trainee { get; set; }
+        [ForeignKey("Trainer")]
+        public string TrainerUserId { get; set; }
+        public Trainer Trainer { get; set; }
 
-        public ICollection<CourseTrainee> CourseTrainees { get; set; }
+        public ICollection<CourseTrainer> CourseTrainers { get; set; }
     }
 }

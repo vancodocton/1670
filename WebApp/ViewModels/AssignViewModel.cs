@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
     public class AssignViewModel
     {
-        public Course Course { get; set; }
+        [Required]
+        public int CourseId { get; set; }
 
-        public ICollection<Trainee> AssignedTrainees { get; set; }
+        [Required]
+        public string Role { get; set; }
 
-        public ICollection<ApplicationUser> AssignedTrainers { get; set; }
+        [Required]
+        public string UserId { get; set; }
 
-        public ICollection<ApplicationUser> UnassignedTrainees { get; set; }
+        public ICollection<Trainee> Trainees { get; set; }
 
-        public ICollection<ApplicationUser> UnassignedTrainers { get; set; }
+        public ICollection<Trainer> Trainers { get; set; }
     }
 }

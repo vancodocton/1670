@@ -1,17 +1,14 @@
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using WebApp.Models;
 using WebApp.Utils;
 using WebApp.ViewModels;
-using PagedList;
-using System.Net;
+using X.PagedList;
 
 namespace WebApp.Areas.Staff.Controllers
 {
@@ -29,19 +26,39 @@ namespace WebApp.Areas.Staff.Controllers
             roles.Add(Role.Trainee);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Index(string keyword, int? age, int? page)
+        protected async Task<IPagedList<ApplicationUser>> GetPagedNames(IQueryable<ApplicationUser> users, int page)
         {
-            var traineeRole = await _context.Roles.SingleOrDefaultAsync(r => r.Name == Role.Trainee);
+            const int pageSize = 3;
+
+            if (page < 1)
+                return null;
+
+            var listPaged = await users.ToPagedListAsync(page, pageSize);
+
+            if (listPaged.PageNumber != 1 && page > listPaged.PageCount)
+                return null;
+
+            return listPaged;
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> Index(string name, int? age, int? page)
+        {
+            var traineeRole = await RoleManager.FindByNameAsync(Role.Trainee);
 
             var trainees = _context.Users
-                .Where(x => x.Roles.Select(y => y.RoleId).Contains(traineeRole.Id));
+                .Include(u => u.Trainee)
+                .Where(x => x.Roles
+                    .All(r => r.RoleId == traineeRole.Id));
 
-            if (keyword != null && keyword.Trim() != "")
+            if (name != null)
             {
-                keyword = keyword.Trim().ToLower();
-                trainees = trainees.Where(u => u.UserName.ToLower().Contains(keyword));
+                name = name.Trim().ToLower();
+                if (name != "")
+                    trainees = trainees.Where(u => u.UserName.ToLower().Contains(name));
             }
+
             if (age != null)
             {
                 trainees = trainees.Where(u => u.Age == age);
@@ -49,8 +66,12 @@ namespace WebApp.Areas.Staff.Controllers
 
             trainees = trainees.OrderBy(u => u.Email);
 
-            int pageSize = 3;
-            return View(trainees.ToPagedList(page ?? 1, pageSize));
+            var listPaged = await GetPagedNames(trainees, page ?? 1);
+
+            if (listPaged == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return View(listPaged);
         }
 
         protected override async Task<UserViewModel> LoadUserViewModel(string userId)

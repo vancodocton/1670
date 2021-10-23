@@ -30,13 +30,13 @@ namespace WebApp.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var model = new List<GroupedUsersViewModel>();
+            var model = new List<GroupedUsersViewModel<ApplicationUser>>();
 
             foreach (var roleName in roles)
             {
                 var role = await RoleManager.FindByNameAsync(roleName);
 
-                var groupedUsers = new GroupedUsersViewModel()
+                var groupedUsers = new GroupedUsersViewModel<ApplicationUser>()
                 {
                     Type = roleName,
                     Users = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(role.Id)).ToListAsync(),
@@ -56,6 +56,9 @@ namespace WebApp.Areas.Admin.Controllers
 
             var roles = await UserManager.GetRolesAsync(user.Id);
 
+            if (!roles.All(r => this.roles.Contains(r)))
+                return null;
+
             var model = new UserViewModel()
             {
                 User = user,
@@ -69,6 +72,9 @@ namespace WebApp.Areas.Admin.Controllers
 
         protected override async Task<UserViewModel> LoadUserProfile(UserViewModel model)
         {
+            if (!roles.All(r => this.roles.Contains(r)))
+                return null;
+
             if (roles.Contains(Role.Trainer))
             {
                 var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);

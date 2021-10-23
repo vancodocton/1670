@@ -1,0 +1,21 @@
+﻿@model WebApp.ViewModels.CourseViewModel
+@using WebApp.Utils
+
+@{
+	ViewBag.Title = "Course assign";
+}
+
+<div class="row container-fluid">
+	<div class="col-xl-3">
+		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainer})">Assign a trainer</a>
+		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainee})">Assign a trainee</a>
+	</div>
+
+	<div class="col-xl-9">
+		@Html.Partial("AssignedTrainersPartial", Model.AssignedTrainers)
+
+		@Html.Partial("AssignedTraineesPartial", Model.AssignedTrainees)
+
+	</div>
+</div>
+
