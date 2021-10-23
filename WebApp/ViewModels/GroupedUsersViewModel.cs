@@ -6,9 +6,9 @@ using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
-    public class GroupedUsersViewModel
+    public class GroupedUsersViewModel<T>
     {
         public string Type { get; set; }
-        public List<ApplicationUser> Users { get; set; }
+        public List<T> Users { get; set; }
     }
 }

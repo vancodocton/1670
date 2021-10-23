@@ -30,13 +30,13 @@ namespace WebApp.Areas.Admin.Controllers
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var model = new List<GroupedUsersViewModel>();
+            var model = new List<GroupedUsersViewModel<ApplicationUser>>();
 
             foreach (var roleName in roles)
             {
                 var role = await RoleManager.FindByNameAsync(roleName);
 
-                var groupedUsers = new GroupedUsersViewModel()
+                var groupedUsers = new GroupedUsersViewModel<ApplicationUser>()
                 {
                     Type = roleName,
                     Users = await _context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(role.Id)).ToListAsync(),
