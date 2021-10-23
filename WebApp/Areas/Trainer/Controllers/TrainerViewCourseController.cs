@@ -53,20 +53,5 @@ namespace WebApp.Areas.Trainer.Controllers
             }
             return View(course);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Assign(AssignViewModel model)
-        {
-            var course = await _context.Courses
-                .SingleOrDefaultAsync(c => c.Id == model.Course.Id);
-
-            if (model.TrainerId != null)
-            {
-                course.Trainers.Add(await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == model.TrainerId));
-                _context.Courses.Attach(course);
-                _ = await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Assign), new { id = model.Course.Id });
-        }
     }
 }
