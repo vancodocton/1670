@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Utils;
+using WebApp.ViewModels;
 
 namespace WebApp.Areas.Staff.Controllers
 {
@@ -23,6 +26,7 @@ namespace WebApp.Areas.Staff.Controllers
             return View(categories);
         }
 
+
         [HttpGet]
         public ActionResult Create()
         {
@@ -30,54 +34,96 @@ namespace WebApp.Areas.Staff.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(CourseCategory model)
+        public async Task<ActionResult> Create(CourseCategory courseCategory)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(courseCategory);
             }
 
             try
             {
-                _context.CourseCategories.Add(model);
+                _context.CourseCategories.Add(courseCategory);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException e)
             {
                 ViewBag.Message = e.InnerException;
-                return View(model);
+                return View(courseCategory);
             }
 
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public ActionResult Edit()
+        public async Task<ActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CourseCategory courseCategory = await _context.CourseCategories.FindAsync(id);
+            if (courseCategory == null)
+            {
+                return HttpNotFound();
+            }
+            return View(courseCategory);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Edit(CourseCategory model)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Include = "ID, Name, Description")] CourseCategory courseCategory)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-
-            try
-            {
-                _context.CourseCategories.Add(model);
+                _context.Entry(courseCategory).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            catch (DbUpdateException e)
-            {
-                ViewBag.Message = e.InnerException;
-                return View(model);
-            }
+            return View(courseCategory);
+        }
 
-            return RedirectToAction(nameof(CourseCategory));
+        [HttpGet]
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CourseCategory courseCategory = await _context.CourseCategories
+                .Include(c => c.Courses)
+                .SingleOrDefaultAsync(c => c.Id == id);
+            if (courseCategory == null)
+            {
+                return HttpNotFound();
+            }
+            return View(courseCategory);
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            CourseCategory courseCategory = await _context.CourseCategories.FindAsync(id);
+            if (courseCategory == null)
+            {
+                return HttpNotFound();
+            }
+            return View(courseCategory);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteConfirmed(int id)
+        {
+            CourseCategory courseCategory= await _context.CourseCategories.FindAsync(id);
+            _context.CourseCategories.Remove(courseCategory);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
-
 }

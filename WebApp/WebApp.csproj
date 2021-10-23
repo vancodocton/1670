@@ -213,6 +213,10 @@
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
+    <Compile Include="Areas\Trainer\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Trainer\Controllers\TrainerViewCourseController.cs" />
+    <Compile Include="Areas\Trainer\Controllers\TrainerViewTraineeController.cs" />
+    <Compile Include="Areas\Trainer\TrainerAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -289,6 +293,15 @@
     <Content Include="Areas\Staff\Views\Shared\AssignedTrainersPartial.cshtml" />
     <Content Include="Areas\Staff\Views\Shared\AssignedTraineesPartial.cshtml" />
     <Content Include="Areas\Staff\Views\Assign\Index.cshtml" />
+    <Content Include="Areas\Trainer\Views\web.config" />
+    <Content Include="Areas\Trainer\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Trainer\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Staff\Views\CourseCategory\Edit.cshtml" />
+    <Content Include="Areas\Staff\Views\CourseCategory\Delete.cshtml" />
+    <Content Include="Areas\Staff\Views\CourseCategory\Details.cshtml" />
+    <Content Include="Areas\Trainer\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Trainer\Views\TrainerViewCourse\Index.cshtml" />
+    <Content Include="Areas\Trainer\Views\TrainerViewCourse\Details.cshtml" />
     <None Include="Content\jquery-3.6.0.intellisense.js" />
     <Content Include="Content\jquery-3.6.0.js" />
     <Content Include="Content\jquery-3.6.0.min.js" />
@@ -417,12 +430,16 @@
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
     <Content Include="Views\Shared\CreateAccountFormPartial.cshtml" />
+    <Content Include="Views\Shared\DetailsCoursePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Staff\Data\" />
+    <Folder Include="Areas\Staff\Views\Assign\" />
+    <Folder Include="Areas\Trainer\Data\" />
+    <Folder Include="Areas\Trainer\Views\TrainerViewTrainee\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
