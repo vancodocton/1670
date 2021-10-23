@@ -7,8 +7,8 @@
 
 <div class="row container-fluid">
 	<div class="col-xl-3">
-		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, user = Role.Trainer})">Assign a trainer</a>
-		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, user = Role.Trainee})">Assign a trainee</a>
+		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainer})">Assign a trainer</a>
+		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainee})">Assign a trainee</a>
 	</div>
 
 	<div class="col-xl-9">

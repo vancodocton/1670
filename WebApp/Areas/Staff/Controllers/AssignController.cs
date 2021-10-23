@@ -52,9 +52,9 @@ namespace WebApp.Areas.Staff.Controllers
             return View(model);
         }
 
-        private async Task<AssignViewModel> LoadAssignViewModel(string role)
+        private async Task<AssignViewModel> LoadAssignViewModel(string role, AssignViewModel model = null)
         {
-            var model = new AssignViewModel();
+            model = model ?? new AssignViewModel();
 
             switch (role)
             {
@@ -77,16 +77,21 @@ namespace WebApp.Areas.Staff.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Add(int? courseId, string user)
+        public async Task<ActionResult> Add(int? courseId, string userRole)
         {
-            if (courseId == null || user == null)
+            if (courseId == null || userRole == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var model = await LoadAssignViewModel(user);
+            var course = await _context.Courses.SingleOrDefaultAsync(c => c.Id == courseId);
+
+            if (course == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            var model = await LoadAssignViewModel(userRole);
 
             if (model == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-
+            model.CourseId = course.Id;
             return View(model);
         }
 
@@ -102,15 +107,24 @@ namespace WebApp.Areas.Staff.Controllers
 
                 if (model.Role == Role.Trainer)
                 {
-                    course.Trainers.Add(await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == model.UserId));
+                    var trainer = await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == model.UserId);
+                    course.Trainers.Add(trainer);
                 }
                 else if (model.Role == Role.Trainee)
                 {
                     var trainee = await _context.Trainees.SingleOrDefaultAsync(t => t.UserId == model.UserId);
-                    course.Trainees.Add(trainee);                    
+                    course.Trainees.Add(trainee);
                 }
                 _context.Courses.Attach(course);
-                _ = await _context.SaveChangesAsync();
+                int row = await _context.SaveChangesAsync();
+
+                if (row == 0)
+                {
+                    ModelState.AddModelError("", string.Format("The {0} has assigned to the course", model.Role));
+
+                    model = await LoadAssignViewModel(model.Role, model);
+                    return View(model);
+                }
 
                 return RedirectToAction(nameof(Index), new { courseId = model.CourseId });
             }

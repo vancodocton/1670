@@ -4,7 +4,7 @@
 	ViewBag.Title = "Assign";
 }
 
-<h2>Assign</h2>
+<h2>Assign a @Model.Role to course</h2>
 
 @using (Html.BeginForm())
 {
@@ -20,7 +20,7 @@
 		{
 			case Role.Trainer:
 				<div class="form-group mb-3">
-					<label class="col-md-2 control-label">@ViewContext.RouteData.Values["user"]</label>
+					<label class="col-md-2 control-label">@Model.Role</label>
 					<div class="col-md-10">
 						@Html.DropDownListFor(m => m.UserId, new SelectList(Model.Trainers, "UserId", "User.Email"), "", new { @class = "form-select" })
 						@Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
@@ -29,7 +29,7 @@
 				break;
 			case Role.Trainee:
 				<div class="form-group mb-3">
-					<label class="col-md-2 control-label">@ViewContext.RouteData.Values["user"]</label>
+					<label class="col-md-2 control-label">@Model.Role</label>
 					<div class="col-md-10">
 						@Html.DropDownListFor(m => m.UserId, new SelectList(Model.Trainees, "UserId", "User.Email"), "", new { @class = "form-select" })
 						@Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
@@ -44,7 +44,11 @@
 			</div>
 		</div>
 	</div>
+	<div>
+		<p>@Html.ActionLink("Back to index page", "Index", new { courseId = Model.CourseId })</p>
+	</div>
 }
+
 
 <script type="text/javascript">
 	//function fun1() {
