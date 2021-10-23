@@ -56,6 +56,9 @@ namespace WebApp.Areas.Admin.Controllers
 
             var roles = await UserManager.GetRolesAsync(user.Id);
 
+            if (!roles.All(r => this.roles.Contains(r)))
+                return null;
+
             var model = new UserViewModel()
             {
                 User = user,
@@ -69,6 +72,9 @@ namespace WebApp.Areas.Admin.Controllers
 
         protected override async Task<UserViewModel> LoadUserProfile(UserViewModel model)
         {
+            if (!roles.All(r => this.roles.Contains(r)))
+                return null;
+
             if (roles.Contains(Role.Trainer))
             {
                 var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
