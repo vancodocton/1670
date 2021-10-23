@@ -1,0 +1,33 @@
+﻿@model IPagedList<WebApp.Models.Course>
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Fluent
+@using X.PagedList.Web.Common
+
+@{
+    ViewBag.Title = "Course Assigned";
+}
+
+<h2>@Html.ActionLink((string)ViewBag.Title, "Index", "TrainerViewCourse")</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th>
+                @Html.DisplayNameFor(m => m.First().Name)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(m => m.First().CourseCategory)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(m => m.First().Description)
+            </th>
+        </tr>
+    </thead>
+</table>
+<br />
+
+@(Html.Pager(Model)
+		.Url(page => Url.Action("Index", new { name = Request.Params["name"], age = Request.Params["age"], page = page }))
+		.Build())
