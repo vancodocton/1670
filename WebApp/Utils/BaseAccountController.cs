@@ -361,63 +361,63 @@ namespace WebApp.Utils
             return model;
         }
 
-        //protected virtual async Task<UserViewModel> GetUserProfile(UserViewModel model)
-        //{
-        //    var roles = model.Roles;
+        protected virtual async Task<UserViewModel> GetUserProfile(UserViewModel model)
+        {
+            var roles = model.Roles;
 
-        //    if (roles.Contains(Role.Trainer))
-        //    {
-        //        var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+            if (roles.Contains(Role.Trainer))
+            {
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
 
-        //        if (trainer == null)
-        //        {
-        //            _ = await AddEmptyTrainer(model.User.Id);
-        //            model.Specialty = null;
-        //        }
-        //        else
-        //        {
-        //            model.Specialty = trainer.Specialty;
-        //        }
-        //    }
+                if (trainer == null)
+                {
+                    _ = await AddEmptyTrainer(model.User.Id);
+                    model.Specialty = null;
+                }
+                else
+                {
+                    model.Specialty = trainer.Specialty;
+                }
+            }
 
-        //    if (roles.Contains(Role.Trainee))
-        //    {
-        //        var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+            if (roles.Contains(Role.Trainee))
+            {
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
 
-        //        if (trainee == null)
-        //        {
-        //            _ = await AddEmptyTrainee(model.User.Id);
-        //            model.Education = null;
-        //            model.BirthDate = null;
-        //        }
-        //        else
-        //        {
-        //            model.Education = trainee.Education;
-        //            model.BirthDate = trainee.BirthDate;
-        //        }
-        //    }
-        //    return model;
-        //}
+                if (trainee == null)
+                {
+                    _ = await AddEmptyTrainee(model.User.Id);
+                    model.Education = null;
+                    model.BirthDate = null;
+                }
+                else
+                {
+                    model.Education = trainee.Education;
+                    model.BirthDate = trainee.BirthDate;
+                }
+            }
+            return model;
+        }
 
-        //protected virtual async Task<int> UpdateUserProfile(UserViewModel model)
-        //{
-        //    int affectedRow = 0;
-        //    if (_managedRoles.Any(r => r == Role.Trainer))
-        //    {
-        //        var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
-        //        trainer.Specialty = model.Specialty;
-        //        affectedRow += await _context.SaveChangesAsync();
-        //    }
+        protected virtual async Task<int> UpdateUserProfile(UserViewModel model)
+        {
+            int affectedRow = 0;
+            if (_managedRoles.Any(r => r == Role.Trainer))
+            {
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+                trainer.Specialty = model.Specialty;
+                affectedRow += await _context.SaveChangesAsync();
+            }
 
-        //    if (_managedRoles.Any(r => r == Role.Trainee))
-        //    {
-        //        var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
-        //        trainee.Education = model.Education;
-        //        trainee.BirthDate = model.BirthDate;
-        //        affectedRow += await _context.SaveChangesAsync();
-        //    }
-        //    return affectedRow;
-        //}
+            if (_managedRoles.Any(r => r == Role.Trainee))
+            {
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+                trainee.Education = model.Education;
+                trainee.BirthDate = model.BirthDate;
+                affectedRow += await _context.SaveChangesAsync();
+            }
+            return affectedRow;
+        }
 
         private void AddErrors(IdentityResult result)
         {
@@ -427,7 +427,7 @@ namespace WebApp.Utils
             }
         }
 
-        protected abstract Task<UserViewModel> GetUserProfile(UserViewModel model);
-        protected abstract Task<int> UpdateUserProfile(UserViewModel model);
+        //protected abstract Task<UserViewModel> GetUserProfile(UserViewModel model);
+        //protected abstract Task<int> UpdateUserProfile(UserViewModel model);
     }
 }
