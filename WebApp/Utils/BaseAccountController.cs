@@ -9,21 +9,25 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.ViewModels;
 using WebApp.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace WebApp.Utils
 {
     public abstract class BaseAccountController : Controller
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly List<string> roles;
+        protected readonly List<string> _managedRoles;
         protected ApplicationRoleManager _roleManager;
         protected ApplicationSignInManager _signInManager;
         protected ApplicationUserManager _userManager;
 
+        protected abstract void SetManagedRoles();
+
         public BaseAccountController()
         {
             _context = new ApplicationDbContext();
-            roles = new List<string>();
+            _managedRoles = new List<string>();
             SetManagedRoles();
         }
 
@@ -69,14 +73,49 @@ namespace WebApp.Utils
             }
         }
 
-        protected abstract void SetManagedRoles();
+        protected async Task<IList<string>> GetUserRoles(string userId)
+        {
+            var roles = await UserManager.GetRolesAsync(userId);
+
+            // check if all roles of user is in managed by controllers
+            if (IsUserManagedByRoles(roles))
+                return roles;
+            else
+                return null;
+        }
+
+        protected bool IsUserManagedByRoles(IList<string> roles)
+        {
+            if (roles.Count == 0)
+                return false;
+
+            foreach (var role in roles)
+                if (!IsUserManagedByRole(role))
+                    return false;
+
+            return true;
+        }
+
+        protected bool IsUserManagedByRole(string role)
+        {
+            if (role == null)
+                return false;
+
+            foreach (var managedRole in _managedRoles)
+            {
+                if (role == managedRole)
+                    return true;
+            }
+
+            return false;
+        }
 
         [HttpGet]
         public ActionResult Create()
         {
             AccountRegisterViewModel model = new AccountRegisterViewModel()
             {
-                Roles = roles
+                Roles = _managedRoles
             };
             return View(model);
         }
@@ -87,25 +126,60 @@ namespace WebApp.Utils
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
+                if (_managedRoles.Contains(model.Role))
                 {
-                    await UserManager.AddToRoleAsync(user.Id, model.Role);
+                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                    var result = await UserManager.CreateAsync(user, model.Password);
 
-                    return RedirectToAction("Index");
+                    if (result.Succeeded)
+                    {
+                        await UserManager.AddToRoleAsync(user.Id, model.Role);
+
+                        // add profile for role
+                        if (model.Role == Role.Trainer)
+                            _ = await AddEmptyTrainer(user.Id);
+                        if (model.Role == Role.Trainee)
+                            _ = await AddEmptyTrainee(user.Id);
+
+                        return RedirectToAction("Index");
+                    }
+                    else
+                        AddErrors(result);
                 }
-                AddErrors(result);
+                else
+                    ModelState.AddModelError("", "Cannot create account with role is" + model.Role);
             }
 
-            model.Roles = roles;
+            model.Roles = _managedRoles;
             return View(model);
         }
 
-        protected abstract Task<UserViewModel> LoadUserViewModel(string userId);
-        protected abstract Task<UserViewModel> LoadUserProfile(UserViewModel model);
-        protected abstract Task<UserViewModel> UpdateUserProfile(UserViewModel model);
+        protected async Task<int> AddEmptyTrainer(string userId)
+        {
+            var trainer = new Models.Trainer()
+            {
+                UserId = userId,
+                Specialty = null,
+            };
+
+            _context.Trainers.Add(trainer);
+
+            return await _context.SaveChangesAsync();
+        }
+
+        protected async Task<int> AddEmptyTrainee(string userId)
+        {
+            var trainee = new Models.Trainee()
+            {
+                UserId = userId,
+                Education = null,
+                BirthDate = null,
+            };
+
+            _context.Trainees.Add(trainee);
+
+            return await _context.SaveChangesAsync();
+        }
 
         [HttpGet]
         public async Task<ActionResult> Details(string id)
@@ -113,7 +187,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserViewModel model = await GetUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -127,7 +201,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserViewModel model = await GetUserViewModel(id);
             if (model == null)
                 return HttpNotFound();
 
@@ -155,11 +229,9 @@ namespace WebApp.Utils
             IdentityResult result = await UserManager.DeleteAsync(user);
 
             if (result.Succeeded)
-            {
                 return RedirectToAction("Index");
-            }
-
-            return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
+            else
+                return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
         }
 
         [HttpGet]
@@ -168,7 +240,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserViewModel model = await GetUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -183,6 +255,11 @@ namespace WebApp.Utils
             if (ModelState.IsValid)
             {
                 var user = model.User;
+
+                var roles = await GetUserRoles(user.Id);
+                if (roles == null)
+                    return HttpNotFound();
+
                 var userinDb = await UserManager.FindByIdAsync(user.Id);
 
                 if (userinDb == null)
@@ -193,11 +270,7 @@ namespace WebApp.Utils
                 userinDb.Email = user.Email;
                 userinDb.UserName = user.Email;
 
-                model = await UpdateUserProfile(model);
-                if (model == null)
-                {
-                    return HttpNotFound();
-                }
+                _ = await UpdateUserProfile(model);
 
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
 
@@ -242,7 +315,7 @@ namespace WebApp.Utils
 
             var roles = await UserManager.GetRolesAsync(user.Id);
 
-            if (!roles.All(r => this.roles.Contains(r)))
+            if (!IsUserManagedByRoles(roles))
             {
                 ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
                 return View(model);
@@ -260,13 +333,91 @@ namespace WebApp.Utils
             return View();
         }
 
-        [Route("{email}")]
         [HttpGet]
         public ActionResult ResetPasswordConfirmation(string email)
         {
             ViewBag.Email = email;
             return View();
         }
+
+        private async Task<UserViewModel> GetUserViewModel(string userId)
+        {
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+                return null;
+
+            var roles = await GetUserRoles(userId);
+            if (roles == null)
+                return null;
+
+            var model = new UserViewModel()
+            {
+                User = user,
+                Roles = new List<string>(roles)
+            };
+
+            model = await GetUserProfile(model);
+
+            return model;
+        }
+
+        //protected virtual async Task<UserViewModel> GetUserProfile(UserViewModel model)
+        //{
+        //    var roles = model.Roles;
+
+        //    if (roles.Contains(Role.Trainer))
+        //    {
+        //        var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+
+        //        if (trainer == null)
+        //        {
+        //            _ = await AddEmptyTrainer(model.User.Id);
+        //            model.Specialty = null;
+        //        }
+        //        else
+        //        {
+        //            model.Specialty = trainer.Specialty;
+        //        }
+        //    }
+
+        //    if (roles.Contains(Role.Trainee))
+        //    {
+        //        var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+
+        //        if (trainee == null)
+        //        {
+        //            _ = await AddEmptyTrainee(model.User.Id);
+        //            model.Education = null;
+        //            model.BirthDate = null;
+        //        }
+        //        else
+        //        {
+        //            model.Education = trainee.Education;
+        //            model.BirthDate = trainee.BirthDate;
+        //        }
+        //    }
+        //    return model;
+        //}
+
+        //protected virtual async Task<int> UpdateUserProfile(UserViewModel model)
+        //{
+        //    int affectedRow = 0;
+        //    if (_managedRoles.Any(r => r == Role.Trainer))
+        //    {
+        //        var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+        //        trainer.Specialty = model.Specialty;
+        //        affectedRow += await _context.SaveChangesAsync();
+        //    }
+
+        //    if (_managedRoles.Any(r => r == Role.Trainee))
+        //    {
+        //        var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+        //        trainee.Education = model.Education;
+        //        trainee.BirthDate = model.BirthDate;
+        //        affectedRow += await _context.SaveChangesAsync();
+        //    }
+        //    return affectedRow;
+        //}
 
         private void AddErrors(IdentityResult result)
         {
@@ -275,5 +426,8 @@ namespace WebApp.Utils
                 ModelState.AddModelError("", error);
             }
         }
+
+        protected abstract Task<UserViewModel> GetUserProfile(UserViewModel model);
+        protected abstract Task<int> UpdateUserProfile(UserViewModel model);
     }
 }
