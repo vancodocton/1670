@@ -106,7 +106,8 @@ namespace WebApp.Controllers
             return model;
         }
 
-
+        [HttpGet]
+        [Authorize(Roles = Role.Trainee + "," + Role.Trainer + "," + Role.Admin + "," + Role.Staff)]
         public async Task<ActionResult> ViewProfile()
         {
             string id = User.Identity.GetUserId();
@@ -120,6 +121,8 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Role.Trainer + "," + Role.Admin + "," + Role.Staff)]
+
         public async Task<ActionResult> UpdateProfile()
         {
             string id = User.Identity.GetUserId();
