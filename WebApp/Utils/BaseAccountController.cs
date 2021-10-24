@@ -340,7 +340,7 @@ namespace WebApp.Utils
             return View();
         }
 
-        private async Task<UserViewModel> GetUserViewModel(string userId)
+        protected async Task<UserViewModel> GetUserViewModel(string userId)
         {
             var user = await UserManager.FindByIdAsync(userId);
             if (user == null)
