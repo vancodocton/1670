@@ -8,28 +8,28 @@
 <div>
 	<h4>Course</h4>
 	<hr />
-	<dl class="dl-horizontal">
-		<dt>
+	<dl class="row">
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(model => model.Name)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(model => model.Name)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(model => model.CourseCategory)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(model => model.CourseCategory.Name)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(model => model.Description)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(model => model.Description)
 		</dd>
 
@@ -40,8 +40,8 @@
 		@Html.AntiForgeryToken()
 
 		<div class="form-actions no-color">
-			<input type="submit" value="Delete" class="btn btn-default" /> |
-			@Html.ActionLink("Back to List", "Index")
+			@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary mx-2" }) 
+			<input type="submit" value="Confirm Delete" class="btn btn-danger" />
 		</div>
 	}
 </div>

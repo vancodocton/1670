@@ -1,65 +1,40 @@
-﻿@model WebApp.Models.Course
+﻿@model WebApp.ViewModels.CreateCourseViewModel
 
 @{
-	ViewBag.Title = "Create a course";
+	ViewBag.Title = "Edit course";
+}
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	@Html.HiddenFor(model => model.Course.Id)
+	<h4>Edit Course</h4>
+	<hr />
+
+	<div class="form-group mb-3">
+		@Html.LabelFor(model => model.Course.Name, htmlAttributes: new { @class = "form-label" })
+		@Html.EditorFor(model => model.Course.Name, new { htmlAttributes = new { @class = "form-control" } })
+		@Html.ValidationMessageFor(model => model.Course.Name, "", new { @class = "text-danger" })
+	</div>
+
+	<div class="form-group mb-3">
+		@Html.LabelFor(model => model.Course.CourseCategory, htmlAttributes: new { @class = "form-label" })
+		@Html.DropDownListFor(m => m.Course.CourseCategoryId, Model.Categories, "", htmlAttributes: new { @class = "form-select" })
+		@Html.ValidationMessageFor(model => model.Course.CourseCategoryId, "", new { @class = "text-danger" })
+	</div>
+
+	<div class="form-group mb-3">
+		@Html.LabelFor(model => model.Course.Description, htmlAttributes: new { @class = "form-label" })
+		@Html.EditorFor(model => model.Course.Description, new { htmlAttributes = new { @class = "form-control" } })
+		@Html.ValidationMessageFor(model => model.Course.Description, "", new { @class = "text-danger" })
+	</div>
+
+	<div class="form-group mb-3">
+		@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary mx-2" })
+		<input type="submit" value="Confirm Change" class="btn btn-primary" />
+	</div>
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-	<meta name="viewport" content="width=device-width" />
-	<title>Edit</title>
-</head>
-<body>
-	@Scripts.Render("~/bundles/jquery")
+@section scripts{
 	@Scripts.Render("~/bundles/jqueryval")
-
-
-	@using (Html.BeginForm())
-	{
-		@Html.AntiForgeryToken()
-
-		<div class="form-horizontal">
-			<h4>Course</h4>
-			<hr />
-			@Html.ValidationSummary(true, "", new { @class = "text-danger" })
-			@Html.HiddenFor(model => model.Id)
-
-			<div class="form-group">
-				@Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-				<div class="col-md-10">
-					@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-				</div>
-			</div>
-
-			<div class="form-group">
-				@Html.LabelFor(model => model.CourseCategoryId, "CourseCategoryId", htmlAttributes: new { @class = "control-label col-md-2" })
-				<div class="col-md-10">
-					@Html.DropDownList("CourseCategoryId", null, htmlAttributes: new { @class = "form-control" })
-					@Html.ValidationMessageFor(model => model.CourseCategoryId, "", new { @class = "text-danger" })
-				</div>
-			</div>
-
-			<div class="form-group">
-				@Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-				<div class="col-md-10">
-					@Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-					@Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="col-md-offset-2 col-md-10">
-					<input type="submit" value="Save" class="btn btn-default" />
-				</div>
-			</div>
-		</div>
-	}
-
-	<div>
-		@Html.ActionLink("Back to List", "Index")
-	</div>
-</body>
-</html>
+}
