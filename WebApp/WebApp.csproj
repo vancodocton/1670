@@ -302,6 +302,7 @@
     <Content Include="Areas\Trainer\Views\Home\Index.cshtml" />
     <Content Include="Areas\Trainer\Views\TrainerViewCourse\Index.cshtml" />
     <Content Include="Areas\Trainer\Views\TrainerViewCourse\Details.cshtml" />
+    <Content Include="Areas\Staff\Views\Assign\Remove.cshtml" />
     <None Include="Content\jquery-3.6.0.intellisense.js" />
     <Content Include="Content\jquery-3.6.0.js" />
     <Content Include="Content\jquery-3.6.0.min.js" />
