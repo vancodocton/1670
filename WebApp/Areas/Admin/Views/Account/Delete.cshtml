@@ -10,7 +10,7 @@
 	@Html.AntiForgeryToken()
 
 	<div class="form-actions no-color">
+		@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary" })
 		<input type="submit" value="Confirm Delete" class="btn btn-danger" />
-		<p class="mt-3">@Html.ActionLink("Back to List", "Index")</p>
 	</div>
 }

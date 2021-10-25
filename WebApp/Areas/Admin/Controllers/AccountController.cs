@@ -52,14 +52,14 @@ namespace WebApp.Areas.Admin.Controllers
 
                 if (trainer == null)
                 {
-                    _ = await AddEmptyTrainer(model.User.Id);
+                    _ = await AddTrainer(new Models.Trainer() { UserId = model.User.Id });
                     model.Specialty = null;
                 }
                 else
                 {
                     model.Specialty = trainer.Specialty;
                 }
-            }          
+            }
             return model;
         }
 
