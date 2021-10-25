@@ -207,17 +207,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
-    <Compile Include="Areas\Staff\Controllers\AssignController.cs" />
-    <Compile Include="Areas\Staff\Controllers\TraineeController.cs" />
-    <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
-    <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
-    <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Staff\Data\AssignedSearchVewModel.cs" />
-    <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
-    <Compile Include="Areas\Trainer\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Trainer\Controllers\TrainerViewCourseController.cs" />
-    <Compile Include="Areas\Trainer\Controllers\TrainerViewTraineeController.cs" />
-    <Compile Include="Areas\Trainer\TrainerAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -233,21 +222,9 @@
     <Compile Include="Migrations\202110071650277_InitialCreate.Designer.cs">
       <DependentUpon>202110071650277_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202110071952509_alter-application-user-table.cs" />
-    <Compile Include="Migrations\202110071952509_alter-application-user-table.Designer.cs">
-      <DependentUpon>202110071952509_alter-application-user-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110091455405_add-course-categories-table.cs" />
-    <Compile Include="Migrations\202110091455405_add-course-categories-table.Designer.cs">
-      <DependentUpon>202110091455405_add-course-categories-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110101354407_create-course-table.cs" />
-    <Compile Include="Migrations\202110101354407_create-course-table.designer.cs">
-      <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202110211446077_add-trainer-trainee-table.cs" />
-    <Compile Include="Migrations\202110211446077_add-trainer-trainee-table.Designer.cs">
-      <DependentUpon>202110211446077_add-trainer-trainee-table.cs</DependentUpon>
+    <Compile Include="Migrations\202110251435408_Alter_User_Table_Columns.cs" />
+    <Compile Include="Migrations\202110251435408_Alter_User_Table_Columns.Designer.cs">
+      <DependentUpon>202110251435408_Alter_User_Table_Columns.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -256,15 +233,15 @@
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\CourseCategory.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Profiles\UserProfile.cs" />
+    <Compile Include="ViewModels\UserProfile.cs" />
     <Compile Include="Models\Trainee.cs" />
     <Compile Include="Models\Trainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\BaseAccountController.cs" />
     <Compile Include="Models\Profiles\IProfileTrainee.cs" />
     <Compile Include="Models\Profiles\IProfileTrainer.cs" />
     <Compile Include="Models\Profiles\IProfile.cs" />
+    <Compile Include="Utils\BaseAccountController.cs" />
     <Compile Include="Utils\Role.cs" />
     <Compile Include="Utils\AssignedSearchForm.cs" />
     <Compile Include="ViewModels\AccountRegisterViewModel.cs" />
@@ -275,6 +252,13 @@
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Account\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -297,21 +281,6 @@
     <Content Include="Content\bootstrap.min.js" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
-    <Content Include="Areas\Staff\Views\Shared\AssignedTrainersPartial.cshtml" />
-    <Content Include="Areas\Staff\Views\Shared\AssignedTraineesPartial.cshtml" />
-    <Content Include="Areas\Staff\Views\Assign\Index.cshtml" />
-    <Content Include="Areas\Trainer\Views\web.config" />
-    <Content Include="Areas\Trainer\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Trainer\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Staff\Views\CourseCategory\Edit.cshtml" />
-    <Content Include="Areas\Staff\Views\CourseCategory\Delete.cshtml" />
-    <Content Include="Areas\Staff\Views\CourseCategory\Details.cshtml" />
-    <Content Include="Areas\Trainer\Views\Home\Index.cshtml" />
-    <Content Include="Areas\Trainer\Views\TrainerViewCourse\Index.cshtml" />
-    <Content Include="Areas\Trainer\Views\TrainerViewCourse\Details.cshtml" />
-    <Content Include="Areas\Staff\Views\Assign\Remove.cshtml" />
-    <Content Include="Areas\Staff\Views\Assign\Search.cshtml" />
-    <Content Include="Areas\Staff\Views\Shared\AssignedSearchFormPartial.cshtml" />
     <None Include="Content\jquery-3.6.0.intellisense.js" />
     <Content Include="Content\jquery-3.6.0.js" />
     <Content Include="Content\jquery-3.6.0.min.js" />
@@ -327,25 +296,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Areas\Admin\Views\web.config" />
-    <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\web.config" />
-    <Content Include="Areas\Staff\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Staff\Views\Home\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\CourseCategory\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\CourseCategory\Create.cshtml" />
-    <Content Include="Areas\Staff\Views\Course\Create.cshtml" />
-    <Content Include="Areas\Staff\Views\Course\Delete.cshtml" />
-    <Content Include="Areas\Staff\Views\Course\Details.cshtml" />
-    <Content Include="Areas\Staff\Views\Course\Edit.cshtml" />
-    <Content Include="Areas\Staff\Views\Course\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\Create.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\Delete.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\Index.cshtml" />
-    <Content Include="Areas\Staff\Views\Assign\Add.cshtml" />
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -430,10 +380,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
     <Content Include="Views\Shared\ResetPassword.cshtml" />
     <Content Include="Views\Shared\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\UpdateProfilePartial.cshtml" />
@@ -445,10 +391,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Areas\Trainer\Data\" />
-    <Folder Include="Areas\Trainer\Views\TrainerViewTrainee\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
@@ -458,17 +401,8 @@
     <EmbeddedResource Include="Migrations\202110071650277_InitialCreate.resx">
       <DependentUpon>202110071650277_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110071952509_alter-application-user-table.resx">
-      <DependentUpon>202110071952509_alter-application-user-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110091455405_add-course-categories-table.resx">
-      <DependentUpon>202110091455405_add-course-categories-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110101354407_create-course-table.resx">
-      <DependentUpon>202110101354407_create-course-table.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202110211446077_add-trainer-trainee-table.resx">
-      <DependentUpon>202110211446077_add-trainer-trainee-table.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202110251435408_Alter_User_Table_Columns.resx">
+      <DependentUpon>202110251435408_Alter_User_Table_Columns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

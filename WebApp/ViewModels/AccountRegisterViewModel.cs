@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
-    public class AccountRegisterViewModel
+    public class AccountRegisterViewModel : UserProfileViewModel
     {
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public override string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -24,11 +23,7 @@ namespace WebApp.ViewModels
         public string ConfirmPassword { get; set; }
 
         public string Role { get; set; }
+
         public List<string> Roles { get; set; }
-
-        public Trainee Trainee { get; set; }
-        public Trainer Trainer { get; set; }
-
     }
-
 }

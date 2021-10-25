@@ -126,20 +126,43 @@ namespace WebApp.Utils
         {
             if (ModelState.IsValid)
             {
-                if (_managedRoles.Contains(model.Role))
+                if (IsUserManagedByRole(model.Role))
                 {
-                    var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                    var user = new ApplicationUser
+                    {
+                        FullName = model.FullName,
+                        Email = model.Email,
+                        Age = model.Age,
+                        Address = model.Address,
+                        UserName = model.Email,
+                    };
+
                     var result = await UserManager.CreateAsync(user, model.Password);
 
+                    // set role and add profile
                     if (result.Succeeded)
                     {
-                        await UserManager.AddToRoleAsync(user.Id, model.Role);
-
-                        // add profile for role
                         if (model.Role == Role.Trainer)
-                            _ = await AddEmptyTrainer(user.Id);
-                        if (model.Role == Role.Trainee)
-                            _ = await AddEmptyTrainee(user.Id);
+                        {
+                            Trainer trainer = new Trainer()
+                            {
+                                UserId = user.Id,
+                                Specialty = model.Specialty,
+                            };
+                            _ = await AddTrainer(trainer);
+                        }
+                        else if (model.Role == Role.Trainee)
+                        {
+                            Trainee trainee = new Trainee()
+                            {
+                                UserId = user.Id,
+                                Education = model.Education,
+                                BirthDate = model.BirthDate,
+                            };
+                            _ = await AddTrainee(trainee);
+                        }
+
+                        await UserManager.AddToRoleAsync(user.Id, model.Role);
 
                         return RedirectToAction("Index");
                     }
@@ -154,28 +177,15 @@ namespace WebApp.Utils
             return View(model);
         }
 
-        protected async Task<int> AddEmptyTrainer(string userId)
+        protected async Task<int> AddTrainer(Trainer trainer)
         {
-            var trainer = new Models.Trainer()
-            {
-                UserId = userId,
-                Specialty = null,
-            };
-
             _context.Trainers.Add(trainer);
 
             return await _context.SaveChangesAsync();
         }
 
-        protected async Task<int> AddEmptyTrainee(string userId)
+        protected async Task<int> AddTrainee(Trainee trainee)
         {
-            var trainee = new Models.Trainee()
-            {
-                UserId = userId,
-                Education = null,
-                BirthDate = null,
-            };
-
             _context.Trainees.Add(trainee);
 
             return await _context.SaveChangesAsync();
@@ -301,43 +311,37 @@ namespace WebApp.Utils
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
+                var user = await UserManager.FindByEmailAsync(model.Email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "The user does not exist.");
+                    return View(model);
+                }
+
+                var roles = await UserManager.GetRolesAsync(user.Id);
+
+                if (!IsUserManagedByRoles(roles))
+                {
+                    ModelState.AddModelError("","The user cannot be reset. Permission is denied.");
+                    return View(model);
+                }
+
+                model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+
+                if (result.Succeeded)
+                {
+                    ViewBag.Email = model.Email;
+                    return View("ResetPasswordConfirmation");
+                }
+                else
+                    AddErrors(result);
             }
-            var user = await UserManager.FindByEmailAsync(model.Email);
 
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = "The user does not exist";
-                return View(model);
-            }
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-
-            if (!IsUserManagedByRoles(roles))
-            {
-                ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
-                return View(model);
-            }
-
-            model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), null, new { email = user.Email });
-            }
-
-            AddErrors(result);
-            return View();
-        }
-
-        [HttpGet]
-        public ActionResult ResetPasswordConfirmation(string email)
-        {
-            ViewBag.Email = email;
-            return View();
+            return View(model);
         }
 
         protected async Task<UserViewModel> GetUserViewModel(string userId)
@@ -371,7 +375,7 @@ namespace WebApp.Utils
 
                 if (trainer == null)
                 {
-                    _ = await AddEmptyTrainer(model.User.Id);
+                    _ = await AddTrainer(new Trainer() { UserId = model.User.Id });
                     model.Specialty = null;
                 }
                 else
@@ -386,7 +390,7 @@ namespace WebApp.Utils
 
                 if (trainee == null)
                 {
-                    _ = await AddEmptyTrainee(model.User.Id);
+                    _ = await AddTrainee(new Trainee() { UserId = model.User.Id });
                     model.Education = null;
                     model.BirthDate = null;
                 }
