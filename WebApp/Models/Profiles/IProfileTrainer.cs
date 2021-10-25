@@ -1,6 +1,6 @@
 ﻿namespace WebApp.Models.Profiles
 {
-    interface IProfileTrainer
+    interface IProfileTrainer : IProfile
     {
         string Specialty { get; set; }
     }

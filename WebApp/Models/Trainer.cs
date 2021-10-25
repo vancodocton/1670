@@ -5,8 +5,13 @@ using WebApp.Models.Profiles;
 
 namespace WebApp.Models
 {
-    public class Trainer: ApplicationUser, IProfileTrainer
+    public class Trainer: IProfileTrainer, IProfile
     {
+        [Key]
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; }
+
         [StringLength(50)]
         public string Specialty { get; set; }
 

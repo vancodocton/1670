@@ -13,7 +13,7 @@ namespace WebApp.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202110251350011_Alter_User_Table_Columns"; }
+            get { return "202110251435408_Alter_User_Table_Columns"; }
         }
         
         string IMigrationMetadata.Source

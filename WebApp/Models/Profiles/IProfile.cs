@@ -2,14 +2,7 @@
 {
     public interface IProfile
     {
-        string Id { get; set; }
-
-        string FullName { get; set; }
-
-        string Email { get; set; }
-
-        int? Age { get; set; }
-
-        string Address { get; set; }
+        string UserId { get; set; }
+        ApplicationUser User { get; set; }
     }
 }
