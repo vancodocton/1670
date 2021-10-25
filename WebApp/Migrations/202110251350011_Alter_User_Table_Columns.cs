@@ -3,7 +3,7 @@ namespace WebApp.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class alterdatabase : DbMigration
+    public partial class Alter_User_Table_Columns : DbMigration
     {
         public override void Up()
         {
@@ -57,10 +57,10 @@ namespace WebApp.Migrations
                 .Index(t => t.Course_Id);
             
             AddColumn("dbo.AspNetUsers", "FullName", c => c.String());
-            AddColumn("dbo.AspNetUsers", "Age", c => c.Int(nullable: false));
+            AddColumn("dbo.AspNetUsers", "Age", c => c.Int());
             AddColumn("dbo.AspNetUsers", "Address", c => c.String());
             AddColumn("dbo.AspNetUsers", "BirthDate", c => c.DateTime());
-            AddColumn("dbo.AspNetUsers", "Education", c => c.String(maxLength: 255));
+            AddColumn("dbo.AspNetUsers", "Education", c => c.String(maxLength: 50));
             AddColumn("dbo.AspNetUsers", "Specialty", c => c.String(maxLength: 50));
             AddColumn("dbo.AspNetUsers", "Discriminator", c => c.String(nullable: false, maxLength: 128));
         }

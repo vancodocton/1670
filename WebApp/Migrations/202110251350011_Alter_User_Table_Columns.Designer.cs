@@ -7,13 +7,13 @@ namespace WebApp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class alterdatabase : IMigrationMetadata
+    public sealed partial class Alter_User_Table_Columns : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(alterdatabase));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Alter_User_Table_Columns));
         
         string IMigrationMetadata.Id
         {
-            get { return "202110251324581_alter-database"; }
+            get { return "202110251350011_Alter_User_Table_Columns"; }
         }
         
         string IMigrationMetadata.Source

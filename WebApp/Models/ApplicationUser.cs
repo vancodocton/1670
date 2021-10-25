@@ -13,7 +13,7 @@ namespace WebApp.Models
         public string FullName { get; set; }
 
         [Range(0, int.MaxValue)]
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         public string Address { get; set; }
 

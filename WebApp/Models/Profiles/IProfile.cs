@@ -8,7 +8,7 @@
 
         string Email { get; set; }
 
-        int Age { get; set; }
+        int? Age { get; set; }
 
         string Address { get; set; }
     }
