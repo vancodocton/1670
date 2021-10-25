@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
@@ -25,5 +26,9 @@ namespace WebApp.ViewModels
         public string Role { get; set; }
 
         public List<string> Roles { get; set; }
+
+        public Trainee Trainee { get; set; }
+        public Trainer Trainer { get; set; }
+
     }
 }
