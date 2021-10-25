@@ -256,11 +256,15 @@
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\CourseCategory.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Profiles\UserProfile.cs" />
     <Compile Include="Models\Trainee.cs" />
     <Compile Include="Models\Trainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\BaseAccountController.cs" />
+    <Compile Include="Models\Profiles\IProfileTrainee.cs" />
+    <Compile Include="Models\Profiles\IProfileTrainer.cs" />
+    <Compile Include="Models\Profiles\IProfile.cs" />
     <Compile Include="Utils\Role.cs" />
     <Compile Include="Utils\AssignedSearchForm.cs" />
     <Compile Include="ViewModels\AccountRegisterViewModel.cs" />
