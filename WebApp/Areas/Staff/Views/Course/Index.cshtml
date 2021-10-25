@@ -1,30 +1,26 @@
 ﻿@model IPagedList<WebApp.Models.Course>
 @using X.PagedList
-@using X.PagedList.Mvc
 @using X.PagedList.Mvc.Fluent
-@using X.PagedList.Web.Common
-
 @{
 	ViewBag.Title = "Course management";
 }
 
-<h2>@Html.ActionLink((string)ViewBag.Title, "Index", "Course")</h2>
+<h3>@ViewBag.Title</h3>
+@Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
+
 @using (Html.BeginForm("Index", "Course", FormMethod.Get))
 {
-	<div class="form-group">
-		<div class="col-md-10">
-			@Html.Editor("CourseName", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search for course" } })
-		</div>
-	</div>
+	<div class="form-group my-3">
+		<input id="keyword" name="keyword" type="text" placeholder="Course name" required value="@Request.Params["keyword"]" />
+		<input id="submit" type="submit" class="btn btn-primary" value="Search" />
+		@if (Request.Params["keyword"] != null)
+		{
+			@Html.ActionLink("Delete search result", "Index", null, htmlAttributes: new { @class = "btn btn-danger mx-3" })
+		}
 
-	<div class="form-group">
-		<div class="col-md-offset-2 col-md-10">
-			<input type="submit" value="Search" class="btn btn-default" />
-		</div>
 	</div>
 }
 
-@Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
 
 <table class="table">
 	<thead>
@@ -61,7 +57,7 @@
 					@Html.DisplayFor(modelItem => item.Description)
 				</td>
 				<td>
-					@Html.ActionLink("Assign to", "Index","Assign", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary" }) |
+					@Html.ActionLink("Assign to", "Index", "Assign", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary" }) |
 					@Html.ActionLink("Edit", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-success" }) |
 					@Html.ActionLink("Details", "Details", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-info" }) |
 					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger" })
