@@ -16,8 +16,8 @@ namespace WebApp.Areas.Staff.Controllers
 {
     [Authorize(Roles = Role.Staff)]
     public class CourseCategoryController : Controller
-    { 
-        private ApplicationDbContext _context = new ApplicationDbContext();
+    {
+        private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
         [HttpGet]
         public async Task<ActionResult> Index()
@@ -34,70 +34,61 @@ namespace WebApp.Areas.Staff.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(CourseCategory courseCategory)
+        public async Task<ActionResult> Create(CourseCategory category)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(courseCategory);
+                _context.CourseCategories.Add(category);
+                _ = await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
 
-            try
-            {
-                _context.CourseCategories.Add(courseCategory);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException e)
-            {
-                ViewBag.Message = e.InnerException;
-                return View(courseCategory);
-            }
-
-            return RedirectToAction("Index");
+            return View(category);
         }
 
         [HttpGet]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             CourseCategory courseCategory = await _context.CourseCategories.FindAsync(id);
             if (courseCategory == null)
-            {
-                return HttpNotFound();
-            }
+                return HttpNotFound("No course category found");
+
             return View(courseCategory);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID, Name, Description")] CourseCategory courseCategory)
+        public async Task<ActionResult> Edit(CourseCategory category)
         {
             if (ModelState.IsValid)
             {
-                _context.Entry(courseCategory).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                _context.Entry(category).State = EntityState.Modified;
+                _ = await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
-            return View(courseCategory);
+
+            return View(category);
         }
 
         [HttpGet]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CourseCategory courseCategory = await _context.CourseCategories
+
+            CourseCategory category = await _context.CourseCategories
                 .Include(c => c.Courses)
                 .SingleOrDefaultAsync(c => c.Id == id);
-            if (courseCategory == null)
-            {
-                return HttpNotFound();
-            }
-            return View(courseCategory);
+
+            if (category == null)
+                return HttpNotFound("No course category found");
+
+            return View(category);
         }
 
 
@@ -105,24 +96,26 @@ namespace WebApp.Areas.Staff.Controllers
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            CourseCategory courseCategory = await _context.CourseCategories.FindAsync(id);
-            if (courseCategory == null)
-            {
-                return HttpNotFound();
-            }
-            return View(courseCategory);
+
+            CourseCategory category = await _context.CourseCategories.FindAsync(id);
+            if (category == null)
+                return HttpNotFound("No course category found");
+
+            return View(category);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            CourseCategory courseCategory= await _context.CourseCategories.FindAsync(id);
-            _context.CourseCategories.Remove(courseCategory);
+            CourseCategory category = await _context.CourseCategories.FindAsync(id);
+            if (category == null)
+                return RedirectToAction(nameof(Index));
+
+            _context.CourseCategories.Remove(category);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
     }
