@@ -7,13 +7,13 @@ namespace WebApp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class addtrainertraineetable : IMigrationMetadata
+    public sealed partial class alterdatabase : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addtrainertraineetable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(alterdatabase));
         
         string IMigrationMetadata.Id
         {
-            get { return "202110211446077_add-trainer-trainee-table"; }
+            get { return "202110251324581_alter-database"; }
         }
         
         string IMigrationMetadata.Source

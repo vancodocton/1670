@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApp.Models.Profiles;
 
 namespace WebApp.Models
 {
-    public class Trainee
+    public class Trainee : ApplicationUser, IProfileTrainee
     {
-        [Key]
-        [ForeignKey("User")]
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
-
         [DataType(DataType.Date)]
         public DateTime? BirthDate { get; set; }
 
