@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using WebApp.Areas.Staff.Data;
 using WebApp.Models;
 using WebApp.Utils;
 using WebApp.ViewModels;
@@ -212,6 +213,72 @@ namespace WebApp.Areas.Staff.Controllers
             return RedirectToAction(nameof(Index), new { courseId });
         }
 
+        // search enrolled trainer/trainee by course name
+        [HttpGet]
+        public async Task<ActionResult> Search(string userRole, string keyword, int? page)
+        {
+            var model = new AssignedSearchVewModel();
+
+            //model.Roles = new List<string>() { Role.Trainee, Role.Trainer };
+            model.Roles = _managedRoles;
+            if (keyword == null)
+                return View(model);
+
+            keyword = keyword.Trim().ToLower();
+
+            if (_managedRoles.Contains(userRole))
+            {
+                model.UserRole = userRole;
+                var courses = _context.Courses
+                    .Where(c =>
+                        c.Name
+                        .ToLower()
+                        .Contains(keyword));
+
+                courses = courses.OrderBy(c => c.Id);
+                switch (userRole)
+                {
+                    case Role.Trainee:
+                        model.GroupedUsers = await courses
+                            .Include(c => c.Trainees)
+                            .Select(c => new GroupedUsersViewModel<ApplicationUser>()
+                            {
+                                Type = c.Name,
+                                Users = c.Trainees.Select(t => t.User).ToList()
+                            })
+                            .ToListAsync();
+                        break;
+                    case Role.Trainer:
+                        model.GroupedUsers = await courses
+                            .Include(c => c.Trainers)
+                            .Select(c => new GroupedUsersViewModel<ApplicationUser>()
+                            {
+                                Type = c.Name,
+                                Users = c.Trainers.Select(t => t.User).ToList()
+                            })
+                            .ToListAsync();
+                        break;
+                        //default:
+                        //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        //    return View();
+                }
+            }
+
+            return View(model);
+        }
+
+        protected async Task<IPagedList<ApplicationUser>> GetPagedListAsync(IQueryable<ApplicationUser> courses, string userRole, int page)
+        {
+            const int pageSize = 3;
+
+            if (page < 1)
+                return null;
+
+            var listPaged = await courses.ToPagedListAsync(page, pageSize);
+
+            return listPaged;
+        }
+
         private async Task<UserViewModel> GetUserViewModelAsync(int courseId, string userRole, string userId)
         {
             var course = await _context.Courses
@@ -253,6 +320,22 @@ namespace WebApp.Areas.Staff.Controllers
                 default:
                     return null;
             }
+        }
+    }
+
+    internal class Search<T>
+    {
+        private string keyword;
+        private int page;
+        private int pageSize;
+        private ApplicationDbContext context;
+
+        public Search(string keyword, int page, int pageSize = 3)
+        {
+            this.context = new ApplicationDbContext();
+            this.keyword = keyword;
+            this.page = page;
+            this.pageSize = pageSize;
         }
     }
 }

@@ -212,6 +212,7 @@
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Staff\Data\AssignedSearchVewModel.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
     <Compile Include="Areas\Trainer\Controllers\HomeController.cs" />
     <Compile Include="Areas\Trainer\Controllers\TrainerViewCourseController.cs" />
@@ -261,10 +262,12 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\BaseAccountController.cs" />
     <Compile Include="Utils\Role.cs" />
+    <Compile Include="Utils\AssignedSearchForm.cs" />
     <Compile Include="ViewModels\AccountRegisterViewModel.cs" />
     <Compile Include="ViewModels\AssignViewModel.cs" />
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
+    <Compile Include="Utils\SearchForm.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +306,8 @@
     <Content Include="Areas\Trainer\Views\TrainerViewCourse\Index.cshtml" />
     <Content Include="Areas\Trainer\Views\TrainerViewCourse\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Assign\Remove.cshtml" />
+    <Content Include="Areas\Staff\Views\Assign\Search.cshtml" />
+    <Content Include="Areas\Staff\Views\Shared\AssignedSearchFormPartial.cshtml" />
     <None Include="Content\jquery-3.6.0.intellisense.js" />
     <Content Include="Content\jquery-3.6.0.js" />
     <Content Include="Content\jquery-3.6.0.min.js" />
@@ -437,7 +442,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\ViewModels\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Areas\Staff\Data\" />
     <Folder Include="Areas\Trainer\Data\" />
     <Folder Include="Areas\Trainer\Views\TrainerViewTrainee\" />
     <Folder Include="Properties\PublishProfiles\" />
