@@ -1,0 +1,61 @@
+﻿@model WebApp.Areas.Staff.Data.AssignedSearchVewModel
+@using X.PagedList
+@using X.PagedList.Mvc
+@using X.PagedList.Mvc.Fluent
+@using X.PagedList.Web.Common
+@using WebApp.Utils
+@{
+	ViewBag.Title = "Search";
+}
+
+@*<h2 class="pb-4">@Html.ActionLink((string)ViewBag.Title, "Index")</h2>*@
+
+<div class="row">
+	<div class="col-xl-2 pb-3">
+	</div>
+
+	<div class="col-xl-10 pb-3">
+		@Html.Partial("AssignedSearchFormPartial", Model)
+		@if (Model.GroupedUsers != null)
+		{
+			<h3>Search Result</h3>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">Course Name</th>
+						<th scope="col">@Model.UserRole</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model.GroupedUsers.Count == 0)
+					{
+						<template class="text-danger">
+							"No result"
+						</template>
+					}
+					else
+					{
+						foreach (var group in Model.GroupedUsers)
+						{
+							<tr>
+								<td>@group.Type</td>
+								<td>
+									<ol class="">
+										@foreach (var user in group.Users)
+										{
+											<li class="">
+												@user.Email
+											</li>
+										}
+									</ol>
+								</td>
+							</tr>
+						}
+					}
+				</tbody>
+			</table>
+
+		}
+
+	</div>
+</div>
