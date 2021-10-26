@@ -38,9 +38,9 @@
 	@using (Html.BeginForm())
 	{
 		@Html.AntiForgeryToken()
-
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 		<div class="form-actions no-color">
-			@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary mx-2" }) 
+			@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary mx-2" })
 			<input type="submit" value="Confirm Delete" class="btn btn-danger" />
 		</div>
 	}
