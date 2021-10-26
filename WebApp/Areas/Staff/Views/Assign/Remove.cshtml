@@ -1,0 +1,19 @@
+﻿@model WebApp.ViewModels.UserProfileViewModel
+@using WebApp.Utils;
+@{
+	ViewBag.Title = "Remove";
+}
+
+@Html.Partial("Profile.DetailsPartial")
+
+@using (Html.BeginForm("ConfirmRemove", "Assign", FormMethod.Post))
+{
+	@Html.AntiForgeryToken()
+	<input type="hidden" name="courseId" value="@Request.Params["courseId"]" />
+	<input type="hidden" name="userRole" value="@Request.Params["userRole"]" />
+	<input type="hidden" name="userId" value="@Request.Params["userId"]" />
+	<div class="form-actions no-color">
+		<input type="submit" value="Confirm Remove" class="btn btn-danger" /> |
+		@Html.ActionLink("Back to List", "Index")
+	</div>
+}

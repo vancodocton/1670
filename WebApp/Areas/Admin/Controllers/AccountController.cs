@@ -16,15 +16,10 @@ namespace WebApp.Areas.Admin.Controllers
     [Authorize(Roles = Role.Admin)]
     public class AccountController : BaseAccountController
     {
-        public AccountController() : base() { }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-            : base(userManager, signInManager) { }
-
         protected override void SetManagedRoles()
         {
-            roles.Add(Role.Staff);
-            roles.Add(Role.Trainer);
+            _managedRoles.Add(Role.Staff);
+            _managedRoles.Add(Role.Trainer);
         }
 
         [HttpGet]
@@ -32,7 +27,7 @@ namespace WebApp.Areas.Admin.Controllers
         {
             var model = new List<GroupedUsersViewModel<ApplicationUser>>();
 
-            foreach (var roleName in roles)
+            foreach (var roleName in _managedRoles)
             {
                 var role = await RoleManager.FindByNameAsync(roleName);
 
@@ -47,33 +42,9 @@ namespace WebApp.Areas.Admin.Controllers
             return View(model);
         }
 
-        protected override async Task<UserViewModel> LoadUserViewModel(string userId)
+        protected override async Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model)
         {
-            var user = await UserManager.FindByIdAsync(userId);
-
-            if (user == null)
-                return null;
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-
-            if (!roles.All(r => this.roles.Contains(r)))
-                return null;
-
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(roles)
-            };
-
-            model = await LoadUserProfile(model);
-
-            return model;
-        }
-
-        protected override async Task<UserViewModel> LoadUserProfile(UserViewModel model)
-        {
-            if (!roles.All(r => this.roles.Contains(r)))
-                return null;
+            var roles = model.Roles;
 
             if (roles.Contains(Role.Trainer))
             {
@@ -81,43 +52,31 @@ namespace WebApp.Areas.Admin.Controllers
 
                 if (trainer == null)
                 {
-                    trainer = new Models.Trainer()
-                    {
-                        UserId = model.User.Id,
-                        Specialty = null
-                    };
-
-                    _context.Trainers.Add(trainer);
-                    await _context.SaveChangesAsync();
-                }
-                model.Specialty = trainer.Specialty;
-            }
-
-            return model;
-        }
-
-        protected override async Task<UserViewModel> UpdateUserProfile(UserViewModel model)
-        {
-            if (roles.Contains(Role.Trainer))
-            {
-                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
-
-                if (trainer == null)
-                {
-                    trainer = new Models.Trainer()
-                    {
-                        UserId = model.User.Id,
-                        Specialty = model.Specialty
-                    };
-                    _context.Trainers.Add(trainer);
+                    _ = await AddTrainer(new Models.Trainer() { UserId = model.User.Id });
+                    model.Specialty = null;
                 }
                 else
-                    trainer.Specialty = model.Specialty;
-
-                await _context.SaveChangesAsync();
+                {
+                    model.Specialty = trainer.Specialty;
+                }
             }
-
             return model;
         }
+
+        protected override async Task<int> UpdateUserProfile(UserProfileViewModel model)
+        {
+            int affectedRow = 0;
+            var roles = model.Roles;
+
+            if (roles.Any(r => r == Role.Trainer))
+            {
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+                trainer.Specialty = model.Specialty;
+                affectedRow += await _context.SaveChangesAsync();
+            }
+
+            return affectedRow;
+        }
+
     }
 }

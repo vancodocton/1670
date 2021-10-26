@@ -6,34 +6,35 @@
 <div>
 	<h4>Course</h4>
 	<hr />
-	<dl class="dl-horizontal">
-		<dt>
+	<dl class="row">
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(model => model.Name)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(model => model.Name)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(model => model.CourseCategory)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(model => model.CourseCategory.Name)
 		</dd>
 
-		<dt>
+		<dt class="col-sm-3 text-end">
 			@Html.DisplayNameFor(model => model.Description)
 		</dt>
 
-		<dd>
+		<dd class="col-sm-9">
 			@Html.DisplayFor(model => model.Description)
 		</dd>
 
 	</dl>
 </div>
 <p>
-	@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-	@Html.ActionLink("Back to List", "Index")
+	@Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-secondary mx-1" })
+	@Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-success mx-1" })
+
 </p>

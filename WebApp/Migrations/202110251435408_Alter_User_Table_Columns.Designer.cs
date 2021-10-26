@@ -7,13 +7,13 @@ namespace WebApp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class addtrainertraineetable : IMigrationMetadata
+    public sealed partial class Alter_User_Table_Columns : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(addtrainertraineetable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Alter_User_Table_Columns));
         
         string IMigrationMetadata.Id
         {
-            get { return "202110211446077_add-trainer-trainee-table"; }
+            get { return "202110251435408_Alter_User_Table_Columns"; }
         }
         
         string IMigrationMetadata.Source

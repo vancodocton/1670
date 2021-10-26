@@ -6,7 +6,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using WebApp.Areas.Staff.Data;
 using WebApp.Models;
+using WebApp.Models.Profiles;
 using WebApp.Utils;
 using WebApp.ViewModels;
 using X.PagedList;
@@ -14,13 +16,12 @@ using X.PagedList;
 namespace WebApp.Areas.Staff.Controllers
 {
     [Authorize(Roles = Role.Staff)]
-    public class AssignController : Controller
+    public class AssignController : BaseAccountController
     {
-        private readonly ApplicationDbContext _context;
-
-        public AssignController()
+        protected override void SetManagedRoles()
         {
-            _context = new ApplicationDbContext();
+            _managedRoles.Add(Role.Trainer);
+            _managedRoles.Add(Role.Trainee);
         }
 
         [HttpGet]
@@ -52,9 +53,11 @@ namespace WebApp.Areas.Staff.Controllers
             return View(model);
         }
 
+        [HttpPost]
         private async Task<AssignViewModel> LoadAssignViewModel(string role, AssignViewModel model = null)
         {
             model = model ?? new AssignViewModel();
+            model.Role = role;
 
             switch (role)
             {
@@ -71,7 +74,6 @@ namespace WebApp.Areas.Staff.Controllers
                 default:
                     return null;
             }
-            model.Role = role;
 
             return model;
         }
@@ -133,6 +135,136 @@ namespace WebApp.Areas.Staff.Controllers
 
             if (model == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Remove(int? courseId, string userRole, string userId, bool saveChangesError = false)
+        {
+            // validate parameters
+            if (courseId == null || userRole == null || userId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var course = await _context.Courses
+                .SingleOrDefaultAsync(c => c.Id == courseId);
+
+            if (course == null)
+                return HttpNotFound();
+
+            var model = new UserProfileViewModel();
+            switch (userRole)
+            {
+                case Role.Trainee:
+                    if (course.Trainees.Any(t => t.UserId == userId))
+                    {
+                        model = await GetUserViewModel(userId);
+                    }
+                    break;
+                case Role.Trainer:
+                    if (course.Trainers.Any(t => t.UserId == userId))
+                    {
+                        model = await GetUserViewModel(userId);
+                    }
+                    break;
+                default:
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError)
+            {
+                ModelState.AddModelError("",
+                    "Delete failed.Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmRemove(int? courseId, string userRole, string userId)
+        {
+            // validate parameters
+            if (courseId == null || userRole == null || userId == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var course = await _context.Courses
+                .SingleOrDefaultAsync(c => c.Id == courseId);
+
+            if (course == null)
+                return HttpNotFound();
+
+            var model = new UserProfileViewModel();
+            switch (userRole)
+            {
+                case Role.Trainee:
+                    var trainee = course.Trainees.SingleOrDefault(t => t.UserId == userId);
+                    course.Trainees.Remove(trainee);
+                    break;
+                case Role.Trainer:
+                    var trainer = course.Trainers.SingleOrDefault(t => t.UserId == userId);
+                    course.Trainers.Remove(trainer);
+                    break;
+                default:
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            _context.Courses.Attach(course);
+
+            _ = await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index), new { courseId });
+        }
+
+        // search enrolled trainer/trainee by course name
+        [HttpGet]
+        public async Task<ActionResult> Search(string userRole, string keyword)
+        {
+            var model = new AssignedSearchVewModel();
+
+            //model.Roles = new List<string>() { Role.Trainee, Role.Trainer };
+            model.Roles = _managedRoles;
+            if (keyword == null)
+                return View(model);
+
+            keyword = keyword.Trim().ToLower();
+
+            if (_managedRoles.Contains(userRole))
+            {
+                model.UserRole = userRole;
+                var courses = _context.Courses
+                    .Where(c =>
+                        c.Name
+                        .ToLower()
+                        .Contains(keyword));
+
+                courses = courses.OrderBy(c => c.Id);
+
+                switch (userRole)
+                {
+                    case Role.Trainee:
+                        model.GroupedUsers = await courses
+                            .Include(c => c.Trainees)
+                            .Select(c => new GroupedUsersViewModel<ApplicationUser>()
+                            {
+                                Type = c.Name,
+                                Users = c.Trainees.Select(t => t.User).ToList()
+                            })
+                            .ToListAsync();
+                        break;
+                    case Role.Trainer:
+                        model.GroupedUsers = await courses
+                            .Include(c => c.Trainers)
+                            .Select(c => new GroupedUsersViewModel<ApplicationUser>()
+                            {
+                                Type = c.Name,
+                                Users = c.Trainers.Select(t => t.User).ToList()
+                            })
+                            .ToListAsync();
+                        break;
+                        //default:
+                        //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        //    return View();
+                }
+            }
 
             return View(model);
         }

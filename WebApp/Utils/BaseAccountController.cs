@@ -9,21 +9,25 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.ViewModels;
 using WebApp.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace WebApp.Utils
 {
     public abstract class BaseAccountController : Controller
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly List<string> roles;
+        protected readonly List<string> _managedRoles;
         protected ApplicationRoleManager _roleManager;
         protected ApplicationSignInManager _signInManager;
         protected ApplicationUserManager _userManager;
 
+        protected abstract void SetManagedRoles();
+
         public BaseAccountController()
         {
             _context = new ApplicationDbContext();
-            roles = new List<string>();
+            _managedRoles = new List<string>();
             SetManagedRoles();
         }
 
@@ -69,16 +73,51 @@ namespace WebApp.Utils
             }
         }
 
-        protected abstract void SetManagedRoles();
+        protected async Task<IList<string>> GetUserRoles(string userId)
+        {
+            var roles = await UserManager.GetRolesAsync(userId);
+
+            // check if all roles of user is in managed by controllers
+            if (IsUserManagedByRoles(roles))
+                return roles;
+            else
+                return null;
+        }
+
+        protected bool IsUserManagedByRoles(IList<string> roles)
+        {
+            if (roles.Count == 0)
+                return false;
+
+            foreach (var role in roles)
+                if (!IsUserManagedByRole(role))
+                    return false;
+
+            return true;
+        }
+
+        protected bool IsUserManagedByRole(string role)
+        {
+            if (role == null)
+                return false;
+
+            foreach (var managedRole in _managedRoles)
+            {
+                if (role == managedRole)
+                    return true;
+            }
+
+            return false;
+        }
 
         [HttpGet]
         public ActionResult Create()
         {
             AccountRegisterViewModel model = new AccountRegisterViewModel()
             {
-                Roles = roles
+                Roles = _managedRoles
             };
-            return View(model);
+            return View("Account.Register", model);
         }
 
         [HttpPost]
@@ -87,25 +126,70 @@ namespace WebApp.Utils
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
+                if (IsUserManagedByRole(model.Role))
                 {
-                    await UserManager.AddToRoleAsync(user.Id, model.Role);
+                    var user = new ApplicationUser
+                    {
+                        FullName = model.FullName,
+                        Email = model.Email,
+                        Age = model.Age,
+                        Address = model.Address,
+                        UserName = model.Email,
+                    };
 
-                    return RedirectToAction("Index");
+                    var result = await UserManager.CreateAsync(user, model.Password);
+
+                    // set role and add profile
+                    if (result.Succeeded)
+                    {
+                        if (model.Role == Role.Trainer)
+                        {
+                            Trainer trainer = new Trainer()
+                            {
+                                UserId = user.Id,
+                                Specialty = model.Specialty,
+                            };
+                            _ = await AddTrainer(trainer);
+                        }
+                        else if (model.Role == Role.Trainee)
+                        {
+                            Trainee trainee = new Trainee()
+                            {
+                                UserId = user.Id,
+                                Education = model.Education,
+                                BirthDate = model.BirthDate,
+                            };
+                            _ = await AddTrainee(trainee);
+                        }
+
+                        await UserManager.AddToRoleAsync(user.Id, model.Role);
+
+                        return RedirectToAction("Index");
+                    }
+                    else
+                        AddErrors(result);
                 }
-                AddErrors(result);
+                else
+                    ModelState.AddModelError("", "Cannot create account with role is" + model.Role);
             }
 
-            model.Roles = roles;
+            model.Roles = _managedRoles;
             return View(model);
         }
 
-        protected abstract Task<UserViewModel> LoadUserViewModel(string userId);
-        protected abstract Task<UserViewModel> LoadUserProfile(UserViewModel model);
-        protected abstract Task<UserViewModel> UpdateUserProfile(UserViewModel model);
+        protected async Task<int> AddTrainer(Trainer trainer)
+        {
+            _context.Trainers.Add(trainer);
+
+            return await _context.SaveChangesAsync();
+        }
+
+        protected async Task<int> AddTrainee(Trainee trainee)
+        {
+            _context.Trainees.Add(trainee);
+
+            return await _context.SaveChangesAsync();
+        }
 
         [HttpGet]
         public async Task<ActionResult> Details(string id)
@@ -113,7 +197,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserProfileViewModel model = await GetUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -127,7 +211,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserProfileViewModel model = await GetUserViewModel(id);
             if (model == null)
                 return HttpNotFound();
 
@@ -155,11 +239,9 @@ namespace WebApp.Utils
             IdentityResult result = await UserManager.DeleteAsync(user);
 
             if (result.Succeeded)
-            {
                 return RedirectToAction("Index");
-            }
-
-            return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
+            else
+                return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
         }
 
         [HttpGet]
@@ -168,7 +250,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserProfileViewModel model = await GetUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -178,11 +260,16 @@ namespace WebApp.Utils
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(UserViewModel model)
+        public async Task<ActionResult> Edit(UserProfileViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = model.User;
+
+                var roles = await GetUserRoles(user.Id);
+                if (roles == null)
+                    return HttpNotFound();
+
                 var userinDb = await UserManager.FindByIdAsync(user.Id);
 
                 if (userinDb == null)
@@ -193,11 +280,7 @@ namespace WebApp.Utils
                 userinDb.Email = user.Email;
                 userinDb.UserName = user.Email;
 
-                model = await UpdateUserProfile(model);
-                if (model == null)
-                {
-                    return HttpNotFound();
-                }
+                _ = await UpdateUserProfile(model);
 
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
 
@@ -211,61 +294,132 @@ namespace WebApp.Utils
         }
 
         [HttpGet]
-        public ActionResult ResetPassword(string email = null)
+        public async Task<ActionResult> ResetPassword(string email = null)
         {
-            if (email == null)
-                return View();
+            if (email != null && await UserManager.FindByEmailAsync(email) == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotAcceptable);
 
             var model = new ResetPasswordViewModel()
             {
                 Email = email
             };
 
-            return View(model);
+            return View("Account.ResetPassword", model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
+                var user = await UserManager.FindByEmailAsync(model.Email);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "The user does not exist.");
+                    return View("Account.ResetPassword", model);
+                }
+
+                var roles = await UserManager.GetRolesAsync(user.Id);
+
+                if (!IsUserManagedByRoles(roles))
+                {
+                    ModelState.AddModelError("", "The user cannot be reset. Permission is denied.");
+                    return View("Account.ResetPassword", model);
+                }
+
+                model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+
+                if (result.Succeeded)
+                {
+                    ViewBag.Email = model.Email;
+                    return View("Account.ResetPasswordConfirmation");
+                }
+                else
+                    AddErrors(result);
             }
-            var user = await UserManager.FindByEmailAsync(model.Email);
 
-            if (user == null)
-            {
-                ViewBag.ErrorMessage = "The user does not exist";
-                return View(model);
-            }
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-
-            if (!roles.All(r => this.roles.Contains(r)))
-            {
-                ViewBag.ErrorMessage = "The user cannot be reset. Permission is denied.";
-                return View(model);
-            }
-
-            model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-            IdentityResult result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction(nameof(ResetPasswordConfirmation), null, new { email = user.Email });
-            }
-
-            AddErrors(result);
-            return View();
+            return View("Account.ResetPassword", model);
         }
 
-        [Route("{email}")]
-        [HttpGet]
-        public ActionResult ResetPasswordConfirmation(string email)
+        protected async Task<UserProfileViewModel> GetUserViewModel(string userId)
         {
-            ViewBag.Email = email;
-            return View();
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null)
+                return null;
+
+            var roles = await GetUserRoles(userId);
+            if (roles == null)
+                return null;
+
+            var model = new UserProfileViewModel(user)
+            {
+                Roles = new List<string>(roles)
+            };
+
+            model = await GetUserProfile(model);
+
+            return model;
+        }
+
+        protected virtual async Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model)
+        {
+            var roles = model.Roles;
+
+            if (roles.Contains(Role.Trainer))
+            {
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+
+                if (trainer == null)
+                {
+                    _ = await AddTrainer(new Trainer() { UserId = model.User.Id });
+                    model.Specialty = null;
+                }
+                else
+                {
+                    model.Specialty = trainer.Specialty;
+                }
+            }
+
+            if (roles.Contains(Role.Trainee))
+            {
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+
+                if (trainee == null)
+                {
+                    _ = await AddTrainee(new Trainee() { UserId = model.User.Id });
+                    model.Education = null;
+                    model.BirthDate = null;
+                }
+                else
+                {
+                    model.Education = trainee.Education;
+                    model.BirthDate = trainee.BirthDate;
+                }
+            }
+            return model;
+        }
+
+        protected virtual async Task<int> UpdateUserProfile(UserProfileViewModel model)
+        {
+            int affectedRow = 0;
+            if (_managedRoles.Any(r => r == Role.Trainer))
+            {
+                var trainer = await _context.Trainers.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+                trainer.Specialty = model.Specialty;
+                affectedRow += await _context.SaveChangesAsync();
+            }
+
+            if (_managedRoles.Any(r => r == Role.Trainee))
+            {
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+                trainee.Education = model.Education;
+                trainee.BirthDate = model.BirthDate;
+                affectedRow += await _context.SaveChangesAsync();
+            }
+            return affectedRow;
         }
 
         private void AddErrors(IdentityResult result)
@@ -275,5 +429,8 @@ namespace WebApp.Utils
                 ModelState.AddModelError("", error);
             }
         }
+
+        //protected abstract Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model);
+        //protected abstract Task<int> UpdateUserProfile(UserProfileViewModel model);
     }
 }

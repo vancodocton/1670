@@ -15,15 +15,9 @@ namespace WebApp.Areas.Staff.Controllers
     [Authorize(Roles = Role.Staff)]
     public class TraineeController : BaseAccountController
     {
-        public TraineeController() : base() { }
-
-        public TraineeController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
-            : base(userManager, signInManager) { }
-
-
         protected override void SetManagedRoles()
         {
-            roles.Add(Role.Trainee);
+            _managedRoles.Add(Role.Trainee);
         }
 
         protected async Task<IPagedList<ApplicationUser>> GetPagedNames(IQueryable<ApplicationUser> users, int page)
@@ -40,7 +34,6 @@ namespace WebApp.Areas.Staff.Controllers
 
             return listPaged;
         }
-
 
         [HttpGet]
         public async Task<ActionResult> Index(string name, int? age, int? page)
@@ -74,78 +67,42 @@ namespace WebApp.Areas.Staff.Controllers
             return View(listPaged);
         }
 
-        protected override async Task<UserViewModel> LoadUserViewModel(string userId)
+        protected override async Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model)
         {
-            var user = await UserManager.FindByIdAsync(userId);
+            var roles = model.Roles;           
 
-            if (user == null)
-                return null;
-
-            var roles = await UserManager.GetRolesAsync(user.Id);
-            if (!roles.All(r => r == Role.Trainee))
-                return null;
-
-            var model = new UserViewModel()
-            {
-                User = user,
-                Roles = new List<string>(roles)
-            };
-
-            model = await LoadUserProfile(model);
-
-            return model;
-        }
-
-        protected override async Task<UserViewModel> LoadUserProfile(UserViewModel model)
-        {
-            var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
-
-            if (trainee == null)
-            {
-                trainee = new Models.Trainee()
-                {
-                    UserId = model.User.Id,
-                    Education = null,
-                    BirthDate = null,
-                };
-
-                _context.Trainees.Add(trainee);
-                await _context.SaveChangesAsync();
-            }
-
-            model.Education = trainee.Education;
-            model.BirthDate = trainee.BirthDate;
-
-            return model;
-        }
-
-        protected override async Task<UserViewModel> UpdateUserProfile(UserViewModel model)
-        {
-            if (roles.All(r => r == Role.Trainee))
+            if (roles.Contains(Role.Trainee))
             {
                 var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
 
                 if (trainee == null)
                 {
-                    trainee = new Models.Trainee()
-                    {
-                        UserId = model.User.Id,
-                        Education = null,
-                        BirthDate = null,
-                    };
-                    _context.Trainees.Add(trainee);
+                    _ = await AddTrainee(new Models.Trainee() { UserId = model.User.Id });
+                    model.Education = null;
+                    model.BirthDate = null;
                 }
                 else
                 {
-                    trainee.Education = model.Education;
-                    trainee.BirthDate = model.BirthDate;
+                    model.Education = trainee.Education;
+                    model.BirthDate = trainee.BirthDate;
                 }
-
-                await _context.SaveChangesAsync();
-                return model;
             }
+            return model;
+        }
 
-            return null;
+        protected override async Task<int> UpdateUserProfile(UserProfileViewModel model)
+        {
+            int affectedRow = 0;
+            var roles = model.Roles;
+
+            if (roles.Any(r => r == Role.Trainee))
+            {
+                var trainee = await _context.Trainees.SingleOrDefaultAsync(u => u.UserId == model.User.Id);
+                trainee.Education = model.Education;
+                trainee.BirthDate = model.BirthDate;
+                affectedRow += await _context.SaveChangesAsync();
+            }
+            return affectedRow;
         }
     }
 }

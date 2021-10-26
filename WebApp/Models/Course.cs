@@ -10,7 +10,7 @@ namespace WebApp.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(255)]
+        [StringLength(100)]
         public string Name { get; set; }
 
         [ForeignKey("CourseCategory")]

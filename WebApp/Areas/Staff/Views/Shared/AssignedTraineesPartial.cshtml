@@ -1,4 +1,5 @@
 ﻿@model ICollection<WebApp.Models.Trainee>
+@using WebApp.Utils;
 
 <h3>Enrolled Trainers</h3>
 @if (Model.Count == 0)
@@ -22,7 +23,7 @@ else
 					<td>@trainer.User.UserName</td>
 					<td>@trainer.User.FullName</td>
 					<td>
-						@Html.ActionLink("Unassign", "Remove", "Assign", new { id = trainer.UserId }, new { @class = "btn btn-danger" })
+						@Html.ActionLink("Unassign", "Remove", "Assign", new { courseId = ViewBag.CourseId, userRole = Role.Trainee, userId = trainer.UserId }, new { @class = "btn btn-danger" })
 					</td>
 				</tr>
 			}

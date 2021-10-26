@@ -1,40 +1,39 @@
 ﻿@model WebApp.Models.CourseCategory
 @{
-    ViewBag.Title = "Delete CourseCategory";
+	ViewBag.Title = "Delete CourseCategory";
 }
 
 <div>
-    <h4>@ViewBag.Title</h4>
-    <hr />
-    @Html.HiddenFor(model => model.Id)
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	<h4>@ViewBag.Title</h4>
+	<hr />
 
-    <dl class="row dl-horizontal">
-        <dt class="col-sm-3 text-end">
-            @Html.DisplayNameFor(m => m.Name)
-        </dt>
+	<dl class="row">
+		<dt class="col-sm-3 text-end">
+			@Html.DisplayNameFor(m => m.Name)
+		</dt>
 
-        <dd class="col-sm-9">
-            @Html.DisplayFor(m => m.Name)
-        </dd>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(m => m.Name)
+		</dd>
 
-        <dt class="col-sm-3 text-end">
-            @Html.DisplayNameFor(m => m.Description)
-        </dt>
+		<dt class="col-sm-3 text-end">
+			@Html.DisplayNameFor(m => m.Description)
+		</dt>
 
-        <dd class="col-sm-9">
-            @Html.DisplayFor(m => m.Description)
-        </dd>
-    </dl>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(m => m.Description)
+		</dd>
+	</dl>
 </div>
 
 @using (Html.BeginForm("Delete", "CourseCategory", FormMethod.Post))
 {
-    @Html.AntiForgeryToken()
-
-    <div class="form-actions no-color">
-        <input type="submit" value="Confirm Delete" class="btn btn-danger" />
-        <p class="mt-3">@Html.ActionLink("Back to List", "Index")</p>
-    </div>
+	@Html.AntiForgeryToken()
+	@Html.HiddenFor(model => model.Id)
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	<div class="form-actions no-color">
+		@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+		<input type="submit" value="Confirm Delete" class="btn btn-danger" />
+	</div>
 }
 

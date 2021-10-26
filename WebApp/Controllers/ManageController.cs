@@ -82,7 +82,7 @@ namespace WebApp.Controllers
             return View(model);
         }
 
-        private async Task<UserViewModel> LoadUserViewModel(string userId)
+        private async Task<UserProfileViewModel> LoadUserViewModel(string userId)
         {
             var user = await UserManager.FindByIdAsync(userId);
 
@@ -91,10 +91,9 @@ namespace WebApp.Controllers
 
             var roles = await UserManager.GetRolesAsync(user.Id);
 
-            var model = new UserViewModel()
+            var model = new UserProfileViewModel(user)
             {
-                User = user,
-                Roles = new List<string>(roles)
+                Roles = roles
             };
 
             if (roles.Any(r => r == Role.Trainer))
@@ -106,13 +105,14 @@ namespace WebApp.Controllers
             return model;
         }
 
-
+        [HttpGet]
+        [Authorize(Roles = Role.Trainee + "," + Role.Trainer + "," + Role.Admin + "," + Role.Staff)]
         public async Task<ActionResult> ViewProfile()
         {
             string id = User.Identity.GetUserId();
 
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserProfileViewModel model = await LoadUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -120,11 +120,13 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Role.Trainer + "," + Role.Admin + "," + Role.Staff)]
+
         public async Task<ActionResult> UpdateProfile()
         {
             string id = User.Identity.GetUserId();
 
-            UserViewModel model = await LoadUserViewModel(id);
+            UserProfileViewModel model = await LoadUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -133,7 +135,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateProfile(UserViewModel model)
+        public async Task<ActionResult> UpdateProfile(UserProfileViewModel model)
         {
             if (ModelState.IsValid)
             {
