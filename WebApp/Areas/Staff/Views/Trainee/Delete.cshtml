@@ -1,6 +1,5 @@
 ﻿@model WebApp.ViewModels.UserProfileViewModel
-@using WebApp.Utils;
-@{ 
+@{
 	ViewBag.Title = "Delete Account";
 }
 
@@ -9,7 +8,7 @@
 @using (Html.BeginForm("Delete", "Trainee", FormMethod.Post))
 {
 	@Html.AntiForgeryToken()
-
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 	<div class="form-actions no-color">
 		<input type="submit" value="Confirm Delete" class="btn btn-default" /> |
 		@Html.ActionLink("Back to List", "Index")
