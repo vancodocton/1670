@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebApp.Areas.Staff.Data;
 using WebApp.Models;
+using WebApp.Models.Profiles;
 using WebApp.Utils;
 using WebApp.ViewModels;
 using X.PagedList;
@@ -151,7 +152,7 @@ namespace WebApp.Areas.Staff.Controllers
             if (course == null)
                 return HttpNotFound();
 
-            var model = new UserViewModel();
+            var model = new UserProfileViewModel();
             switch (userRole)
             {
                 case Role.Trainee:
@@ -192,7 +193,7 @@ namespace WebApp.Areas.Staff.Controllers
             if (course == null)
                 return HttpNotFound();
 
-            var model = new UserViewModel();
+            var model = new UserProfileViewModel();
             switch (userRole)
             {
                 case Role.Trainee:
@@ -215,7 +216,7 @@ namespace WebApp.Areas.Staff.Controllers
 
         // search enrolled trainer/trainee by course name
         [HttpGet]
-        public async Task<ActionResult> Search(string userRole, string keyword, int? page)
+        public async Task<ActionResult> Search(string userRole, string keyword)
         {
             var model = new AssignedSearchVewModel();
 
@@ -236,6 +237,7 @@ namespace WebApp.Areas.Staff.Controllers
                         .Contains(keyword));
 
                 courses = courses.OrderBy(c => c.Id);
+
                 switch (userRole)
                 {
                     case Role.Trainee:
@@ -265,77 +267,6 @@ namespace WebApp.Areas.Staff.Controllers
             }
 
             return View(model);
-        }
-
-        protected async Task<IPagedList<ApplicationUser>> GetPagedListAsync(IQueryable<ApplicationUser> courses, string userRole, int page)
-        {
-            const int pageSize = 3;
-
-            if (page < 1)
-                return null;
-
-            var listPaged = await courses.ToPagedListAsync(page, pageSize);
-
-            return listPaged;
-        }
-
-        private async Task<UserViewModel> GetUserViewModelAsync(int courseId, string userRole, string userId)
-        {
-            var course = await _context.Courses
-                .Include(c => c.Trainers)
-                .SingleOrDefaultAsync(c => c.Id == courseId);
-            switch (userRole)
-            {
-                case Role.Trainee:
-                    if (course.Trainees.Any(t => t.UserId == userId))
-                    {
-                        var model = new UserViewModel();
-                        var user = await _context.Users
-                            .Include(u => u.Trainer)
-                            .SingleAsync(u => u.Id == userId);
-
-                        model.User = user;
-                        model.BirthDate = user.Trainee.BirthDate;
-                        model.Education = user.Trainee.Education;
-
-                        return model;
-                    }
-                    else
-                        return null;
-                case Role.Trainer:
-                    if (course.Trainers.Any(t => t.UserId == userId))
-                    {
-                        var model = new UserViewModel();
-                        var user = await _context.Users
-                            .Include(u => u.Trainer)
-                            .SingleAsync(u => u.Id == userId);
-
-                        model.User = user;
-                        model.Specialty = user.Trainer.Specialty;
-
-                        return model;
-                    }
-                    else
-                        return null;
-                default:
-                    return null;
-            }
-        }
-    }
-
-    internal class Search<T>
-    {
-        private string keyword;
-        private int page;
-        private int pageSize;
-        private ApplicationDbContext context;
-
-        public Search(string keyword, int page, int pageSize = 3)
-        {
-            this.context = new ApplicationDbContext();
-            this.keyword = keyword;
-            this.page = page;
-            this.pageSize = pageSize;
         }
     }
 }
