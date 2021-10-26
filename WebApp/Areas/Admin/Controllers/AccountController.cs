@@ -42,7 +42,7 @@ namespace WebApp.Areas.Admin.Controllers
             return View(model);
         }
 
-        protected override async Task<UserViewModel> GetUserProfile(UserViewModel model)
+        protected override async Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model)
         {
             var roles = model.Roles;
 
@@ -63,7 +63,7 @@ namespace WebApp.Areas.Admin.Controllers
             return model;
         }
 
-        protected override async Task<int> UpdateUserProfile(UserViewModel model)
+        protected override async Task<int> UpdateUserProfile(UserProfileViewModel model)
         {
             int affectedRow = 0;
             var roles = model.Roles;

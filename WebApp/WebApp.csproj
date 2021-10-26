@@ -207,7 +207,6 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountController.cs" />
-    <Compile Include="Areas\Staff\Controllers\AssignController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
@@ -257,7 +256,6 @@
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="Utils\SearchForm.cs" />
-    <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
