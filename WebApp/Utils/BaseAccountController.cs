@@ -294,10 +294,10 @@ namespace WebApp.Utils
         }
 
         [HttpGet]
-        public ActionResult ResetPassword(string email = null)
+        public async Task<ActionResult> ResetPassword(string email = null)
         {
-            if (email == null)
-                return View();
+            if (email != null && await UserManager.FindByEmailAsync(email) == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotAcceptable);
 
             var model = new ResetPasswordViewModel()
             {
