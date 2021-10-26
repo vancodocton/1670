@@ -69,6 +69,7 @@ namespace WebApp.ViewModels
             Email = Email,
             Age = Age,
             Address = Address,
+            UserName = Email
         };
     }
 }
