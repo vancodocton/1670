@@ -211,7 +211,6 @@
     <Compile Include="Areas\Staff\Controllers\CourseCategoryController.cs" />
     <Compile Include="Areas\Staff\Controllers\CourseController.cs" />
     <Compile Include="Areas\Staff\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Staff\Controllers\TraineeController - Copy.cs" />
     <Compile Include="Areas\Staff\Controllers\TraineeController.cs" />
     <Compile Include="Areas\Staff\Data\AssignedSearchVewModel.cs" />
     <Compile Include="ViewModels\CreateCourseViewModel.cs" />
@@ -242,7 +241,7 @@
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\CourseCategory.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="ViewModels\UserProfile.cs" />
+    <Compile Include="ViewModels\UserProfileViewModel.cs" />
     <Compile Include="Models\Trainee.cs" />
     <Compile Include="Models\Trainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -261,7 +260,6 @@
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Admin\Views\Account\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Account\Edit.cshtml" />
@@ -308,7 +306,6 @@
     <Content Include="Areas\Staff\Views\Shared\AssignedSearchFormPartial.cshtml" />
     <Content Include="Areas\Staff\Views\Shared\AssignedTraineesPartial.cshtml" />
     <Content Include="Areas\Staff\Views\Shared\AssignedTrainersPartial.cshtml" />
-    <Content Include="Areas\Staff\Views\Trainee\Create.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Delete.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />
@@ -414,14 +411,14 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\ResetPassword.cshtml" />
-    <Content Include="Views\Shared\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Shared\Account.ResetPassword.cshtml" />
+    <Content Include="Views\Shared\Account.ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\UpdateProfilePartial.cshtml" />
     <Content Include="Views\Shared\DetailsProfilePartial.cshtml" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
-    <Content Include="Views\Shared\CreateAccountFormPartial.cshtml" />
     <Content Include="Views\Shared\DetailsCoursePartial.cshtml" />
+    <Content Include="Views\Shared\Account.Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

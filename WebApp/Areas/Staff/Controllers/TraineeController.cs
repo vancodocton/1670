@@ -77,7 +77,7 @@ namespace WebApp.Areas.Staff.Controllers
 
                 if (trainee == null)
                 {
-                    _ = await AddEmptyTrainee(model.User.Id);
+                    _ = await AddTrainee(new Models.Trainee() { UserId = model.User.Id });
                     model.Education = null;
                     model.BirthDate = null;
                 }
