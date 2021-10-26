@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebApp.Models;
 using WebApp.Models.Profiles;
 
 namespace WebApp.ViewModels
@@ -25,45 +26,37 @@ namespace WebApp.ViewModels
         [StringLength(50)]
         public string Address { get; set; }
 
-        //public UserProfile() { }
+        public UserProfileViewModel() { }
 
-        //public UserProfile(ApplicationUser user)
-        //{
-        //    Id = user.Id;
-        //    FullName = user.FullName;
-        //    Email = user.Email;
-        //    Age = user.Age;
-        //    Address = user.Address;
-        //}
+        public UserProfileViewModel(ApplicationUser user)
+        {
+            Id = user.Id;
+            FullName = user.FullName;
+            Email = user.Email;
+            Age = user.Age;
+            Address = user.Address;
+        }
 
         [DataType(DataType.Date)]
+        [Display(Name = "Date of birth")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? BirthDate { get; set; }
 
         [StringLength(50)]
         public string Education { get; set; }
 
-        //public UserProfile(Trainee user)
-        //{
-        //    Id = user.Id;
-        //    FullName = user.FullName;
-        //    Email = user.Email;
-        //    Age = user.Age;
-        //    Address = user.Address;
-        //    BirthDate = user.BirthDate;
-        //    Education = user.Education;
-        //}
+        public UserProfileViewModel(Trainee trainee) : this(trainee.User)
+        {
+            BirthDate = trainee.BirthDate;
+            Education = trainee.Education;
+        }
 
         [StringLength(50)]
         public string Specialty { get; set; }
 
-        //public UserProfile(Trainer user)
-        //{
-        //    Id = user.Id;
-        //    FullName = user.FullName;
-        //    Email = user.Email;
-        //    Age = user.Age;
-        //    Address = user.Address;
-        //    Specialty = user.Specialty;
-        //}
+        public UserProfile(Trainer trainer) : this(trainer.User)
+        {
+            Specialty = trainer.Specialty;
+        }
     }
 }

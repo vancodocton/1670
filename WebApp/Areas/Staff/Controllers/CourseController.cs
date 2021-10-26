@@ -41,16 +41,15 @@ namespace WebApp.Areas.Staff.Controllers
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Course course = await _context.Courses
                 .Include(c => c.CourseCategory)
                 .SingleOrDefaultAsync(c => c.Id == id);
+
             if (course == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(course);
         }
 

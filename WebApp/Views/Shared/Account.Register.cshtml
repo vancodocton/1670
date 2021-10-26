@@ -8,27 +8,31 @@
 @using (Html.BeginForm("Create", null, null, FormMethod.Post, new { @class = "row container-fluid", role = "form" }))
 {
 	@Html.AntiForgeryToken()
-	@Html.ValidationSummary("", new { @class = "text-danger" })
+	@Html.ValidationSummary(false, "", new { @class = "text-danger" })
 	<hr />
 	<div id="credential" class="col-lg-4 col-md-6">
 		<div class="form-group mb-3">
 			@Html.LabelFor(m => m.Email, new { @class = "form-label" })
 			@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
 			@Html.LabelFor(m => m.Password, new { @class = "form-label" })
 			@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
 			@Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
 			@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+			@Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
 			@Html.LabelFor(m => m.Role, new { @class = "form-label" })
 			@Html.DropDownListFor(m => m.Role, new SelectList(Model.Roles), new { @class = "form-select" })
+			@Html.ValidationMessageFor(m => m.Role, "", new { @class = "text-danger" })
 		</div>
 	</div>
 

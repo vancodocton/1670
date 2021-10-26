@@ -117,7 +117,7 @@ namespace WebApp.Utils
             {
                 Roles = _managedRoles
             };
-            return View(model);
+            return View("Account.Register", model);
         }
 
         [HttpPost]
@@ -304,7 +304,7 @@ namespace WebApp.Utils
                 Email = email
             };
 
-            return View(model);
+            return View("Account.ResetPassword", model);
         }
 
         [HttpPost]
@@ -318,15 +318,15 @@ namespace WebApp.Utils
                 if (user == null)
                 {
                     ModelState.AddModelError("", "The user does not exist.");
-                    return View(model);
+                    return View("Account.ResetPassword", model);
                 }
 
                 var roles = await UserManager.GetRolesAsync(user.Id);
 
                 if (!IsUserManagedByRoles(roles))
                 {
-                    ModelState.AddModelError("","The user cannot be reset. Permission is denied.");
-                    return View(model);
+                    ModelState.AddModelError("", "The user cannot be reset. Permission is denied.");
+                    return View("Account.ResetPassword", model);
                 }
 
                 model.Code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -335,13 +335,13 @@ namespace WebApp.Utils
                 if (result.Succeeded)
                 {
                     ViewBag.Email = model.Email;
-                    return View("ResetPasswordConfirmation");
+                    return View("Account.ResetPasswordConfirmation");
                 }
                 else
                     AddErrors(result);
             }
 
-            return View(model);
+            return View("Account.ResetPassword", model);
         }
 
         protected async Task<UserViewModel> GetUserViewModel(string userId)
