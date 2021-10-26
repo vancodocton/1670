@@ -257,7 +257,6 @@
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="Utils\SearchForm.cs" />
-    <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
@@ -413,12 +412,14 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\Account.ResetPassword.cshtml" />
     <Content Include="Views\Shared\Account.ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Shared\UpdateProfilePartial.cshtml" />
-    <Content Include="Views\Shared\DetailsProfilePartial.cshtml" />
+    <Content Include="Views\Shared\Profile.UpdatePartial.cshtml" />
+    <Content Include="Views\Shared\Profile.DetailsPartial.cshtml" />
     <Content Include="Scripts\jquery-3.6.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.0.min.map" />
     <Content Include="Views\Shared\DetailsCoursePartial.cshtml" />
     <Content Include="Views\Shared\Account.Register.cshtml" />
+    <Content Include="Views\Manage\UpdateProfile.cshtml" />
+    <Content Include="Views\Manage\ViewProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

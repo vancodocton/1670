@@ -197,7 +197,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await GetUserViewModel(id);
+            UserProfileViewModel model = await GetUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -211,7 +211,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await GetUserViewModel(id);
+            UserProfileViewModel model = await GetUserViewModel(id);
             if (model == null)
                 return HttpNotFound();
 
@@ -250,7 +250,7 @@ namespace WebApp.Utils
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            UserViewModel model = await GetUserViewModel(id);
+            UserProfileViewModel model = await GetUserViewModel(id);
 
             if (model == null)
                 return HttpNotFound();
@@ -260,7 +260,7 @@ namespace WebApp.Utils
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(UserViewModel model)
+        public async Task<ActionResult> Edit(UserProfileViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -294,10 +294,10 @@ namespace WebApp.Utils
         }
 
         [HttpGet]
-        public ActionResult ResetPassword(string email = null)
+        public async Task<ActionResult> ResetPassword(string email = null)
         {
-            if (email == null)
-                return View();
+            if (email != null && await UserManager.FindByEmailAsync(email) == null)
+                return new HttpStatusCodeResult(HttpStatusCode.NotAcceptable);
 
             var model = new ResetPasswordViewModel()
             {
@@ -344,7 +344,7 @@ namespace WebApp.Utils
             return View("Account.ResetPassword", model);
         }
 
-        protected async Task<UserViewModel> GetUserViewModel(string userId)
+        protected async Task<UserProfileViewModel> GetUserViewModel(string userId)
         {
             var user = await UserManager.FindByIdAsync(userId);
             if (user == null)
@@ -354,9 +354,8 @@ namespace WebApp.Utils
             if (roles == null)
                 return null;
 
-            var model = new UserViewModel()
+            var model = new UserProfileViewModel(user)
             {
-                User = user,
                 Roles = new List<string>(roles)
             };
 
@@ -365,7 +364,7 @@ namespace WebApp.Utils
             return model;
         }
 
-        protected virtual async Task<UserViewModel> GetUserProfile(UserViewModel model)
+        protected virtual async Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model)
         {
             var roles = model.Roles;
 
@@ -403,7 +402,7 @@ namespace WebApp.Utils
             return model;
         }
 
-        protected virtual async Task<int> UpdateUserProfile(UserViewModel model)
+        protected virtual async Task<int> UpdateUserProfile(UserProfileViewModel model)
         {
             int affectedRow = 0;
             if (_managedRoles.Any(r => r == Role.Trainer))
@@ -431,7 +430,7 @@ namespace WebApp.Utils
             }
         }
 
-        //protected abstract Task<UserViewModel> GetUserProfile(UserViewModel model);
-        //protected abstract Task<int> UpdateUserProfile(UserViewModel model);
+        //protected abstract Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model);
+        //protected abstract Task<int> UpdateUserProfile(UserProfileViewModel model);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebApp.Models;
@@ -11,6 +12,8 @@ namespace WebApp.ViewModels
     {
         [Display(Name = "User Id")]
         public string Id { get; set; }
+
+        public IList<string> Roles { get; set; }
 
         [Display(Name = "Full Name")]
         [StringLength(50)]
@@ -54,9 +57,18 @@ namespace WebApp.ViewModels
         [StringLength(50)]
         public string Specialty { get; set; }
 
-        public UserProfile(Trainer trainer) : this(trainer.User)
+        public UserProfileViewModel(Trainer trainer) : this(trainer.User)
         {
             Specialty = trainer.Specialty;
         }
+
+        public ApplicationUser User => new ApplicationUser()
+        {
+            Id = Id,
+            FullName = FullName,
+            Email = Email,
+            Age = Age,
+            Address = Address,
+        };
     }
 }

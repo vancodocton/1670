@@ -1,10 +1,10 @@
-﻿@model WebApp.ViewModels.UserViewModel
+﻿@model WebApp.ViewModels.UserProfileViewModel
 @using WebApp.Utils;
 @{
 	ViewBag.Title = "Remove";
 }
 
-@Html.Partial("DetailsProfilePartial")
+@Html.Partial("Profile.DetailsPartial")
 
 @using (Html.BeginForm("ConfirmRemove", "Assign", FormMethod.Post))
 {

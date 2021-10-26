@@ -25,5 +25,9 @@ namespace WebApp.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public Trainee Trainee { get; set; }
+
+        public Trainer Trainer { get; set; }
     }
 }
