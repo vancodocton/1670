@@ -5,7 +5,7 @@
 	@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "justify-content-center" }))
 	{
 		@Html.AntiForgeryToken()
-		@Html.HiddenFor(model => model.User.Id)
+		@Html.HiddenFor(model => model.Id)
 
 		<h4>@ViewBag.Title</h4>
 		<hr />
@@ -13,38 +13,37 @@
 
 		<div class="form-group mb-3">
 			@Html.LabelFor(model => model.User.UserName, htmlAttributes: new { @class = "col-form-label" })
-			@Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-			@Html.ValidationMessageFor(model => model.User.UserName, "", new { @class = "text-danger" })
+			@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
 		</div>
 
 		<div class="form-group mb-3">
-			@Html.LabelFor(model => model.User.FullName, htmlAttributes: new { @class = "form-label" })
-			@Html.EditorFor(model => model.User.FullName, new { htmlAttributes = new { @class = "form-control" } })
-			@Html.ValidationMessageFor(model => model.User.FullName, "", new { @class = "text-danger" })
+			@Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "form-label" })
+			@Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
-			@Html.LabelFor(model => model.User.Age, htmlAttributes: new { @class = "form-label" })
-			@Html.EditorFor(model => model.User.Age, new { htmlAttributes = new { @class = "form-control" } })
-			@Html.ValidationMessageFor(model => model.User.Age, "", new { @class = "text-danger" })
+			@Html.LabelFor(model => model.Age, htmlAttributes: new { @class = "form-label" })
+			@Html.EditorFor(model => model.Age, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.ValidationMessageFor(model => model.Age, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
-			@Html.LabelFor(model => model.User.Address, htmlAttributes: new { @class = "form-label" })
-			@Html.EditorFor(model => model.User.Address, new { htmlAttributes = new { @class = "form-control" } })
-			@Html.ValidationMessageFor(model => model.User.Address, "", new { @class = "text-danger" })
+			@Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "form-label" })
+			@Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
-			@Html.LabelFor(model => model.User.Email, htmlAttributes: new { @class = "form-label" })
-			@Html.EditorFor(model => model.User.Email, new { htmlAttributes = new { @class = "form-control" } })
-			@Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+			@Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form-label" })
+			@Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+			@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
 		</div>
 
 		<div class="form-group mb-3">
 			@Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "form-label" })
 			@Html.EditorFor(model => model.Roles, new { htmlAttributes = new { @class = "form-control", @value = string.Join(", ", Model.Roles), @readonly = "readonly" } })
-			@Html.ValidationMessageFor(model => model.User.Email, "", new { @class = "text-danger" })
+			@Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
 		</div>
 
 		if (Model.Roles.Any(r => r == Role.Trainer))
