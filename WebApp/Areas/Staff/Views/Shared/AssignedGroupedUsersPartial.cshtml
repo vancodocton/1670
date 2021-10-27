@@ -1,20 +1,23 @@
 ﻿@model WebApp.ViewModels.GroupedUsersViewModel<WebApp.Models.ApplicationUser>
 
-<h3>Enrolled Trainers</h3>
-@if (Model.Users.Count == 0)
-{
-	<p class="text-danger">There is no enrolled @Model.Type in the course.</p>
-}
-else
-{
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th scope="col">UserName</th>
-				<th scope="col">Full Name</th>
-				<th scope="col">Action</th>
-			</tr>
-		</thead>
+
+<table class="table table-hover">
+	<caption class="caption-top">
+		<h3>@Model.Type</h3>
+	</caption>
+	<thead>
+		<tr>
+			<th scope="col">UserName</th>
+			<th scope="col">Full Name</th>
+			<th scope="col">Action</th>
+		</tr>
+	</thead>
+	@if (Model.Users.Count == 0)
+	{
+		<caption class="text-danger">There is no enrolled @Model.Type in the course.</caption>
+	}
+	else
+	{
 		<tbody>
 			@foreach (var user in Model.Users)
 			{
@@ -27,5 +30,5 @@ else
 				</tr>
 			}
 		</tbody>
-	</table>
-}
+	}
+</table>
