@@ -256,7 +256,6 @@
     <Compile Include="ViewModels\AssignViewModel.cs" />
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
-    <Compile Include="Utils\SearchForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
@@ -424,8 +423,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
-    <Folder Include="Areas\Staff\Data\" />
-    <Folder Include="Areas\Staff\Views\Assign\" />
     <Folder Include="Areas\Trainer\Data\" />
     <Folder Include="Areas\Trainer\Views\TrainerViewTrainee\" />
     <Folder Include="Properties\PublishProfiles\" />

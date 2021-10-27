@@ -34,11 +34,17 @@
 							<th scope="row">@i</th>
 							<td>@user.UserName</td>
 							<td>@user.FullName</td>
-							<td>
-								@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "btn btn-danger" })
-								@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "btn btn-success" })
-								@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "btn btn-info" })
-								@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "btn btn-danger" })
+							<td class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" id="actions-dropdown" data-bs-toggle="dropdown"
+										aria-haspopup="true" aria-expanded="false">
+									Actions
+								</button>
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="actions-dropdown">
+									@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "dropdown-item" })
+									@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "dropdown-item" })
+									@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "dropdown-item" })
+									@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "dropdown-item" })
+								</div>
 							</td>
 						</tr>
 					}
