@@ -3,7 +3,7 @@
 	ViewBag.Title = "Account Details";
 }
 @Html.Partial("Profile.DetailsPartial")
-<p>
-	@Html.ActionLink("Edit profile", "Edit", new { id = Model.User.Id }) |
-	@Html.ActionLink("Back to List", "Index")
-</p>
+<div class="offset-sm-2">
+	@Html.ActionLink("Edit profile", "Edit", new { id = Model.User.Id }, new { @class = "btn btn-success me-1" })
+	@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary me-1" })
+</div>

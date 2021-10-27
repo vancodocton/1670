@@ -2,6 +2,7 @@
 @{
 	ViewBag.Title = "Dashboard";
 	int i = 0;
+	int j = 0;
 }
 <h2>Dashboard</h2>
 
@@ -29,16 +30,22 @@
 				<tbody>
 					@foreach (var user in groupedUsers.Users)
 					{
-						{ i++; }
+						{ i++; j++; }
 						<tr>
 							<th scope="row">@i</th>
 							<td>@user.UserName</td>
 							<td>@user.FullName</td>
-							<td>
-								@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "btn btn-danger" })
-								@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "btn btn-success" })
-								@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "btn btn-info" })
-								@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "btn btn-danger" })
+							<td class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" id="actions-dropdown-@j" data-bs-toggle="dropdown"
+										aria-haspopup="true" aria-expanded="false">
+									Actions
+								</button>
+								<div class="dropdown-menu dropdown-menu-end bg-light" aria-labelledby="actions-dropdown-@j">
+									@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "dropdown-item text-success" })
+									@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "dropdown-item text-info" })
+									@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "dropdown-item text-danger" })
+									@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "dropdown-item text-danger" })
+								</div>
 							</td>
 						</tr>
 					}

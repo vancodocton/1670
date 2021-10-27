@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using WebApp.Models;
 
 namespace WebApp.ViewModels
 {
-    public class AssignViewModel
+    public class CourseAssignViewModel
     {
         [Required]
         public int CourseId { get; set; }
+        public Course Course { get; set; }
 
         [Required]
         public string Role { get; set; }
@@ -15,8 +17,6 @@ namespace WebApp.ViewModels
         [Required]
         public string UserId { get; set; }
 
-        public ICollection<Trainee> Trainees { get; set; }
-
-        public ICollection<Trainer> Trainers { get; set; }
+        public SelectList Users { get; set; }
     }
 }

@@ -18,23 +18,23 @@ namespace WebApp.Areas.Staff.Controllers
 
         // keyword = course name
         [HttpGet]
-        public ActionResult Index(string keyword, int? page)
+        public async Task<ActionResult> Index(string keyword, int? page)
         {
             var courses = _context.Courses
+                .AsQueryable()
                 .Include(c => c.CourseCategory);
 
-            if (keyword != null)
+            if (!string.IsNullOrWhiteSpace(keyword))
             {
-                keyword = keyword.Trim();
-                if (keyword != "")
-                    courses = courses.Where(c => c.Name.Contains(keyword.Trim()));
+                keyword = keyword.Trim().ToLower();
+                courses = courses.Where(c => c.Name.Contains(keyword.Trim()));
             }
 
-            courses = courses.OrderBy(c => c.Id);
+            courses = courses.OrderByDescending(c => c.Id);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
 
-            return View(courses.ToPagedList(pageNumber, pageSize));
+            return View(await courses.ToPagedListAsync(pageNumber, pageSize));
         }
 
         [HttpGet]
@@ -112,7 +112,7 @@ namespace WebApp.Areas.Staff.Controllers
             {
                 _context.Entry(model.Course).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { model.Course.Id });
             }
 
             model.Categories = new SelectList(await _context.CourseCategories.ToListAsync(), "Id", "Name");
@@ -123,25 +123,29 @@ namespace WebApp.Areas.Staff.Controllers
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Course course = await _context.Courses.FindAsync(id);
+
+            Course course = await _context.Courses
+                .Include(c => c.CourseCategory)
+                .SingleOrDefaultAsync(c => c.Id == id);
+
             if (course == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(course);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName(nameof(Delete))]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Course course = await _context.Courses.FindAsync(id);
+            Course course = await _context.Courses
+                .FindAsync(id);
+
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            return RedirectToAction(nameof(Index));
         }
 
         protected override void Dispose(bool disposing)
