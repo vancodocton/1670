@@ -18,7 +18,7 @@
         Profile:
         </dt>
         <dd class="col-sm-9">
-            @Html.ActionLink("View Profile", "ViewProfile") |
+            @Html.ActionLink("View Profile", "ViewProfile") 
             @if (User.IsInRole(Role.Admin) || User.IsInRole(Role.Staff) || User.IsInRole(Role.Trainer))
             {
                 <span> | </span>
