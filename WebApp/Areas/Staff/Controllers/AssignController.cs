@@ -32,44 +32,60 @@ namespace WebApp.Areas.Staff.Controllers
             if (courseId == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var course = await _context.Courses.SingleOrDefaultAsync(c => c.Id == courseId);
+            var course = await _context.Courses
+                .Include(c => c.CourseCategory)
+                .SingleOrDefaultAsync(c => c.Id == courseId);
             if (course == null)
                 return HttpNotFound();
-
 
             var model = new CourseViewModel();
 
             model.Course = course;
 
-            model.AssignedTrainees = await _context.Trainees
-                .Include(t => t.User)
-                .Where(t => t.Courses.Any(c => c.Id == courseId))
-                .ToListAsync();
-            model.AssignedTrainers = await _context.Trainers
-                .Include(t => t.User)
-                .Where(t => t.Courses.Any(c => c.Id == courseId))
-                .ToListAsync();
+            model.UserGroups.Add(new GroupedUsersViewModel<ApplicationUser>()
+            {
+                Type = "Trainee",
+                Users = await _context.Trainees
+                    .Include(t => t.User)
+                    .Where(t => t.Courses.Any(c => c.Id == courseId))
+                    .Select(t => t.User)
+                    .ToListAsync()
+            });
+
+            model.UserGroups.Add(new GroupedUsersViewModel<ApplicationUser>()
+            {
+                Type = "Trainer",
+                Users = await _context.Trainers
+                    .Include(t => t.User)
+                    .Where(t => t.Courses.Any(c => c.Id == courseId))
+                    .Select(t => t.User)
+                    .ToListAsync()
+            });
 
             return View(model);
         }
 
         [HttpPost]
-        private async Task<AssignViewModel> LoadAssignViewModel(string role, AssignViewModel model = null)
+        private async Task<CourseAssignViewModel> LoadAssignViewModel(string role, CourseAssignViewModel model = null)
         {
-            model = model ?? new AssignViewModel();
+            model = model ?? new CourseAssignViewModel();
             model.Role = role;
 
             switch (role)
             {
                 case Role.Trainee:
-                    model.Trainees = await _context.Trainees
+                    var remainTrainees = await _context.Trainees
                         .Include(t => t.User)
+                        .Where(t => !t.Courses.Any(c => c.Id == model.CourseId))
                         .ToListAsync();
+                    model.Users = new SelectList(remainTrainees, "UserId", "User.Email");
                     break;
                 case Role.Trainer:
-                    model.Trainers = await _context.Trainers
+                    var remainTrainers = await _context.Trainers
                         .Include(t => t.User)
+                        .Where(t => !t.Courses.Any(c => c.Id == model.CourseId))
                         .ToListAsync();
+                    model.Users = new SelectList(remainTrainers, "UserId", "User.Email");
                     break;
                 default:
                     return null;
@@ -89,7 +105,7 @@ namespace WebApp.Areas.Staff.Controllers
             if (course == null)
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
 
-            var model = await LoadAssignViewModel(userRole);
+            var model = await LoadAssignViewModel(userRole, new CourseAssignViewModel() { CourseId = course.Id });
 
             if (model == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -99,7 +115,7 @@ namespace WebApp.Areas.Staff.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(AssignViewModel model)
+        public async Task<ActionResult> Add(CourseAssignViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -151,6 +167,10 @@ namespace WebApp.Areas.Staff.Controllers
 
             if (course == null)
                 return HttpNotFound();
+            ViewBag.CourseName = course.Name;
+
+            if (!await _context.Users.AnyAsync(u => u.Id == userId))
+                return HttpNotFound();
 
             var model = new UserProfileViewModel();
             switch (userRole)
@@ -168,12 +188,15 @@ namespace WebApp.Areas.Staff.Controllers
                     }
                     break;
                 default:
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                    return HttpNotFound();
             }
+
+            if (model == null)
+                return HttpNotFound();
             if (saveChangesError)
             {
                 ModelState.AddModelError("",
-                    "Delete failed.Try again, and if the problem persists " +
+                    "Remove failed.Try again, and if the problem persists " +
                     "see your system administrator.");
             }
             return View(model);
@@ -218,11 +241,11 @@ namespace WebApp.Areas.Staff.Controllers
         [HttpGet]
         public async Task<ActionResult> Search(string userRole, string keyword)
         {
-            var model = new AssignedSearchVewModel();
-
-            //model.Roles = new List<string>() { Role.Trainee, Role.Trainer };
-            model.Roles = _managedRoles;
-            if (keyword == null)
+            var model = new AssignedSearchVewModel
+            {
+                Roles = _managedRoles
+            };
+            if (keyword == null || userRole == null)
                 return View(model);
 
             keyword = keyword.Trim().ToLower();
@@ -233,7 +256,6 @@ namespace WebApp.Areas.Staff.Controllers
                 var courses = _context.Courses
                     .Where(c =>
                         c.Name
-                        .ToLower()
                         .Contains(keyword));
 
                 courses = courses.OrderBy(c => c.Id);
@@ -260,9 +282,6 @@ namespace WebApp.Areas.Staff.Controllers
                             })
                             .ToListAsync();
                         break;
-                        //default:
-                        //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                        //    return View();
                 }
             }
 
