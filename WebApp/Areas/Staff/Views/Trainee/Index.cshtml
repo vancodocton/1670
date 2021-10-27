@@ -6,79 +6,78 @@
 @{
 	ViewBag.Title = "Trainee Management";
 }
-<h2 class="pb-4">@Html.ActionLink((string)ViewBag.Title, "Index")</h2>
+<h2 class="pb-4">@ViewBag.Title</h2>
 
 <div class="row">
 	<div class="col-xl-2 pb-3">
-		<ul class="list-group">
-			<li class="list-group-item">
-				@Html.ActionLink("Create new account", "Create")
-			</li>
-			<li class="list-group-item">
-				@Html.ActionLink("Reset Password", "ResetPassword")
-
-			</li>
+		<ul class="list-group list-group-flush">
+			@Html.ActionLink("Create new account", "Create", null, new { @class = "list-group-item list-group-item-action" })
+			@Html.ActionLink("Reset Password", "ResetPassword", null, new { @class = "list-group-item list-group-item-action" })
 		</ul>
 	</div>
 
 	<div class="col-xl-10 pb-3">
-		<h3>Trainee Accounts</h3>
-
-		@using (Html.BeginForm("Index", "Trainee", FormMethod.Get))
-		{
-			<div class="form-group">
-				<div class="col-md-10">
-					@Html.Editor("keyword", "keyword", new { htmlAttributes = new { @class = "form-control", @placeholder = "Search by name" } })
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-md-10">
-					@Html.Editor("age", "age", new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Search by age" } })
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-md-offset-2 col-md-10">
-					<input type="submit" value="Search" class="btn btn-default" />
-				</div>
-			</div>
-
-		}
-
-		<table class="table table-striped">
+		<table class="table table-hover w-auto m-auto">
+			<caption class="caption-top">
+				<h4>Trainee Accounts</h4>
+				@using (Html.BeginForm("Index", "Trainee", FormMethod.Get, new { @class = "d-inline-flex mb-3" }))
+				{
+					<div class="form-floating mx-2">
+						<input class="form-control" data-val="true" id="name" name="name" type="text" placeholder="Trainee Name" value="@Request["name"]">
+						<label for="name">Course Name</label>
+					</div>
+					<div class="form-floating mx-2">
+						<input class="form-control" style="width: 4rem" data-val="true" id="age" name="age" type="number" placeholder="Trainee Age" value="@Request["age"]">
+						<label for="age">Age</label>
+					</div>
+					<input type="submit" value="Search" class="btn btn-primary mx-2" />
+				}
+				@if (!string.IsNullOrEmpty(Request["name"]) || !string.IsNullOrEmpty(Request["age"]))
+				{
+					@Html.ActionLink("Delete Search Results", "Index", null, new { @class = "btn btn-danger" })
+				}
+			</caption>
 			<thead>
 				<tr>
-					<th scope="col">UserName</th>
+					<th scope="col">Email</th>
 					<th scope="col">Full Name</th>
 					<th scope="col">Age</th>
-					<th scope="col">Action</th>
+					<th scope="col" class="col text-center">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
+				@{ int i = 0;}
 				@foreach (var user in Model)
 				{
+					i++;
 					<tr>
-						<td>@user.UserName</td>
+						<th scope="row">@user.Email</th>
 						<td>@user.FullName</td>
 						<td>@user.Age</td>
 						<td class="dropdown">
-							<button class="btn btn-primary dropdown-toggle" type="button" id="actions-dropdown" data-bs-toggle="dropdown"
+							@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "btn btn-outline-primary" })
+							<button class="btn btn-secondary dropdown-toggle" type="button" id="actions-dropdown-@i" data-bs-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
-								Actions
+								Manage
 							</button>
-							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="actions-dropdown">
-								@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "dropdown-item" })
-								@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "dropdown-item" })
-								@Html.ActionLink("Details", "Details", new { id = user.Id }, new { @class = "dropdown-item" })
-								@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "dropdown-item" })
+							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="actions-dropdown-@i">
+								@Html.ActionLink("Edit profiles", "Edit", new { id = user.Id }, new { @class = "dropdown-item text-success" })
+								@Html.ActionLink("Delete", "Delete", new { id = user.Id }, new { @class = "dropdown-item text-danger" })
+								@Html.ActionLink("Reset Password", "ResetPassword", new { email = user.Email }, new { @class = "dropdown-item text-danger" })
 							</div>
 						</td>
 					</tr>
 				}
 			</tbody>
+			<caption>
+				@(Html.Pager(Model)
+					.Url(page => Url.Action("Index", new { name = Request["name"], age = Request["age"], page = page }))
+					.Build())
+			</caption>
 		</table>
-
-		@(Html.Pager(Model)
-		.Url(page => Url.Action("Index", new { name = Request.Params["name"], age = Request.Params["age"], page = page }))
-		.Build())
 	</div>
 </div>
+
+@section scripts {
+	@Scripts.Render("~/bundles/jqueryval")
+}
