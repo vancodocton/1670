@@ -8,24 +8,26 @@
 
 <table class="table">
     <tr>
-        <th>
+        <th scope="col">
             @Html.DisplayNameFor(model => model.Name)
         </th>
-        <th>
+        <th scope="col">
             @Html.DisplayNameFor(model => model.CourseCategory)
         </th>
-        <th>
+        <th scope="col">
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th> Action</th>
+        <th scope="col">
+            Action
+        </th>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
-            <td>
+            <th scope="row">
                 @item.Name
-            </td>
+            </th>
             <td>
                 @item.CourseCategory.Name
             </td>
@@ -33,7 +35,7 @@
                 @item.Description
             </td>
             <td>
-                @Html.ActionLink("View Trainee", "ViewTrainee", null, new { courseId = item.Id},null)
+                @Html.ActionLink("View Trainee", "ViewTrainee", new { courseId = item.Id })
             </td>
         </tr>
     }
