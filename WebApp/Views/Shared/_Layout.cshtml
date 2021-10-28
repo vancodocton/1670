@@ -41,6 +41,13 @@
                             </li>
 
                         }
+                        if (User.IsInRole(Role.Trainee))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("View Trainee", "Index", "Trainee", new { Area = "Trainee" }, new { @class = "nav-link" })
+                            </li>
+
+                        }
                     }
                 </ul>
 				@Html.Partial("_LoginPartial")

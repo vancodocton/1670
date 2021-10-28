@@ -20,39 +20,26 @@ namespace WebApp.Areas.Trainer.Controllers
         public async Task<ActionResult> Index()
         {
             string traierId = User.Identity.GetUserId();
-            var trainer = await _context.Trainers.SingleOrDefaultAsync(t => t.UserId == traierId);
-            var courses = trainer.Courses.ToList();
+            var trainer = await _context.Trainers                
+                .SingleOrDefaultAsync(t => t.UserId == traierId);
+            var courses = _context.Courses
+                .Include(c => c.CourseCategory)
+                .Where(c => c.Trainers.Any(t => t.UserId == traierId))
+                .ToList();
             return View(courses);
         }
 
         public async Task<ActionResult> ViewTrainee(int courseId)
-        {
-            string myUserId = User.Identity.GetUserId();
+        {            
+            var course = await _context.Courses.SingleOrDefaultAsync(t => t.Id == courseId);
 
-            var trainer = await _context.Trainers.SingleAsync(t => t.UserId == myUserId);
-
-            var courses = trainer.Courses.ToListAsync();
-
-            var coursetrainees = trainer.Courses
-                .Select(c => new GroupedUsersViewModel<Trainee>
-                {
-                    Type = c.Name,
-                    Users = c.Trainees.ToList(),
-                })
+            var trainees =  _context.Trainees
+                .Include(t => t.User)
+                .Where(t => t.Courses.Any(c => c.Id == course.Id))
                 .ToList();
 
-            string userId = User.Identity.GetUserId();
-            var myCourse = await _context.Courses.SingleOrDefaultAsync(c => c.Id == courseId);
-
-            if (myCourse.Trainers.Any(t => t.UserId == myUserId))
-            {
-                var myTrainees = myCourse.Trainees.ToListAsync();
-                return View(myTrainees);
-            }
-            else
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.Forbidden);
-            }
+            return View(trainees);
+            
         }
     }
 }
