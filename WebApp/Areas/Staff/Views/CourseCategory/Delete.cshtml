@@ -8,29 +8,35 @@
 	<hr />
 
 	<dl class="row">
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(m => m.Name)
 		</dt>
-
 		<dd class="col-sm-9">
 			@Html.DisplayFor(m => m.Name)
 		</dd>
 
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(m => m.Description)
 		</dt>
-
 		<dd class="col-sm-9">
 			@Html.DisplayFor(m => m.Description)
+		</dd>
+
+		<dt class="col-sm-3 text-sm-end">
+			@Html.DisplayNameFor(m => m.Courses)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.ActionLink("More details", "Details", new { id = Model.Id })
 		</dd>
 	</dl>
 </div>
 
-@using (Html.BeginForm("Delete", "CourseCategory", FormMethod.Post))
+@using (Html.BeginForm("Delete", "CourseCategory", FormMethod.Post, new { @class = "offset-sm-2" }))
 {
 	@Html.AntiForgeryToken()
 	@Html.HiddenFor(model => model.Id)
 	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	<p class="text-danger">Warning: Delete course category will deleled all its courses including trainers/trainees assigned to. Are you sure?</p>
 	<div class="form-actions no-color">
 		@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
 		<input type="submit" value="Confirm Delete" class="btn btn-danger" />

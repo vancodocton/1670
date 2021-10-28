@@ -257,10 +257,9 @@
     <Compile Include="Utils\Role.cs" />
     <Compile Include="Utils\AssignedSearchForm.cs" />
     <Compile Include="ViewModels\AccountRegisterViewModel.cs" />
-    <Compile Include="ViewModels\AssignViewModel.cs" />
+    <Compile Include="ViewModels\CourseAssignViewModel.cs" />
     <Compile Include="ViewModels\GroupedUsersViewModel.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
-    <Compile Include="Utils\SearchForm.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Views\Account\Delete.cshtml" />
@@ -307,8 +306,7 @@
     <Content Include="Areas\Staff\Views\Course\Index.cshtml" />
     <Content Include="Areas\Staff\Views\Home\Index.cshtml" />
     <Content Include="Areas\Staff\Views\Shared\AssignedSearchFormPartial.cshtml" />
-    <Content Include="Areas\Staff\Views\Shared\AssignedTraineesPartial.cshtml" />
-    <Content Include="Areas\Staff\Views\Shared\AssignedTrainersPartial.cshtml" />
+    <Content Include="Areas\Staff\Views\Shared\AssignedGroupedUsersPartial.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Delete.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Details.cshtml" />
     <Content Include="Areas\Staff\Views\Trainee\Edit.cshtml" />

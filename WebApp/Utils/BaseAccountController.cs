@@ -285,7 +285,7 @@ namespace WebApp.Utils
                 IdentityResult result = await UserManager.UpdateAsync(userinDb);
 
                 if (result.Succeeded)
-                    return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Details), new { user.Id });
                 else
                     AddErrors(result);
             }

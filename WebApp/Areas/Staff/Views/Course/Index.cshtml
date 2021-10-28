@@ -5,24 +5,26 @@
 	ViewBag.Title = "Course management";
 }
 
-<h3>@ViewBag.Title</h3>
-@Html.ActionLink("Create New", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
 
-@using (Html.BeginForm("Index", "Course", FormMethod.Get))
-{
-	<div class="form-group my-3">
-		<input id="keyword" name="keyword" type="text" placeholder="Course name" required value="@Request.Params["keyword"]" />
-		<input id="submit" type="submit" class="btn btn-primary" value="Search" />
-		@if (Request.Params["keyword"] != null)
+<table class="table table-hover w-auto m-auto">
+	<caption class="caption-top">
+		<h3>@ViewBag.Title</h3>
+		@Html.ActionLink("Create New Course", "Create", null, htmlAttributes: new { @class = "btn btn-primary" })
+
+		@using (Html.BeginForm("Index", "Course", FormMethod.Get))
 		{
-			@Html.ActionLink("Delete search result", "Index", null, htmlAttributes: new { @class = "btn btn-danger mx-3" })
+			<div class="form-floating my-3">
+				<input id="keyword" name="keyword" class="form-control d-inline-flex me-1" type="text" placeholder="Course name" required value="@Request.Params["keyword"]" />
+				<label for="keyword">Course Name</label>
+				<input id="submit" type="submit" class="btn btn-primary me-1" value="Search" />
+				@if (Request.Params["keyword"] != null)
+				{
+					@Html.ActionLink("Delete search result", "Index", null, htmlAttributes: new { @class = "btn btn-danger" })
+				}
+			</div>
 		}
-
-	</div>
-}
-
-
-<table class="table">
+		@Html.ValidationMessage("", new { @class = "text-daner" })
+	</caption>
 	<thead>
 		<tr>
 			<th scope="col">#</th>
@@ -32,42 +34,45 @@
 			<th scope="col">
 				@Html.DisplayNameFor(m => m.First().CourseCategory)
 			</th>
-			<th scope="col">
-				@Html.DisplayNameFor(m => m.First().Description)
-			</th>
-			<th>
+			<th scope="col" class="col">
 				Actions
 			</th>
 		</tr>
 	</thead>
+	@if (Model.Count > 0)
+	{
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<th scope="row">@item.Id</th>
+					<td>
+						@item.Name
+					</td>
+					<td>
+						@item.CourseCategory.Name
+					</td>
+					<td class="dropdown">
+						@Html.ActionLink("Assign", "Index", "Assign", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-outline-primary" })
+						@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-outline-info" })
+						<button class="btn btn-secondary dropdown-toggle" type="button" id="actions-dropdown-@item.Id" data-bs-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+							Manage
+						</button>
+						<div class="dropdown-menu dropdown-menu-end" aria-labelledby="actions-dropdown-@item.Id">
+							@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "dropdown-item text-success" })
+							@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "dropdown-item text-danger" })
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
 
-	<tbody>
-		@{ int i = 0;}
-		@foreach (var item in Model)
-		{
-			<tr>
-				<th scope="row">@{i++;}@i</th>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.CourseCategory.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Description)
-				</td>
-				<td>
-					@Html.ActionLink("Assign to", "Index", "Assign", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-primary" }) |
-					@Html.ActionLink("Edit", "Edit", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-success" }) |
-					@Html.ActionLink("Details", "Details", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-info" }) |
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, htmlAttributes: new { @class = "btn btn-danger" })
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
-<br />
-
-@(Html.Pager(Model)
-		.Url(page => Url.Action("Index"))
+		<caption class="">
+			<br />
+			@(Html.Pager(Model)
+		.Url(page => Url.Action("Index", new { page}))
 		.Build())
+		</caption>
+	}
+</table>

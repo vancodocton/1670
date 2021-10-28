@@ -7,8 +7,11 @@ namespace WebApp.ViewModels
     {
         public Course Course { get; set; }
 
-        public ICollection<Trainee> AssignedTrainees { get; set; }
+        public List<GroupedUsersViewModel<ApplicationUser>> UserGroups { get; set; }
 
-        public ICollection<Trainer> AssignedTrainers { get; set; }
+        public CourseViewModel()
+        {
+            UserGroups = new List<GroupedUsersViewModel<ApplicationUser>>();
+        }
     }
 }
