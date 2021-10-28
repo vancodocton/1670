@@ -321,6 +321,8 @@
     <Content Include="Areas\Trainee\Views\web.config" />
     <Content Include="Areas\Trainee\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Trainee\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Trainee\Views\Trainee\ViewTrainee.cshtml" />
+    <Content Include="Areas\Trainee\Views\Trainee\Index.cshtml" />
     <None Include="Content\jquery-3.6.0.intellisense.js" />
     <Content Include="Content\jquery-3.6.0.js" />
     <Content Include="Content\jquery-3.6.0.min.js" />
@@ -436,7 +438,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Trainee\Data\" />
-    <Folder Include="Areas\Trainee\Views\Trainee\" />
     <Folder Include="Areas\Trainer\Data\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
