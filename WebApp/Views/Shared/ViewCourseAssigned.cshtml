@@ -6,21 +6,17 @@
 }
 
 
-<table class="table">
-    <tr>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.CourseCategory)
-        </th>
-        <th scope="col">
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th scope="col">
-            Action
-        </th>
-    </tr>
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Course Name </th>
+            <th scope="col">Course Category </th>
+            <th scope="col">Description </th>
+            <th scope="col">Action </th>
+        </tr>
+    </thead>
+
+
 
     @foreach (var item in Model)
     {
