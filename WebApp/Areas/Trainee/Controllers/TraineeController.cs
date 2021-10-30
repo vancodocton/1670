@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebApp.Models;
@@ -27,8 +28,12 @@ namespace WebApp.Areas.Trainee.Controllers
             return View(courses);
         }
 
-        public async Task<ActionResult> ViewTrainee(int courseId)
+        public async Task<ActionResult> ViewTrainee(int? courseId)
         {
+            if (courseId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             var userId = User.Identity.GetUserId();
             var trainee = await _context.Trainees.SingleOrDefaultAsync(t => t.UserId == userId);
 
@@ -36,7 +41,6 @@ namespace WebApp.Areas.Trainee.Controllers
             // check if user had enrolled to course
             if (course == null)
                 return HttpNotFound();
-
             //load trainees in course
             var trainees = await _context.Trainees
                 .Include(t => t.User)
