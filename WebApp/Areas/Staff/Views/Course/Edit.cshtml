@@ -6,11 +6,9 @@
 @using (Html.BeginForm())
 {
 	@Html.AntiForgeryToken()
-	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 	@Html.HiddenFor(model => model.Course.Id)
-	<h4>Edit Course</h4>
+	<h4>@ViewBag.Title</h4>
 	<hr />
-
 	<div class="form-group mb-3">
 		@Html.LabelFor(model => model.Course.Name, htmlAttributes: new { @class = "form-label" })
 		@Html.EditorFor(model => model.Course.Name, new { htmlAttributes = new { @class = "form-control" } })
@@ -30,8 +28,10 @@
 	</div>
 
 	<div class="form-group mb-3">
-		@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary mx-2" })
-		<input type="submit" value="Confirm Change" class="btn btn-primary" />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		<input type="submit" value="Confirm Change" class="btn btn-primary me-1" />
+		@Html.ActionLink("Ignore", "Index", null, new { @class = "btn btn-secondary me-1" })
+		@Html.ActionLink("Delete", "Delete", new { id = Model.Course.Id}, new { @class = "btn btn-danger me-1" })
 	</div>
 }
 

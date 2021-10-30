@@ -1,16 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using WebApp.Models;
 using WebApp.Utils;
-using WebApp.ViewModels;
 
 namespace WebApp.Areas.Staff.Controllers
 {
@@ -20,10 +14,19 @@ namespace WebApp.Areas.Staff.Controllers
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string keyword)
         {
-            var categories = await _context.CourseCategories.ToListAsync();
-            return View(categories);
+            var categories = _context.CourseCategories.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.Trim().ToLower();
+
+                categories = categories.Where(c => c.Name.Contains(keyword));
+            }
+            categories = categories.OrderBy(c => c.Name);
+
+            return View(await categories.ToListAsync());
         }
 
 
@@ -34,6 +37,7 @@ namespace WebApp.Areas.Staff.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CourseCategory category)
         {
             if (ModelState.IsValid)
@@ -116,7 +120,7 @@ namespace WebApp.Areas.Staff.Controllers
             _context.CourseCategories.Remove(category);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

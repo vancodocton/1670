@@ -19,6 +19,7 @@ namespace WebApp.ViewModels
         [StringLength(50)]
         public string FullName { get; set; }
 
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public virtual string Email { get; set; }

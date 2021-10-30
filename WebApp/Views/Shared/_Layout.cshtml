@@ -37,7 +37,14 @@
                         if (User.IsInRole(Role.Trainer))
                         {
                             <li class="nav-item">
-                                @Html.ActionLink("View Course And Trainee", "Index", "Home", new { Area = "Trainer" }, new { @class = "nav-link" })
+                                @Html.ActionLink("View Course ", "Index", "Trainer", new { Area = "Trainer" }, new { @class = "nav-link" })
+                            </li>
+
+                        }
+                        if (User.IsInRole(Role.Trainee))
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("View Course", "Index", "Trainee", new { Area = "Trainee" }, new { @class = "nav-link" })
                             </li>
 
                         }

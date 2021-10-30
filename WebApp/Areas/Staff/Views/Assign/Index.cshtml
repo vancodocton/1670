@@ -7,16 +7,44 @@
 }
 
 <div class="row container-fluid">
-	<div class="col-xl-3">
-		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainer})">Assign a trainer</a>
-		<a class="btn btn-primary" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainee})">Assign a trainee</a>
+	<div class="col-xl-3 col-lg-4">
+		<div class="list-group-flush">
+			<div class="list-group-item">
+				<h5>Course Info</h5>
+				<dl class="row mb-0">
+					<dt class="col-sm-3 col-lg-auto text-sm-end">
+						@Html.DisplayNameFor(model => model.Course.Name)
+					</dt>
+					<dd class="col-sm-9 col-lg-auto">
+						@Html.DisplayFor(model => model.Course.Name)
+					</dd>
+
+					<dt class="col-sm-3 col-lg-auto text-sm-end">
+						@Html.DisplayNameFor(model => model.Course.CourseCategory)
+					</dt>
+					<dd class="col-sm-9 col-lg-auto">
+						@Html.DisplayFor(model => model.Course.CourseCategory.Name)
+					</dd>
+
+					<dt class="col-sm-3 col-lg-auto text-sm-end text-truncate">
+						@Html.DisplayNameFor(model => model.Course.Description)
+					</dt>
+					<dd class="col-sm-9 col-lg-auto">
+						@Html.DisplayFor(model => model.Course.Description)
+					</dd>
+				</dl>
+			</div>
+			<a class="list-group-item list-group-item-action" href="@Url.Action("Edit", "Course", new { Model.Course.Id})">Edit course</a>
+			<a class="list-group-item list-group-item-action" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainer})">Assign a trainer</a>
+			<a class="list-group-item list-group-item-action" href="@Url.Action("Add", new { courseId = Model.Course.Id, userRole = Role.Trainee})">Assign a trainee</a>
+		</div>
 	</div>
 
-	<div class="col-xl-9">
-		@Html.Partial("AssignedTrainersPartial", Model.AssignedTrainers)
-
-		@Html.Partial("AssignedTraineesPartial", Model.AssignedTrainees)
-
+	<div class="col-xl-9 col-lg-8">
+		@foreach (var group in Model.UserGroups)
+		{
+			@Html.Partial("AssignedGroupedUsersPartial", group);
+		}
 	</div>
 </div>
 

@@ -12,38 +12,41 @@
 	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 	<div class="row">
-		<div class="col-lg-4">
+		<div class="col-md-4">
+			@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary mb-3 me-1" })
+			@Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-success mb-3" })
 			<dl class="row">
-				<dt class="col-sm-3 text-end">
+				<dt class="col-xl-3 text-xl-end">
 					@Html.DisplayNameFor(m => m.Name)
 				</dt>
 
-				<dd class="col-sm-9">
+				<dd class="col-xl-9">
 					@Html.DisplayFor(m => m.Name)
 				</dd>
 
-				<dt class="col-sm-3 text-end">
+				<dt class="col-xl-3 text-xl-end">
 					@Html.DisplayNameFor(m => m.Description)
 				</dt>
 
-				<dd class="col-sm-9">
+				<dd class="col-xl-9">
 					@Html.DisplayFor(m => m.Description)
 				</dd>
 			</dl>
 		</div>
-		<div class="col-lg-8">
+		<div class="col-md-8">
+			<p class="text-black">Go to <a href="@Url.Action("Index","Course")">Course Management</a> to create more courses of the <b>@Model.Name</b> category.</p>
 			@if (Model.Courses.Count == 0)
 			{
-				<p class="text-danger">There is no courses in <b>@Model.Name</b> category</p>
+				<p class="text-danger">There is no courses in the <b>@Model.Name</b> category.</p>
 			}
 			else
 			{
-				@Html.DisplayNameFor(m => m.Courses)
-				<ol>
+				<h5>Courses</h5>
+				<ol class="list-group list-group-numbered list-group-flush">
 					@foreach (var course in Model.Courses)
 					{
-						<li>
-							@Html.ActionLink(course.Name, "Index", "Course", new { id = course.Id }, null)
+						<li class="list-group-item">
+							@Html.ActionLink(course.Name, "Details", "Course", new { id = course.Id }, null)
 						</li>
 					}
 				</ol>
@@ -53,7 +56,6 @@
 	</div>
 
 	<div>
-		@Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
 	</div>
 </div>
 

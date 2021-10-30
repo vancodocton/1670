@@ -3,36 +3,49 @@
 	ViewBag.Title = "Course Category";
 }
 
-<h2>@ViewBag.Title</h2>
+<table class="table table-hover w-auto m-auto">
+	<caption class="caption-top">
+		<h3>@ViewBag.Title</h3>
+		@Html.ActionLink("Create New Category", "Create", null, new { @class = "btn btn-primary" })
 
-@Html.ActionLink("Create New Category", "Create", null, new { @class = "btn btn-primary" })
-
-<table class="table table-striped">
+		@using (Html.BeginForm("Index", "CourseCategory", FormMethod.Get))
+		{
+			<div class="form-floating my-3">
+				<input id="keyword" name="keyword" class="form-control d-inline-flex me-1" type="text" placeholder="Category Name" required value="@Request.Params["keyword"]" />
+				<label for="keyword">Category Name</label>
+				<input id="submit" type="submit" class="btn btn-primary me-1" value="Search" />
+				@if (Request.Params["keyword"] != null)
+				{
+					@Html.ActionLink("Delete search result", "Index", null, htmlAttributes: new { @class = "btn btn-danger" })
+				}
+			</div>
+		}
+	</caption>
 	<thead>
 		<tr>
-			<th scope="col">
-				@Html.DisplayNameFor(model => model.Name)
+			<th scope="col" class="col">
+				Course Category Name
 			</th>
-			<th scope="col">
-				@Html.DisplayNameFor(model => model.Description)
-			</th>
-			<th>Action</th>
+			<th scope="col" class="col text-center">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach (var item in Model)
 		{
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Description)
-				</td>
-				<td>
-					@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-success" }) |
-					@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-info" }) |
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+				<th>
+					@item.Name
+				</th>
+				<td class="dropdown">
+					@Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-outline-primary" })
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="actions-dropdown-@item.Id" data-bs-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false">
+						Actions
+					</button>
+					<div class="dropdown-menu dropdown-menu-end" aria-labelledby="actions-dropdown-@item.Id">
+						@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "dropdown-item text-success" })
+						@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "dropdown-item text-danger" })
+					</div>
 				</td>
 			</tr>
 		}

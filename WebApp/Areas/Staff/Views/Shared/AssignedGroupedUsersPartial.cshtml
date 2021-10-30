@@ -1,0 +1,34 @@
+﻿@model WebApp.ViewModels.GroupedUsersViewModel<WebApp.Models.ApplicationUser>
+
+
+<table class="table table-hover">
+	<caption class="caption-top">
+		<h3>@Model.Type</h3>
+	</caption>
+	<thead>
+		<tr>
+			<th scope="col">UserName</th>
+			<th scope="col">Full Name</th>
+			<th scope="col">Action</th>
+		</tr>
+	</thead>
+	@if (Model.Users.Count == 0)
+	{
+		<caption class="text-danger">There is no enrolled @Model.Type in the course.</caption>
+	}
+	else
+	{
+		<tbody>
+			@foreach (var user in Model.Users)
+			{
+				<tr>
+					<td>@user.UserName</td>
+					<td>@user.FullName</td>
+					<td>
+						@Html.ActionLink("Unassign", "Remove", "Assign", new { courseId = ViewBag.CourseId, userRole = Model.Type, userId = user.Id }, new { @class = "btn btn-danger" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	}
+</table>

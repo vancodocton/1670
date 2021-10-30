@@ -5,8 +5,8 @@
 	<h4>@ViewBag.Title</h4>
 	<hr />
 	@Html.HiddenFor(m => m.Id)
-	<dl class="row dl-horizontal">
-		<dt class="col-sm-3 text-end">
+	<dl class="row">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(m => m.User.UserName)
 		</dt>
 
@@ -14,7 +14,7 @@
 			@Html.DisplayFor(m => m.Email)
 		</dd>
 
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(m => m.FullName)
 		</dt>
 
@@ -22,7 +22,7 @@
 			@Html.DisplayFor(m => m.FullName)
 		</dd>
 
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(u => u.Age)
 		</dt>
 
@@ -30,7 +30,7 @@
 			@Html.DisplayFor(i => i.Age)
 		</dd>
 
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(u => u.Address)
 		</dt>
 
@@ -38,7 +38,7 @@
 			@Html.DisplayFor(i => i.Address)
 		</dd>
 
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(u => u.Email)
 		</dt>
 
@@ -46,7 +46,7 @@
 			@Html.DisplayFor(u => u.Email)
 		</dd>
 
-		<dt class="col-sm-3 text-end">
+		<dt class="col-sm-3 text-sm-end">
 			@Html.DisplayNameFor(u => u.Roles)
 		</dt>
 
@@ -56,7 +56,7 @@
 
 		@if (Model.Roles.Contains(Role.Trainer))
 		{
-			<dt class="col-sm-3 text-end">
+			<dt class="col-sm-3 text-sm-end">
 				@Html.DisplayNameFor(u => u.Specialty)
 			</dt>
 
@@ -67,7 +67,7 @@
 
 		@if (Model.Roles.Contains(Role.Trainee))
 		{
-			<dt class="col-sm-3 text-end">
+			<dt class="col-sm-3 text-sm-end">
 				@Html.DisplayNameFor(u => u.BirthDate)
 			</dt>
 
@@ -75,7 +75,7 @@
 				@Html.DisplayFor(u => u.BirthDate)
 			</dd>
 
-			<dt class="col-sm-3 text-end">
+			<dt class="col-sm-3 text-sm-end">
 				@Html.DisplayNameFor(u => u.Education)
 			</dt>
 
