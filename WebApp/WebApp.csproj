@@ -217,6 +217,10 @@
     <Compile Include="Areas\Trainee\TraineeAreaRegistration.cs" />
     <Compile Include="Areas\Trainer\Controllers\TrainerController.cs" />
     <Compile Include="Areas\Trainer\TrainerAreaRegistration.cs" />
+    <Compile Include="Migrations\202110301452218_Alter-Course-CourseCategory-Tables-Columns.cs" />
+    <Compile Include="Migrations\202110301452218_Alter-Course-CourseCategory-Tables-Columns.Designer.cs">
+      <DependentUpon>202110301452218_Alter-Course-CourseCategory-Tables-Columns.cs</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\CreateCourseViewModel.cs" />
     <Compile Include="Areas\Staff\StaffAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -450,6 +454,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110251435408_Alter_User_Table_Columns.resx">
       <DependentUpon>202110251435408_Alter_User_Table_Columns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110301452218_Alter-Course-CourseCategory-Tables-Columns.resx">
+      <DependentUpon>202110301452218_Alter-Course-CourseCategory-Tables-Columns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -11,6 +11,7 @@ namespace WebApp.Models
 
         [Required]
         [StringLength(100)]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
 
         [ForeignKey("CourseCategory")]
