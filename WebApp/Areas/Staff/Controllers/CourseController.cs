@@ -1,5 +1,7 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -71,10 +73,17 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Courses.Add(course);
-                await _context.SaveChangesAsync();
+                if (await _context.Courses.AnyAsync(c => c.Name == course.Name))
+                {
+                    ModelState.AddModelError("", "There has a course named '" + course.Name + "' already.");
+                }
+                else
+                {
+                    _context.Courses.Add(course);
+                    await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             var model = new CreateCourseViewModel()

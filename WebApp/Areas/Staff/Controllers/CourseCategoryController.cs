@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -42,10 +44,18 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.CourseCategories.Add(category);
-                _ = await _context.SaveChangesAsync();
+                if (await _context.Courses.AnyAsync(c => c.Name == category.Name))
+                {
+                    ModelState.AddModelError("", "There has a category named '" + category.Name + "' already.");
 
-                return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    _context.CourseCategories.Add(category);
+                    _ = await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
             return View(category);

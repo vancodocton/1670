@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp.Models
 {
@@ -10,6 +11,7 @@ namespace WebApp.Models
 
         [Required]
         [StringLength(100)]
+        [Index(IsUnique = true)]
         public string Name { get; set; }
 
         [StringLength(255)]
