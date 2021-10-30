@@ -44,7 +44,7 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _context.Courses.AnyAsync(c => c.Name == category.Name))
+                if (await _context.CourseCategories.AnyAsync(c => c.Name == category.Name))
                 {
                     ModelState.AddModelError("", "There has a category named '" + category.Name + "' already.");
 
