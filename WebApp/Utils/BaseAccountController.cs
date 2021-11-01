@@ -174,7 +174,7 @@ namespace WebApp.Utils
             }
 
             model.Roles = _managedRoles;
-            return View(model);
+            return View("Account.Register", model);
         }
 
         protected async Task<int> AddTrainer(Trainer trainer)
