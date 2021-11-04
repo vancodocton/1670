@@ -2,17 +2,17 @@
 
 namespace WebApp.Areas.Trainee
 {
-    public class TraineeAreaRegistration : AreaRegistration 
+    public class TraineeAreaRegistration : AreaRegistration
     {
-        public override string AreaName 
+        public override string AreaName
         {
-            get 
+            get
             {
                 return "Trainee";
             }
         }
 
-        public override void RegisterArea(AreaRegistrationContext context) 
+        public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(
                 "Trainee_default",

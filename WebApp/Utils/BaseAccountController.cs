@@ -7,10 +7,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using WebApp.ViewModels;
 using WebApp.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+using WebApp.ViewModels;
 
 namespace WebApp.Utils
 {
