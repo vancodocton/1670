@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -69,7 +67,7 @@ namespace WebApp.Areas.Staff.Controllers
 
         protected override async Task<UserProfileViewModel> GetUserProfile(UserProfileViewModel model)
         {
-            var roles = model.Roles;           
+            var roles = model.Roles;
 
             if (roles.Contains(Role.Trainee))
             {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -119,9 +117,17 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Entry(model.Course).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Details), new { model.Course.Id });
+                if (await _context.Courses.AnyAsync(c => c.Id != model.Course.Id && c.Name == model.Course.Name))
+                {
+                    ModelState.AddModelError("", "There has a course named '" + model.Course.Name + "' already.");
+                }
+                else
+                {
+                    _context.Entry(model.Course).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Details), new { model.Course.Id });
+                }
             }
 
             model.Categories = new SelectList(await _context.CourseCategories.ToListAsync(), "Id", "Name");

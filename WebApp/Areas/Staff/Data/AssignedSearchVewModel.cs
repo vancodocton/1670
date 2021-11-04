@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using WebApp.Models;
 using WebApp.Utils;
 using WebApp.ViewModels;
-using X.PagedList;
 
 namespace WebApp.Areas.Staff.Data
 {
-    public class AssignedSearchVewModel :  AssignedSearchForm
+    public class AssignedSearchVewModel : AssignedSearchForm
     {
         //public AssignedSearchForm SearchForm { get; set; }
 

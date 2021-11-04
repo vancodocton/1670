@@ -7,10 +7,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using WebApp.ViewModels;
 using WebApp.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+using WebApp.ViewModels;
 
 namespace WebApp.Utils
 {
@@ -174,7 +172,7 @@ namespace WebApp.Utils
             }
 
             model.Roles = _managedRoles;
-            return View(model);
+            return View("Account.Register", model);
         }
 
         protected async Task<int> AddTrainer(Trainer trainer)

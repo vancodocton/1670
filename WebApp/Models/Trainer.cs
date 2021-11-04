@@ -5,7 +5,7 @@ using WebApp.Models.Profiles;
 
 namespace WebApp.Models
 {
-    public class Trainer: IProfileTrainer, IProfile
+    public class Trainer : IProfileTrainer, IProfile
     {
         [Key]
         [ForeignKey("User")]

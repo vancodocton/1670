@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using WebApp.Models;
-using WebApp.Models.Profiles;
 
 namespace WebApp.ViewModels
 {
