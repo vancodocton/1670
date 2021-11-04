@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -119,7 +117,7 @@ namespace WebApp.Areas.Staff.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _context.Courses.AnyAsync(c => c.Name == model.Course.Name))
+                if (await _context.Courses.AnyAsync(c => c.Id != model.Course.Id && c.Name == model.Course.Name))
                 {
                     ModelState.AddModelError("", "There has a course named '" + model.Course.Name + "' already.");
                 }
